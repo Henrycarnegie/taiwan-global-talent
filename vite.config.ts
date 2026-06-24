@@ -17,6 +17,7 @@ export default defineConfig({
                 }),
             ],
         }),
+        
         inertia(),
         react({
             babel: {
@@ -28,4 +29,9 @@ export default defineConfig({
             formVariants: true,
         }),
     ],
+    resolve: {
+        alias: {
+            '@': '/resources/js',
+        },
+    },
 });
