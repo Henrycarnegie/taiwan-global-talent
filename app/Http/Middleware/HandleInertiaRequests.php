@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
 use Inertia\Middleware;
+use Illuminate\Support\Facades\Auth;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -35,11 +36,21 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        // Mengambil user langsung dari Auth facade untuk memastikan keakuratan session
+        $user = Auth::user();
+
         return [
             ...parent::share($request),
+
             'name' => config('app.name'),
+
             'auth' => [
-                'user' => $request->user(),
+                'user' => $user ? [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'role' => $user->role_id, // Kirim role_id ke frontend agar match dengan interface AuthUser Anda
+                ] : null,
             ],
         ];
     }

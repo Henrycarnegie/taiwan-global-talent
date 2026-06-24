@@ -19,18 +19,27 @@ class GoogleAuthController extends Controller
         $googleUser = Socialite::driver('google')->stateless()->user();
 
         $user = User::updateOrCreate(
-            ['email' => $googleUser->getEmail()],
+            ['google_id' => $googleUser->getId()],
             [
                 'name' => $googleUser->getName(),
-                'google_id' => $googleUser->getId(),
+                'email' => $googleUser->getEmail(),
                 'avatar' => $googleUser->getAvatar(),
                 'email_verified_at' => now(),
-                'password' => null,
+                'role_id' => 3,
             ]
         );
 
+        $user->profile()->firstOrCreate([]);
+
         Auth::login($user, true);
 
-        return redirect('/dashboard');
+        // Regenerate session untuk memastikan Laravel mencatat login dengan aman
+        request()->session()->regenerate();
+
+        return redirect(match ((int) $user->role_id) {
+            1 => '/admin/dashboard',
+            2 => '/teacher/dashboard',
+            default => '/student/dashboard',
+        });
     }
 }

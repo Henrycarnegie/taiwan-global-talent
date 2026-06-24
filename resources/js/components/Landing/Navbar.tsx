@@ -1,5 +1,5 @@
 import React from 'react';
-import LoginGoogle from '../Button/LoginGoogle';
+import LoginGoogle from '../UI/LoginGoogle';
 
 const Navbar = () => {
     return (
@@ -16,9 +16,6 @@ const Navbar = () => {
                 </div>
 
                 <div className="flex gap-2">
-                    <button className="rounded-full bg-black px-4 py-2 text-sm text-white transition hover:opacity-90">
-                        Get Started
-                    </button>
                     <LoginGoogle />
                 </div>
             </div>

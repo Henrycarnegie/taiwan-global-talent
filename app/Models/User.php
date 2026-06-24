@@ -16,6 +16,7 @@ class User extends Authenticatable
         'password',
         'google_id',
         'avatar',
+        'role_id',
     ];
 
     protected $hidden = [
@@ -30,4 +31,30 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+    public function profile()
+    {
+        return $this->hasOne(UserProfile::class);
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role?->name === 'admin';
+    }
+
+    public function isTeacher(): bool
+    {
+        return $this->role?->name === 'teacher';
+    }
+
+    public function isStudent(): bool
+    {
+        return $this->role?->name === 'student';
+    }
+
 }
