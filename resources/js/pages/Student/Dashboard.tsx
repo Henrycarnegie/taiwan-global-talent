@@ -31,26 +31,29 @@ export default function StudentDashboard({ profile }: any) {
             {/* GLOBAL TOP NAVBAR */}
             <header className="sticky top-0 z-50 border-b border-gray-200 bg-white shadow-sm">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <div className="flex h-16 items-center justify-between">
-                        {/* Logo */}
-                        <div className="flex items-center gap-3">
-                            <div className="rounded-lg bg-blue-600 p-2 text-lg font-bold tracking-wider text-white shadow-sm">
+                    {/* Konten Utama */}
+                    <div className="flex flex-col items-center justify-between gap-4 py-4 md:h-20 md:flex-row md:py-0">
+                        {/* Bagian Logo dan Identitas */}
+                        <div className="flex w-full items-center gap-3 md:w-auto">
+                            <div className="shrink-0 rounded-lg bg-blue-600 p-2 text-lg font-bold tracking-wider text-white shadow-sm">
                                 TW
                             </div>
                             <div>
-                                {/* Use optional chaining here */}
-                                <p>{auth?.user?.name || 'Guest'}</p>
-                                <h1 className="text-lg leading-tight font-bold text-gray-900">
+                                <p className="text-sm font-medium text-gray-700">
+                                    {auth?.user?.name || 'Guest'}
+                                </p>
+                                <h1 className="text-base leading-tight font-bold text-gray-900 sm:text-lg">
                                     Talent Platform
                                 </h1>
-                                <p className="text-xs font-medium text-gray-500">
+                                <p className="text-[10px] font-medium text-gray-500 sm:text-xs">
                                     臺灣數位人才 Net
                                 </p>
                             </div>
                         </div>
 
                         {/* Reusable Tab Navigation */}
-                        <nav className="flex h-full space-x-1 pt-2 sm:space-x-4">
+                        {/* Menggunakan overflow-x-auto agar di mobile bisa di-swipe ke samping jika menunya panjang */}
+                        <nav className="no-scrollbar flex w-full items-center justify-start space-x-2 pb-2 md:h-full md:w-auto md:justify-center md:pt-2 md:pb-0">
                             <TabButton
                                 label="Overview"
                                 subLabel="概覽"
@@ -78,26 +81,32 @@ export default function StudentDashboard({ profile }: any) {
                         </nav>
 
                         {/* Info Akun / Avatar */}
-                        <ProfileDropdown
-                            profile={profile}
-                            onLogout={() => {
-                                router.post('/logout');
-                            }}
-                            onProfileUpdate={(updatedData) => {
-                                router.put('/student/profile', updatedData, {
-                                    onSuccess: () => {
-                                        // Hanya pindah ke overview jika validasi backend sukses & data tersimpan
-                                        setActiveTab('overview');
-                                    },
-                                    onError: (errors) => {
-                                        console.error(
-                                            'Gagal menyimpan profil:',
-                                            errors,
-                                        );
-                                    },
-                                });
-                            }}
-                        />
+                        {/* Di mobile, diletakkan di pojok kanan atas memanfaatkan posisi absolute atau disesuaikan tata letaknya */}
+                        <div className="absolute top-4 right-4 shrink-0 md:static">
+                            <ProfileDropdown
+                                profile={profile}
+                                onLogout={() => {
+                                    router.post('/logout');
+                                }}
+                                onProfileUpdate={(updatedData) => {
+                                    router.put(
+                                        '/student/profile',
+                                        updatedData,
+                                        {
+                                            onSuccess: () => {
+                                                setActiveTab('overview');
+                                            },
+                                            onError: (errors) => {
+                                                console.error(
+                                                    'Gagal menyimpan profil:',
+                                                    errors,
+                                                );
+                                            },
+                                        },
+                                    );
+                                }}
+                            />
+                        </div>
                     </div>
                 </div>
             </header>

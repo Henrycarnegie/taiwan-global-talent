@@ -3,12 +3,20 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Role extends Model
 {
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'slug'];
 
-    public $timestamps = false;
+    protected static function booted()
+    {
+        static::creating(function ($role) {
+            if (empty($role->slug)) {
+                $role->slug = Str::slug($role->name);
+            }
+        });
+    }
 
     public function users(): HasMany
     {

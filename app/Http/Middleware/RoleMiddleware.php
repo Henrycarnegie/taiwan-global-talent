@@ -9,8 +9,12 @@ class RoleMiddleware
 {
     public function handle(Request $request, Closure $next, string $role): Response
     {
-        if (! $request->user() || $request->user()->role?->name !== $role) {
-            abort(403, 'Forbidden');
+        if (! $request->user()) {
+            return redirect('/login')->with('error', 'Anda harus login terlebih dahulu.');
+        }
+
+        if ($request->user()->role?->slug !== $role) {
+            return redirect($request->user()->getDashboardUrl())->with('error', 'Anda tidak memiliki akses ke halaman tersebut.');
         }
 
         return $next($request);

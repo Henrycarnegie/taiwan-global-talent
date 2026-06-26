@@ -9,10 +9,10 @@ createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),
 
     resolve: (name: string) => {
-        const pages = import.meta.glob('./pages/**/*.tsx');
+        const pages = import.meta.glob('./Pages/**/*.tsx');
 
         return resolvePageComponent(
-            `./pages/${name}.tsx`,
+            `./Pages/${name}.tsx`, 
             pages
         ) as any;
     },

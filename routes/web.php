@@ -2,15 +2,27 @@
 
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Auth\GoogleAuthController;
+use App\Http\Controllers\Auth\AdminAuthController;
 use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
 use App\Http\Controllers\Teacher\DashboardController as TeacherDashboardController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 // Route Umum (Tanpa Login)
 Route::inertia('/', 'Landing')->name('landing-page');
+
+// Login
+Route::get('/login', function () {
+    return Inertia::render('Auth/LoginPage');
+})->name('login');
+
+Route::get('/Auth/LoginPage', [GoogleAuthController::class, 'index'])->name('Auth.LoginPage');
 Route::get('/auth/google', [GoogleAuthController::class, 'redirect']);
 Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback']);
+
+Route::post('/login-admin', [AdminAuthController::class, 'login']);
 
 // BUNGKUS SEMUA ROUTE YANG BUTUH LOGIN DI SINI
 Route::middleware(['auth', 'verified'])->group(function () {
