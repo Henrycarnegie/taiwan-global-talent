@@ -1,12 +1,11 @@
+import { Link } from "@inertiajs/react";
+import { LoginPage } from "@/routes/Auth";
+
 export default function Login() {
-    const loginWithGoogle = () => {
-        window.location.href = '/auth/google';
-    };
 
     return (
-        <div className="flex items-center justify-center bg-gray-50">
+        <Link href={LoginPage()} className="flex items-center justify-center bg-gray-50">
             <button
-                onClick={loginWithGoogle}
                 className="hover:bg-gray-05 flex items-center justify-center gap-3 rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition-all duration-200 hover:shadow-md cursor-pointer active:bg-gray-200"
             >
                 <svg
@@ -34,6 +33,6 @@ export default function Login() {
                 </svg>
                 <span>Continue with Google</span>
             </button>
-        </div>
+        </Link>
     );
 }
