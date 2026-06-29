@@ -3,8 +3,8 @@
 namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
-use Inertia\Middleware;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -36,20 +36,64 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        // Mengambil user langsung dari Auth facade untuk memastikan keakuratan session
         $user = Auth::user();
+
+        if ($user) {
+            $relation = match ($user->role_id) {
+                1 => 'adminProfile',
+                2 => 'teacherProfile',
+                3 => 'studentProfile',
+                4 => 'companyProfile',
+                default => null,
+            };
+
+            if ($relation) {
+                $user->load($relation);
+            }
+        }
+
+        $activeProfile = $user && $relation ? $user->{$relation} : null;
 
         return [
             ...parent::share($request),
-
             'name' => config('app.name'),
-
             'auth' => [
                 'user' => $user ? [
                     'id' => $user->id,
                     'name' => $user->name,
                     'email' => $user->email,
-                    'role' => $user->role_id, // Kirim role_id ke frontend agar match dengan interface AuthUser Anda
+                    'avatar' => $user->avatar,
+                    'role' => (string) $user->role_id,
+
+                    'profile' => $activeProfile ? match ($user->role_id) {
+                        // Admin
+                        1 => [
+                            'id' => $activeProfile->id,
+                        ],
+                        // Teacher
+                        2 => [
+                            'id' => $activeProfile->id,
+                            'bio' => $activeProfile->bio,
+                            'expertise' => $activeProfile->expertise,
+                            'certification_path' => $activeProfile->certification_path,
+                        ],
+                        // Student
+                        3 => [
+                            'id' => $activeProfile->id,
+                            'country' => $activeProfile->country,
+                            'university' => $activeProfile->university,
+                            'major' => $activeProfile->major,
+                        ],
+                        // Company
+                        4 => [
+                            'id' => $activeProfile->id,
+                            'company_name' => $activeProfile->company_name,
+                            'industry' => $activeProfile->industry,
+                            'website' => $activeProfile->website,
+                            'address' => $activeProfile->address,
+                        ],
+                        default => null,
+                    } : null,
                 ] : null,
             ],
         ];

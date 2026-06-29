@@ -1,32 +1,32 @@
-import React from 'react';
+import { ShieldCheck, TrendingUp, Handshake, Target } from 'lucide-react';
 
 const steps = [
     {
         number: '01',
         title: 'Create & Auth Profile',
         desc: 'Masuk instan menggunakan Google Auth dan lengkapi data profil publik talenta Anda.',
-        icon: '🛡️',
+        icon: ShieldCheck,
         badge: 'Setup',
     },
     {
         number: '02',
         title: 'Build Skills & Language',
         desc: 'Unggah portofolio digital Anda, ikuti webinar, dan perbarui skor sertifikasi bahasa Mandarin (TOCFL).',
-        icon: '📈',
+        icon: TrendingUp,
         badge: 'Develop',
     },
     {
         number: '03',
         title: 'Auto-Match Ecosystem',
         desc: 'Sistem algoritma mencocokkan kualifikasi profil Anda secara otomatis dengan ribuan lowongan di Taiwan.',
-        icon: '🤝',
+        icon: Handshake,
         badge: 'Matching',
     },
     {
         number: '04',
         title: 'Apply & Claim Scholarship',
         desc: 'Ajukan lamaran kerja langsung ke perusahaan top atau klaim beasiswa studi yang paling cocok untuk Anda.',
-        icon: '🎯',
+        icon: Target,
         badge: 'Success',
     },
 ];
@@ -66,8 +66,8 @@ const HowItWorks = () => {
                             <div>
                                 {/* Baris Atas Kartu */}
                                 <div className="mb-4 flex items-center justify-between">
-                                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50 text-lg transition-colors group-hover:bg-blue-50">
-                                        {step.icon}
+                                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50 transition-colors group-hover:bg-blue-50">
+                                        <step.icon className="h-5 w-5 text-slate-700 transition-colors group-hover:text-blue-600" />
                                     </div>
                                     <span className="text-2xl font-black tracking-tight text-slate-100 transition-colors group-hover:text-blue-100">
                                         {step.number}

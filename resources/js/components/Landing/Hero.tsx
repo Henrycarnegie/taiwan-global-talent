@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { Building2, CreditCard, GraduationCap } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { translations } from '@/i18n/Landing';
 
@@ -22,7 +23,6 @@ export default function Hero() {
                     transition={{ duration: 0.5 }}
                     className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50/80 px-4 py-1.5 text-xs font-semibold text-slate-700 shadow-xs backdrop-blur"
                 >
-                    <span className="flex h-2 w-2 animate-pulse rounded-full bg-emerald-500" />
                     🇹🇼 Taiwan Digital Talent Hub v2.0
                 </motion.div>
 
@@ -84,15 +84,22 @@ export default function Hero() {
                     className="mx-auto flex max-w-xl flex-wrap items-center justify-center gap-x-6 gap-y-2 border-t border-slate-100 pt-6 text-xs font-medium text-slate-400"
                 >
                     <span className="flex items-center gap-1.5">
-                        ⚡ No Credit Card Required
+                        <CreditCard className="h-4 w-4 text-yellow-400" />
+                        No Credit Card Required
                     </span>
+
                     <span className="text-slate-200">•</span>
+
                     <span className="flex items-center gap-1.5">
-                        🎓 Verified University Partner
+                        <GraduationCap className="h-4 w-4 text-blue-400" />
+                        Verified University Partner
                     </span>
+
                     <span className="text-slate-200">•</span>
+
                     <span className="flex items-center gap-1.5">
-                        🏢 Direct HR Integration
+                        <Building2 className="h-4 w-4 text-emerald-400" />
+                        Direct HR Integration
                     </span>
                 </motion.div>
             </div>
