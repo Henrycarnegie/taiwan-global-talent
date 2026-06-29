@@ -8,14 +8,21 @@ use Illuminate\Http\Request;
 
 class CourseController extends Controller
 {
+    /**
+     * Display a listing of all published courses.
+     */
     public function index()
     {
         // Return only published courses for the public React app
         return Course::where('is_published', true)->get();
     }
 
+    /**
+     * Display the specified course with its lessons.
+     */
     public function show(Course $course)
     {
-        return $course;
+        // We use 'load' here to include the lessons relationship in the response
+        return $course->load('lessons');
     }
 }

@@ -15,4 +15,8 @@ class Course extends Model
         'mandarin_level',
         'is_published',
     ];
+    public function lessons()
+    {
+        return $this->hasMany(Lesson::class);
+    }
 }
