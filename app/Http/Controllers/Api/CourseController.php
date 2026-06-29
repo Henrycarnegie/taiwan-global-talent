@@ -13,16 +13,19 @@ class CourseController extends Controller
      */
     public function index()
     {
-        // Return only published courses for the public React app
         return Course::where('is_published', true)->get();
     }
 
     /**
-     * Display the specified course with its lessons.
+     * Display the specified course with its lessons and certification status.
      */
-    public function show(Course $course)
+    public function show(Course $course, Request $request)
     {
-        // We use 'load' here to include the lessons relationship in the response
-        return $course->load('lessons');
-    }
+        $user = $request->user();
+        
+        return [
+            'course' => $course->load('lessons'),
+            'is_certified' => $user ? $course->isCompletedByUser($user->id) : false,
+        ];
+    }   
 }

@@ -19,4 +19,14 @@ class Course extends Model
     {
         return $this->hasMany(Lesson::class);
     }
+    public function isCompletedByUser($userId)
+    {
+        $totalLessons = $this->lessons()->count();
+        $completedLessons = $this->lessons()
+            ->whereHas('progress', function ($query) use ($userId) {
+                $query->where('user_id', $userId)->where('is_completed', true);
+            })->count();
+
+        return $totalLessons > 0 && $completedLessons === $totalLessons;
+    }
 }
