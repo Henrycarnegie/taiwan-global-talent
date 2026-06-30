@@ -78,7 +78,10 @@ class User extends Authenticatable implements FilamentUser
     {
         return $this->role?->slug === 'student';
     }
-
+    public function progress()
+    {
+        return $this->hasMany(Progress::class);
+    }
     public function getDashboardUrl(): string
     {
         return match ($this->role?->slug) {
