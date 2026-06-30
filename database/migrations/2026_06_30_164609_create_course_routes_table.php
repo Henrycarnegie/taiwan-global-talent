@@ -11,19 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('courses', function (Blueprint $table) {
+        Schema::create('course_routes', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->text('description');
-            $table->string('mandarin_level');
-            $table->foreignId('category_id')
-                ->nullable()
-                ->constrained('course_categories')
-                ->onDelete('set null');
-            $table->boolean('is_published')->default(false);
+            $table->string('slug')->unique();
+            $table->string('icon')->nullable();
+            $table->integer('order')->default(0);
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
-
     }
 
     /**
@@ -31,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('courses');
+        Schema::dropIfExists('course_routes');
     }
 };

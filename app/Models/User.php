@@ -9,6 +9,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
+use App\Models\AdminProfile;
+use App\Models\StudentProfile;
+use App\Models\TeacherProfile;
+use App\Models\CompanyProfile;
+
 
 class User extends Authenticatable implements FilamentUser
 {
@@ -58,6 +63,11 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasOne(CompanyProfile::class);
     }
 
+    public function adminProfile(): HasOne
+    {
+        return $this->hasOne(AdminProfile::class); 
+    }
+
     // Helpers untuk role checking
     public function isAdmin(): bool
     {
@@ -78,6 +88,7 @@ class User extends Authenticatable implements FilamentUser
     {
         return $this->role?->slug === 'student';
     }
+    
     public function progress()
     {
         return $this->hasMany(Progress::class);

@@ -39,8 +39,8 @@ class HandleInertiaRequests extends Middleware
         $user = Auth::user();
 
         if ($user) {
-            $relation = match ($user->role_id) {
-                1 => 'adminProfile',
+            $relation = match ((int) $user->role_id) {
+                1 => null,
                 2 => 'teacherProfile',
                 3 => 'studentProfile',
                 4 => 'companyProfile',

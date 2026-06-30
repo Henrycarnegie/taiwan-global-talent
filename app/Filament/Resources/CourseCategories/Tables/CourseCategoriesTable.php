@@ -1,41 +1,31 @@
 <?php
 
-namespace App\Filament\Resources\Lessons\Tables;
+namespace App\Filament\Resources\CourseCategories\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use App\Models\Course;
 
 
-class LessonsTable
+class CourseCategoriesTable
 {
     public static function configure(Table $table): Table
     {
         return $table
             ->columns([
-                TextColumn::make('title')
+                TextColumn::make('name')
                     ->sortable()
                     ->searchable(),
-
-                TextColumn::make('content')
-                    ->limit(50)
+                TextColumn::make('slug')
                     ->sortable()
                     ->searchable(),
-
                 TextColumn::make('order')
-                    ->numeric()
                     ->sortable(),
             ])
             ->filters([
-                SelectFilter::make('course_id')
-                    ->relationship('course', 'title')
-                    ->label('Course')
-                    ->multiple()
-                    ->preload(),
+                //
             ])
             ->recordActions([
                 EditAction::make(),
