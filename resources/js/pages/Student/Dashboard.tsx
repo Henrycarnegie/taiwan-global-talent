@@ -1,29 +1,16 @@
-import { router, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 import ProfileForm from '@/components/Form/ProfileForm';
 import ProfileDropdown from '@/components/UI/ProfileDropdown';
 import TabButton from '@/components/UI/TabButton';
+import { useAuth } from '@/hooks/useAuth';
 import Community from './Community/Index';
 import MandarinCourse from './MandarinCourse/Index';
 import DashboardOverview from './Overview/Index';
 
 type DashboardTab = 'overview' | 'profile' | 'mandarin' | 'community';
-interface AuthUser {
-    id: number;
-    name: string;
-    email: string;
-    avatar?: string;
-    role: string;
-}
 
 export default function StudentDashboard({ profile }: any) {
-    const { auth } = usePage().props as unknown as {
-        auth: {
-            user: AuthUser;
-        };
-    };
-
-    console.log(auth.user.name);
+    const { user } = useAuth();
     const [activeTab, setActiveTab] = useState<DashboardTab>('overview');
 
     return (
@@ -40,7 +27,7 @@ export default function StudentDashboard({ profile }: any) {
                             </div>
                             <div>
                                 <p className="text-sm font-medium text-gray-700">
-                                    {auth?.user?.name || 'Guest'}
+                                    {user.name}
                                 </p>
                                 <h1 className="text-base leading-tight font-bold text-gray-900 sm:text-lg">
                                     Talent Platform
@@ -61,12 +48,6 @@ export default function StudentDashboard({ profile }: any) {
                                 onClick={() => setActiveTab('overview')}
                             />
                             <TabButton
-                                label="Complete Profile"
-                                subLabel="完善檔案"
-                                isActive={activeTab === 'profile'}
-                                onClick={() => setActiveTab('profile')}
-                            />
-                            <TabButton
                                 label="Mandarin Courses"
                                 subLabel="華語課程"
                                 isActive={activeTab === 'mandarin'}
@@ -78,34 +59,18 @@ export default function StudentDashboard({ profile }: any) {
                                 isActive={activeTab === 'community'}
                                 onClick={() => setActiveTab('community')}
                             />
+                            <TabButton
+                                label="Complete Profile"
+                                subLabel="完善檔案"
+                                isActive={activeTab === 'profile'}
+                                onClick={() => setActiveTab('profile')}
+                            />
                         </nav>
 
                         {/* Info Akun / Avatar */}
                         {/* Di mobile, diletakkan di pojok kanan atas memanfaatkan posisi absolute atau disesuaikan tata letaknya */}
                         <div className="absolute top-4 right-4 shrink-0 md:static">
-                            <ProfileDropdown
-                                profile={profile}
-                                onLogout={() => {
-                                    router.post('/logout');
-                                }}
-                                onProfileUpdate={(updatedData) => {
-                                    router.put(
-                                        '/student/profile',
-                                        updatedData,
-                                        {
-                                            onSuccess: () => {
-                                                setActiveTab('overview');
-                                            },
-                                            onError: (errors) => {
-                                                console.error(
-                                                    'Gagal menyimpan profil:',
-                                                    errors,
-                                                );
-                                            },
-                                        },
-                                    );
-                                }}
-                            />
+                            <ProfileDropdown />
                         </div>
                     </div>
                 </div>

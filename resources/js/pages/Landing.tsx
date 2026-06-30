@@ -5,10 +5,10 @@ import Features from '@/components/Landing/Features';
 import Footer from '@/components/Landing/Footer';
 import Hero from '@/components/Landing/Hero';
 import HowItWorks from '@/components/Landing/HowItWorks';
+import Membership from '@/components/Landing/Membership';
 import Navbar from '@/components/Landing/Navbar';
 import Stats from '@/components/Landing/Stats';
 import CorePillars from '@/components/UI/CorePillars';
-import Membership from '@/components/Landing/Membership'; // BARU
 
 export default function Landing() {
     return (
@@ -17,12 +17,9 @@ export default function Landing() {
             <Hero />
             <Stats />
             
-            {/* Bagian Eksplorasi Program Utama */}
             <CorePillars />
             
             <Features />
-            
-            {/* Skema Membership & Keuntungan Komunitas */}
             <Membership />
             
             <HowItWorks />
