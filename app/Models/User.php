@@ -2,27 +2,22 @@
 
 namespace App\Models;
 
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Filament\Models\Contracts\FilamentUser;
-use Filament\Panel;
-use App\Models\AdminProfile;
-use App\Models\StudentProfile;
-use App\Models\TeacherProfile;
-use App\Models\CompanyProfile;
-
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements FilamentUser
 {
-    use HasFactory, Notifiable;
+    use HasFactory, HasRoles, Notifiable;
 
-     public function canAccessPanel(Panel $panel): bool
+    public function canAccessPanel(Panel $panel): bool
     {
-        // Session user yang login harus memiliki role_id = 1 (Admin)
-        return $this->role_id === 1;
+        return $this->hasRole('admin');
     }
 
     protected $fillable = [
@@ -65,7 +60,7 @@ class User extends Authenticatable implements FilamentUser
 
     public function adminProfile(): HasOne
     {
-        return $this->hasOne(AdminProfile::class); 
+        return $this->hasOne(AdminProfile::class);
     }
 
     // Helpers untuk role checking
@@ -88,11 +83,12 @@ class User extends Authenticatable implements FilamentUser
     {
         return $this->role?->slug === 'student';
     }
-    
+
     public function progress()
     {
         return $this->hasMany(Progress::class);
     }
+
     public function getDashboardUrl(): string
     {
         return match ($this->role?->slug) {

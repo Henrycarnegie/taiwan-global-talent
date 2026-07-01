@@ -6,41 +6,35 @@ use App\Filament\Resources\Students\Pages\CreateStudent;
 use App\Filament\Resources\Students\Pages\EditStudent;
 use App\Filament\Resources\Students\Pages\ListStudents;
 use App\Models\User;
-use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
-use Filament\Tables\Table; 
-use Filament\Forms\Components\TextInput;
+use BackedEnum;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Tables\Columns\TextColumn;
+use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use BackedEnum;
 
 class StudentResource extends Resource
 {
-    // Menggunakan model User karena data akun ada di tabel users
     protected static ?string $model = User::class;
 
-    // 2. Hapus deklarasi type-hinting 'string|BackedEnum|null' agar serasi dengan kelas induk v5
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-academic-cap';
 
     protected static ?string $navigationLabel = 'Students';
 
     protected static ?string $slug = 'students';
 
-    /**
-     * Filter global agar menu ini HANYA menampilkan user yang ber-role Student (role_id = 2)
-     */
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->where('role_id', 2); 
+        return parent::getEloquentQuery()->whereHas('roles', function (Builder $query) {
+            $query->where('name', 'student');
+        });
     }
 
-    /**
-     * 3. Struktur form diubah menggunakan Schema $schema : Schema
-     */
     public static function form(Schema $schema): Schema
     {
         return $schema
@@ -49,7 +43,7 @@ class StudentResource extends Resource
                     ->label('Name')
                     ->required()
                     ->maxLength(255),
-                    
+
                 TextInput::make('email')
                     ->label('Email')
                     ->email()
@@ -103,7 +97,7 @@ class StudentResource extends Resource
                     ->sortable(),
                 TextColumn::make('email')
                     ->searchable(),
-                
+
                 TextColumn::make('studentProfile.university')
                     ->label('University')
                     ->searchable(),

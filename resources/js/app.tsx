@@ -1,6 +1,7 @@
 import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
+import { route } from '../../vendor/tightenco/ziggy';
 import { LanguageProvider } from './context/LanguageContext';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
@@ -21,6 +22,9 @@ createInertiaApp({
         if (!el || typeof window === 'undefined') {
             return;
         }
+
+        // Fix window.route
+        (window as any).route = route;
 
         createRoot(el).render(
             <LanguageProvider>

@@ -31,17 +31,15 @@ class AdminPanelProvider extends PanelProvider
             return [];
         }
 
-        // 1. HANYA simpan data Array mentah dari database ke dalam Cache
         $dynamicRoutesData = Cache::remember('dynamic_course_sidebar_data', now()->addDays(7), function () {
             return CourseRoute::where('is_active', true)
                 ->orderBy('order')
-                ->get(['title', 'slug', 'icon']) // Ambil kolom yang dibutuhkan saja
-                ->toArray(); // 👈 Ubah menjadi array murni agar aman di-serialize
+                ->get(['title', 'slug', 'icon'])
+                ->toArray(); 
         });
 
         $menuItems = [];
 
-        // 2. Gambar objek NavigationItem di luar Cache (Setiap request, tapi tanpa query DB)
         foreach ($dynamicRoutesData as $route) {
             $menuItems[] = NavigationItem::make($route['title'])
                 ->icon($route['icon'] ?? 'heroicon-o-chevron-right')
@@ -80,6 +78,7 @@ class AdminPanelProvider extends PanelProvider
                 FilamentInfoWidget::class,
             ])
             ->middleware([
+                Authenticate::class,
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,

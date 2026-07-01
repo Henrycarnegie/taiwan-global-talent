@@ -39,13 +39,15 @@ class HandleInertiaRequests extends Middleware
         $user = Auth::user();
 
         if ($user) {
-            $relation = match ((int) $user->role_id) {
-                1 => null,
-                2 => 'teacherProfile',
-                3 => 'studentProfile',
-                4 => 'companyProfile',
-                default => null,
-            };
+            $relation = null;
+
+            if ($user->hasRole('teacher')) {
+                $relation = 'teacherProfile';
+            } elseif ($user->hasRole('student')) {
+                $relation = 'studentProfile';
+            } elseif ($user->hasRole('company')) {
+                $relation = 'companyProfile';
+            }
 
             if ($relation) {
                 $user->load($relation);
@@ -63,29 +65,29 @@ class HandleInertiaRequests extends Middleware
                     'name' => $user->name,
                     'email' => $user->email,
                     'avatar' => $user->avatar,
-                    'role' => (string) $user->role_id,
-
-                    'profile' => $activeProfile ? match ($user->role_id) {
+                    'roles' => $user->getRoleNames(),
+                    'role' => $user->roles->first()?->name,
+                    'profile' => $activeProfile ? match ($user->roles?->first()?->name) {
                         // Admin
-                        1 => [
+                        'admin' => [
                             'id' => $activeProfile->id,
                         ],
                         // Teacher
-                        2 => [
+                        'teacher' => [
                             'id' => $activeProfile->id,
                             'bio' => $activeProfile->bio,
                             'expertise' => $activeProfile->expertise,
                             'certification_path' => $activeProfile->certification_path,
                         ],
                         // Student
-                        3 => [
+                        'student' => [
                             'id' => $activeProfile->id,
                             'country' => $activeProfile->country,
                             'university' => $activeProfile->university,
                             'major' => $activeProfile->major,
                         ],
                         // Company
-                        4 => [
+                        'company' => [
                             'id' => $activeProfile->id,
                             'company_name' => $activeProfile->company_name,
                             'industry' => $activeProfile->industry,
