@@ -6,7 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class TeacherProfile extends Model
 {
-    protected $fillable = ['user_id', 'bio', 'expertise', 'certification_path'];
+    protected $fillable = [
+        'user_id',
+        'full_name',
+        'phone',
+        'bio',
+        'cv_path',
+        'expertise',
+        'certificate_path',
+        'learning_goal',
+        'status',
+    ];
 
     public function user()
     {

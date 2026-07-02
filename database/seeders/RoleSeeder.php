@@ -2,9 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Role;
-use App\Models\User;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
 
 class RoleSeeder extends Seeder
 {
@@ -13,15 +12,9 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-        $roles = [
-            ['id' => 1, 'name' => 'Admin', 'slug' => 'admin'],
-            ['id' => 2, 'name' => 'Teacher', 'slug' => 'teacher'],
-            ['id' => 3, 'name' => 'Student', 'slug' => 'student'],
-            ['id' => 4, 'name' => 'Company Admin', 'slug' => 'company'],
-        ];
-
-        foreach ($roles as $role) {
-            Role::updateOrCreate(['id' => $role['id']], $role);
-        }
+        Role::firstOrCreate(['name' => 'admin']);
+        Role::firstOrCreate(['name' => 'teacher']);
+        Role::firstOrCreate(['name' => 'student']);
+        Role::firstOrCreate(['name' => 'company']);
     }
 }

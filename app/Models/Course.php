@@ -15,10 +15,7 @@ class Course extends Model
         'mandarin_level',
         'is_published',
     ];
-    public function lessons()
-    {
-        return $this->hasMany(Lesson::class);
-    }
+
     public function isCompletedByUser($userId)
     {
         $totalLessons = $this->lessons()->count();
@@ -28,5 +25,15 @@ class Course extends Model
             })->count();
 
         return $totalLessons > 0 && $completedLessons === $totalLessons;
+    }
+
+    public function lessons()
+    {
+        return $this->hasMany(Lesson::class);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(CourseCategory::class);
     }
 }

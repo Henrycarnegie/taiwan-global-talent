@@ -6,14 +6,16 @@ use App\Filament\Resources\Teachers\Pages\CreateTeacher;
 use App\Filament\Resources\Teachers\Pages\EditTeacher;
 use App\Filament\Resources\Teachers\Pages\ListTeachers;
 use App\Models\User;
-use Filament\Resources\Resource;
-use Filament\Schemas\Schema; 
-use Filament\Tables\Table;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
-use Filament\Tables\Columns\TextColumn;
-use Illuminate\Database\Eloquent\Builder;
 use BackedEnum;
+use App\Filament\Resources\Teachers\Schemas\TeacherForm;
+use App\Filament\Resources\Teachers\Tables\TeachersTable;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class TeacherResource extends Resource
 {
@@ -27,67 +29,19 @@ class TeacherResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->where('role_id', 3); 
+        return parent::getEloquentQuery()->whereHas('roles', function (Builder $query) {
+            $query->where('name', 'teacher');
+        });
     }
 
     public static function form(Schema $schema): Schema
     {
-        return $schema
-            ->components([
-                TextInput::make('name')
-                    ->label('Full Name')
-                    ->required()
-                    ->maxLength(255),
-                    
-                TextInput::make('email')
-                    ->label('Email')
-                    ->email()
-                    ->required()
-                    ->maxLength(255),
-
-                TextInput::make('password')
-                    ->password()
-                    ->required(fn (string $context): bool => $context === 'create')
-                    ->dehydrated(fn ($state) => filled($state))
-                    ->label('Password'),
-
-                TextInput::make('teacherProfile.university')
-                    ->label('Graduated From / University'),
-
-                TextInput::make('teacherProfile.major')
-                    ->label('Expertise / Major'),
-
-                TextInput::make('teacherProfile.skills')
-                    ->label('Skills (e.g., Mandarin, Teaching)'),
-
-                Textarea::make('teacherProfile.bio')
-                    ->label('Teacher Biography')
-                    ->rows(3),
-            ]);
+        return TeacherForm::configure($schema);
     }
 
     public static function table(Table $table): Table
     {
-        return $table
-            ->columns([
-                TextColumn::make('name')
-                    ->label('Name')
-                    ->searchable()
-                    ->sortable(),
-
-                TextColumn::make('email')
-                    ->searchable(),
-
-                TextColumn::make('teacherProfile.university')
-                    ->label('University')
-                    ->searchable(),
-
-                TextColumn::make('teacherProfile.major')
-                    ->label('Major/Expertise'),
-            ])
-            ->filters([
-                //
-            ]);
+        return TeachersTable::configure($table);
     }
 
     public static function getPages(): array

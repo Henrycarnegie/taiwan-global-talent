@@ -57,9 +57,17 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
-            $table->string('bio')->nullable();
+            $table->string('full_name');
+            $table->string('phone')->nullable();
+            $table->string('cv_path')->nullable();
             $table->string('expertise')->nullable();
-            $table->string('certification_path')->nullable();
+            $table->string('certificate_path')->nullable();
+            $table->string('learning_goal')->nullable();
+            $table->string('bio')->nullable();
+
+            // Approval Status (Approved, Rejected, Pending)
+            $table->string('status')->default('pending');
+
             $table->timestamps();
         });
     }
