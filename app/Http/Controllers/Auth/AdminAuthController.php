@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -10,30 +11,32 @@ class AdminAuthController extends Controller
 {
     public function login(Request $request)
     {
-        // 1. Validasi input
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
 
-        // 2. Tambahkan kondisi harus ber-role admin (role_id = 1)
-        $credentials['role_id'] = 1;
+        $user = User::where('email', $request->email)->first();
 
-        // 3. Lakukan Attempt Login (Otomatis mencocokkan password & membuat session)
+        if (! $user || ! $user->hasRole('admin')) {
+            return response()->json([
+                'message' => 'Akses ditolak. Anda bukan Admin.',
+            ], 403);
+        }
+
         if (Auth::attempt($credentials, $request->filled('remember'))) {
-            // Regenerate session untuk mencegah serangan Session Fixation
+            // Regenerate session untuk keamanan
             $request->session()->regenerate();
 
             return response()->json([
                 'success' => true,
                 'user' => Auth::user(),
-                'message' => 'Login Admin berhasil menggunakan Session!'
+                'message' => 'Login Admin berhasil menggunakan Session!',
             ], 200);
         }
 
-        // 4. Jika gagal
         return response()->json([
-            'message' => 'Email atau password Admin salah.'
+            'message' => 'Email atau password Admin salah.',
         ], 401);
     }
 }

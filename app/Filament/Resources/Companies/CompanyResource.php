@@ -27,7 +27,9 @@ class CompanyResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->where('role_id', 4); 
+        return parent::getEloquentQuery()->whereHas('roles', function (Builder $query) {
+            $query->where('name', 'company');
+        });
     }
 
     public static function form(Schema $schema): Schema

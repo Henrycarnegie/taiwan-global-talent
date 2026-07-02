@@ -16,9 +16,14 @@ return new class extends Migration
             $table->string('title');
             $table->text('description');
             $table->string('mandarin_level');
+            $table->foreignId('category_id')
+                ->nullable()
+                ->constrained('course_categories')
+                ->onDelete('set null');
             $table->boolean('is_published')->default(false);
             $table->timestamps();
         });
+
     }
 
     /**

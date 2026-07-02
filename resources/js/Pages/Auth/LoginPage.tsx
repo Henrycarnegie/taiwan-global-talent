@@ -28,7 +28,7 @@ const LoginPage = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    Accept: 'application/json', // 👈 Memaksa Laravel mengembalikan JSON bahkan saat error 500
+                    Accept: 'application/json',
                     'X-Requested-With': 'XMLHttpRequest',
                     'X-CSRF-TOKEN':
                         document

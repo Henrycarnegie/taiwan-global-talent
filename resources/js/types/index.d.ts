@@ -1,3 +1,5 @@
+import type { Router, Config, RouteParam } from '../ziggy';
+
 export interface TeacherProfile {
     id: number;
     bio: string | null;
@@ -29,7 +31,7 @@ export interface AuthUser {
     name: string;
     email: string;
     avatar?: string;
-    role: '1' | '2' | '3' | '4';
+    role: string;
     email_verified_at: string | null;
     created_at: string;
     updated_at: string;
@@ -44,3 +46,11 @@ declare module '@inertiajs/core' {
         sidebarOpen?: boolean;
     }
 }
+
+declare global {
+    var route: Router & ((name?: string, params?: any, absolute?: boolean, config?: any) => string);
+    var ZiggyConfig: Config;
+    var ZiggyRouteParam: RouteParam;
+}
+
+export {};
