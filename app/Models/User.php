@@ -55,7 +55,7 @@ class User extends Authenticatable implements FilamentUser
 
     public function companyProfile(): HasOne
     {
-        return $this->hasOne(CompanyProfile::class);
+        return $this->hasOne(CompanyProfile::class, 'user_id');
     }
 
     public function adminProfile(): HasOne

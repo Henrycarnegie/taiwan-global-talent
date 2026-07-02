@@ -21,7 +21,10 @@ return Application::configure(basePath: dirname(__DIR__))
             AddLinkHeadersForPreloadedAssets::class,
         ]);
         $middleware->alias([
+            'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
+            'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
             'role' => RoleMiddleware::class,
+            'check.company.status' => \App\Http\Middleware\CheckCompanyStatus::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

@@ -4,8 +4,8 @@
 use App\Http\Controllers\Auth\AdminAuthController;
 use App\Http\Controllers\Auth\GoogleAuthController;
 // Company
-use App\Http\Controllers\Company\CompanyApplyController;
 use App\Http\Controllers\Company\DashboardController as CompanyDashboardController;
+use App\Http\Controllers\Company\CompanyApplyController;
 // Course
 use App\Http\Controllers\CourseRouteController;
 // Profile
@@ -40,9 +40,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // ---------------------------------------------------------
 
     // Company Apply & Waiting
-    Route::get('/company/apply', [CompanyApplyController::class, 'create'])->name('company.apply');
-    Route::post('/company/apply', [CompanyApplyController::class, 'store'])->name('company.store');
-    Route::get('/company/waiting-approval', [CompanyApplyController::class, 'waiting'])->name('company.waiting');
+    Route::prefix('company/apply')->name('company.')->group(function () {
+        Route::get('/', [CompanyApplyController::class, 'create'])->name('register');
+        Route::post('/store', [CompanyApplyController::class, 'store'])->name('store');
+        Route::get('/waiting', [CompanyApplyController::class, 'waiting'])->name('waiting');
+    });
+
+    Route::middleware(['check.company.status'])->prefix('company')->name('company.')->group(function () {
+        Route::get('/dashboard', [CompanyDashboardController::class, 'index'])->name('dashboard');
+    });
 
     // Teacher Apply & Waiting
     Route::get('/teacher/apply', [TeacherApplyController::class, 'create'])->name('teacher.apply');
