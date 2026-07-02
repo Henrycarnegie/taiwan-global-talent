@@ -37,16 +37,46 @@ return new class extends Migration
         Schema::create('company_profiles', function (Blueprint $table) {
             $table->id();
 
-            // Gunakan cara eksplisit yang sama
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            // 1. Akun Pemilik / Admin Utama Perusahaan
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
 
-            $table->string('company_name');
-            $table->string('industry')->nullable();
-            $table->string('website')->nullable();
-            $table->text('address')->nullable();
-            $table->string('tax_id')->nullable();
+            // 2. Informasi Legal & Verifikasi (Untuk Keperluan Admin Web)
+            $table->string('company_legal_name');
+            $table->string('tax_id')->nullable()->unique();
+            $table->string('business_registration_path')->nullable();
+
+            // 3. Informasi Branding Publik (Ditampilkan di Halaman Lowongan)
+            $table->string('company_display_name');
+            $table->string('slug')->unique();
+            $table->string('logo_path')->nullable();
+            $table->string('banner_path')->nullable();
+            $table->string('industry');
+            $table->string('company_size')->nullable();
+            $table->year('founded_year')->nullable();
+            $table->string('website_url')->nullable();
+            $table->text('bio')->nullable();
+            $table->longText('description')->nullable();
+
+            // 4. Informasi Lokasi & Kontak Resmi Perusahaan
+            $table->text('hq_address')->nullable();
+            $table->string('city')->nullable();
+            $table->string('country')->default('Taiwan');
+            $table->string('official_email')->nullable();
+
+            // 5. Informasi Person In Charge (PIC) / Pendaftar Pertama
+            $table->string('pic_name'); 
+            $table->string('pic_phone');
+            $table->string('pic_position'); 
+
+            // 6. Sistem Manajemen Status & Verifikasi
+            $table->enum('status', ['pending', 'approved', 'rejected', 'suspended'])->default('pending');
+
+            $table->text('rejection_reason')->nullable();
+
+            $table->timestamp('verified_at')->nullable();
+            
             $table->timestamps();
+            $table->softDeletes();
         });
 
         // 3. Teacher Profile
@@ -66,8 +96,12 @@ return new class extends Migration
             $table->string('bio')->nullable();
 
             // Approval Status (Approved, Rejected, Pending)
-            $table->string('status')->default('pending');
+            $table->enum('status', ['pending', 'approved', 'rejected', 'suspended'])->default('pending');
 
+            $table->text('rejection_reason')->nullable();
+
+            $table->timestamp('verified_at')->nullable();
+            
             $table->timestamps();
         });
     }

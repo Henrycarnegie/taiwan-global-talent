@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 
 export default function Waiting() {
     const [copied, setCopied] = useState(false);
-    const adminWhatsApp = "6281234567890"; // Replace with your admin's WhatsApp number
+    const adminWhatsApp = "886905787970"; 
 
     const handleLogout = (e: React.FormEvent) => {
         e.preventDefault();

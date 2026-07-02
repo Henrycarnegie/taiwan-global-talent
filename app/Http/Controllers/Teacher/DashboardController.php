@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Teacher;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
-
 
 class DashboardController extends Controller
 {
@@ -14,12 +14,15 @@ class DashboardController extends Controller
      */
     public function index()
     {
+        $user = Auth::user()->load('teacherProfile');
+
         return Inertia::render('Teacher/Dashboard', [
             'stats' => [
                 'courses' => 3,
                 'certificates' => 2,
                 'progress' => 70,
-            ]
+            ],
+            'auth' => $user,
         ]);
     }
 

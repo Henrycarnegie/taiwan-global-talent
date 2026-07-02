@@ -47,7 +47,6 @@ class GoogleAuthController extends Controller
             ->first();
 
         try {
-            // Gunakan $createdUser secara lokal di dalam transaksi untuk menjamin object tidak null
             $user = DB::transaction(function () use ($user, $googleUser, $roleName) {
                 if (! $user) {
                     // Jika User baru, buat akunnya
@@ -62,16 +61,18 @@ class GoogleAuthController extends Controller
                     // Assign role ke user yang baru dibuat
                     $newUser->assignRole($roleName);
 
-                    // Buat profil kosong/default berdasarkan role
-                    match ($roleName) {
-                        'student' => $newUser->studentProfile()->create(['country' => 'Taiwan']),
-                        'teacher' => $newUser->teacherProfile()->create([
+                    // Buat data profil awal berdasarkan role
+                    if ($roleName === 'student') {
+                        $newUser->studentProfile()->create(['country' => 'Taiwan']);
+                    } elseif ($roleName === 'teacher') {
+                        $newUser->teacherProfile()->create([
                             'full_name' => $googleUser->getName(),
                             'status' => 'pending',
-                        ]),
-                        'company' => $newUser->companyProfile()->create(['status' => 'pending']),
-                        default => null
-                    };
+                        ]);
+                    } elseif ($roleName === 'company') {
+                        // KITA JANGAN BUAT PROFIL DULU DI SINI JIKA MAU HR MENGISI FORM NYA SENDIRI
+                        // Cukup biarkan kosong, karena nanti akan dibuat saat submit form pendaftaran (store)
+                    }
 
                     return $newUser;
                 } else {
@@ -86,28 +87,28 @@ class GoogleAuthController extends Controller
                 }
             });
         } catch (\Exception $e) {
-            // Log error untuk mempermudah debugging jika ada error lain (seperti nama table salah)
-            \Log::error('Google Auth Error: '.$e->getMessage());
-
-            return redirect('/login')->with('error', 'Gagal memproses pembuatan akun: '.$e->getMessage());
+            // PENTING: Jika error, tampilkan detail error-nya di layar agar kita tahu field apa yang bermasalah
+            dd($e->getMessage(), $e->getTraceAsString());
         }
 
-        // Login-kan user ke sistem
         Auth::login($user, true);
         request()->session()->regenerate();
 
-        // 2. LOGIKA REDIRECT BERDASARKAN BEHAVIOR ROLE
-
+        // 2. LOGIKA REDIRECT SETELAH BERHASIL LOGIN
         if ($user->hasRole('student')) {
             return redirect()->route('student.dashboard');
         }
 
         if ($user->hasRole('company')) {
             $companyProfile = $user->companyProfile;
-            if (! $companyProfile || empty($companyProfile->company_name)) {
-                return redirect()->route('company.apply');
+
+            // Goal Anda: HR baru -> Belum punya profil -> Masuk ke Form Pendaftaran
+            if (! $companyProfile) {
+                return redirect()->route('company.register');
             }
-            if ($companyProfile->status !== 'approved') { // Sesuai skema status
+
+            // Jika sudah isi form, cek statusnya
+            if ($companyProfile->status === 'pending' || $companyProfile->status === 'rejected') {
                 return redirect()->route('company.waiting');
             }
 
@@ -117,18 +118,14 @@ class GoogleAuthController extends Controller
         if ($user->hasRole('teacher')) {
             $teacherProfile = $user->teacherProfile;
 
-            // Perbaikan 2: Cek kolom yang benar-benar ada di database Anda (misal cv_path atau phone)
-            // Jika cv_path masih kosong, artinya dia BELUM melengkapi form pendaftaran guru
             if (! $teacherProfile || empty($teacherProfile->cv_path)) {
                 return redirect()->route('teacher.apply');
             }
 
-            // Perbaikan 3: Cek status menggunakan kolom 'status' (pending / rejected)
             if ($teacherProfile->status === 'pending' || $teacherProfile->status === 'rejected') {
                 return redirect()->route('teacher.waiting');
             }
 
-            // Jika status sudah 'approved' baru masuk ke dashboard
             return redirect()->route('teacher.dashboard');
         }
 
