@@ -2,11 +2,13 @@
 
 namespace App\Filament\Resources\Vocabularies\Schemas;
 
+use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Schemas\Components\Utilities\Set;
+use Filament\Notifications\Notification;
 use Filament\Schemas\Schema;
 use Google\Cloud\TextToSpeech\V1\AudioConfig;
 use Google\Cloud\TextToSpeech\V1\AudioEncoding;
@@ -28,81 +30,114 @@ class VocabularyForm
                 ->required()
                 ->searchable(),
 
+            TextInput::make('sort_order')
+                ->numeric()
+                ->default(1)
+                ->required(),
+
+            Hidden::make('audio_hash'),
+
             TextInput::make('hanzi')
                 ->label('Hanzi')
                 ->required()
-                ->lazy()
-                ->afterStateUpdated(function (Set $set, $state, callable $get) {
+                ->suffixAction(
+                    Action::make('generateAudio')
+                        ->label('Generate')
+                        ->icon('heroicon-o-speaker-wave')
+                        ->button() // tampil sebagai tombol, bukan icon saja
+                        ->color('primary')
+                        ->action(function (callable $get, callable $set) {
 
-                    if (blank($state)) {
-                        return;
-                    }
+                            $text = trim($get('hanzi'));
 
-                    try {
-                        $credentialsPath = storage_path(
-                            'app/google/taiwan-global-talent-e1d95c4f9649.json'
-                        );
+                            if (blank($text)) {
+                                Notification::make()
+                                    ->title('Hanzi cannot be empty')
+                                    ->danger()
+                                    ->send();
 
-                        $client = new TextToSpeechClient([
-                            'credentials' => $credentialsPath,
-                        ]);
+                                return;
+                            }
 
-                        /**
-                         * 🔥 IMPORTANT:
-                         * gunakan HANZI, bukan pinyin
-                         */
-                        $text = $state;
+                            $hash = md5($text);
 
-                        $input = (new SynthesisInput)
-                            ->setText($text);
+                            // Audio sudah sesuai
+                            if (
+                                $get('audio_hash') === $hash &&
+                                filled($get('audio_path')) &&
+                                Storage::disk('public')->exists($get('audio_path'))
+                            ) {
+                                Notification::make()
+                                    ->title('Audio is already up to date')
+                                    ->info()
+                                    ->send();
 
-                        /**
-                         * 🎯 Taiwan Mandarin Voice
-                         * (fallback ke cmn-TW jika name tidak tersedia)
-                         */
-                        $voice = (new VoiceSelectionParams)
-                            ->setLanguageCode('cmn-TW');
+                                return;
+                            }
 
-                        /**
-                         * 🎧 kualitas audio
-                         */
-                        $audioConfig = (new AudioConfig)
-                            ->setAudioEncoding(AudioEncoding::MP3)
-                            ->setSpeakingRate(0.90)
-                            ->setPitch(0.0);
+                            try {
 
-                        /**
-                         * Request (v2 style)
-                         */
-                        $request = (new SynthesizeSpeechRequest)
-                            ->setInput($input)
-                            ->setVoice($voice)
-                            ->setAudioConfig($audioConfig);
+                                // Hapus audio lama jika ada
+                                if (
+                                    filled($get('audio_path')) &&
+                                    Storage::disk('public')->exists($get('audio_path'))
+                                ) {
+                                    Storage::disk('public')->delete($get('audio_path'));
+                                }
 
-                        $response = $client->synthesizeSpeech($request);
+                                $credentialsPath = storage_path(env('GOOGLE_APPLICATION_CREDENTIALS'));
 
-                        $audioContent = $response->getAudioContent();
+                                $client = new TextToSpeechClient([
+                                    'credentials' => $credentialsPath,
+                                ]);
 
-                        $filename = 'tts/'.Str::uuid().'.mp3';
+                                $input = (new SynthesisInput)
+                                    ->setText($text);
 
-                        Storage::disk('public')->put($filename, $audioContent);
+                                $voice = (new VoiceSelectionParams)
+                                    ->setLanguageCode('cmn-TW');
 
-                        $set('audio_path', $filename);
+                                $audioConfig = (new AudioConfig)
+                                    ->setAudioEncoding(AudioEncoding::MP3)
+                                    ->setSpeakingRate(0.75)
+                                    ->setPitch(0);
 
-                        $client->close();
+                                $request = (new SynthesizeSpeechRequest)
+                                    ->setInput($input)
+                                    ->setVoice($voice)
+                                    ->setAudioConfig($audioConfig);
 
-                    } catch (\Exception $e) {
-                        \Log::error('Google TTS Error: '.$e->getMessage());
-                    }
-                }),
+                                $response = $client->synthesizeSpeech($request);
 
-            TextInput::make('pinyin')
-                ->label('Pinyin (display only)')
-                ->required(),
+                                $filename = 'tts/'.Str::uuid().'.mp3';
 
-            TextInput::make('meaning')
-                ->label('Meaning')
-                ->required(),
+                                Storage::disk('public')->put(
+                                    $filename,
+                                    $response->getAudioContent()
+                                );
+
+                                $set('audio_path', $filename);
+                                $set('audio_hash', $hash);
+
+                                $client->close();
+
+                                Notification::make()
+                                    ->title('Audio generated successfully')
+                                    ->success()
+                                    ->send();
+
+                            } catch (\Exception $e) {
+
+                                \Log::error($e);
+
+                                Notification::make()
+                                    ->title('Failed to generate audio')
+                                    ->body($e->getMessage())
+                                    ->danger()
+                                    ->send();
+                            }
+                        })
+                ),
 
             FileUpload::make('audio_path')
                 ->label('Audio')
@@ -113,9 +148,12 @@ class VocabularyForm
                 ->dehydrated()
                 ->helperText('Auto-generated from Hanzi'),
 
-            TextInput::make('sort_order')
-                ->numeric()
-                ->default(1)
+            TextInput::make('pinyin')
+                ->label('Pinyin (display only)')
+                ->required(),
+
+            TextInput::make('meaning')
+                ->label('Meaning')
                 ->required(),
 
             Toggle::make('is_active')
