@@ -1,104 +1,68 @@
-import { ShieldCheck, TrendingUp, Handshake, Target } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 const steps = [
-    {
-        number: '01',
-        title: 'Create & Auth Profile',
-        desc: 'Masuk instan menggunakan Google Auth dan lengkapi data profil publik talenta Anda.',
-        icon: ShieldCheck,
-        badge: 'Setup',
-    },
-    {
-        number: '02',
-        title: 'Build Skills & Language',
-        desc: 'Unggah portofolio digital Anda, ikuti webinar, dan perbarui skor sertifikasi bahasa Mandarin (TOCFL).',
-        icon: TrendingUp,
-        badge: 'Develop',
-    },
-    {
-        number: '03',
-        title: 'Auto-Match Ecosystem',
-        desc: 'Sistem algoritma mencocokkan kualifikasi profil Anda secara otomatis dengan ribuan lowongan di Taiwan.',
-        icon: Handshake,
-        badge: 'Matching',
-    },
-    {
-        number: '04',
-        title: 'Apply & Claim Scholarship',
-        desc: 'Ajukan lamaran kerja langsung ke perusahaan top atau klaim beasiswa studi yang paling cocok untuk Anda.',
-        icon: Target,
-        badge: 'Success',
-    },
+    [
+        '01',
+        'Tell us who you are',
+        'Create your profile in minutes and show us what you want to achieve.',
+    ],
+    [
+        '02',
+        'Follow your pathway',
+        'Learn Mandarin, explore funding, and build your professional story at your pace.',
+    ],
+    [
+        '03',
+        'Meet your next opportunity',
+        'Connect with universities, mentors, and employers ready to welcome global talent.',
+    ],
 ];
 
-const HowItWorks = () => {
+export default function HowItWorks() {
     return (
         <section
             id="how"
-            className="border-y border-slate-200/60 bg-slate-50 px-6 py-24"
+            className="overflow-hidden bg-[#1f4d46] px-5 py-24 text-[#fffaf0] sm:px-8 lg:py-32"
         >
-            <div className="mx-auto max-w-6xl">
-                {/* Header Section */}
-                <div className="mx-auto mb-20 max-w-2xl text-center">
-                    <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-bold tracking-widest text-[#0A2A66] uppercase">
-                        Alur Kerja Sistem
-                    </span>
-                    <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-slate-900 md:text-4xl">
-                        Bagaimana Platform Ini Membantu Anda?
-                    </h2>
-                    <p className="mt-4 text-sm leading-relaxed text-slate-500">
-                        Proses digitalisasi terstruktur untuk mempersiapkan
-                        karir dan pendidikan masa depan Anda di Taiwan tanpa
-                        birokrasi yang rumit.
+            <div className="mx-auto max-w-7xl">
+                <div className="grid gap-8 lg:grid-cols-2">
+                    <div>
+                        <p className="text-xs font-black tracking-[0.2em] text-[#f6c453] uppercase">
+                            Simple by design
+                        </p>
+                        <h2 className="mt-5 max-w-xl font-serif text-5xl leading-[0.95] font-black tracking-[-0.045em] sm:text-7xl">
+                            Your next chapter, in three clear steps.
+                        </h2>
+                    </div>
+                    <p className="max-w-xl self-end text-lg leading-8 text-[#c3d7d1]">
+                        No maze of forms. No wondering what comes next. Just a
+                        thoughtful path from where you are to where you want to
+                        be.
                     </p>
                 </div>
 
-                {/* Steps Timeline Grid */}
-                <div className="relative grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-                    {/* Garis Penghubung Dekoratif (Hanya muncul di desktop) */}
-                    <div className="absolute top-1/2 right-4 left-4 z-0 hidden h-0.5 -translate-y-12 bg-slate-200 lg:block" />
-
-                    {steps.map((step, i) => (
+                <div className="mt-16 divide-y divide-white/20 border-y border-white/20">
+                    {steps.map(([number, title, desc]) => (
                         <div
-                            key={i}
-                            className="group relative z-10 flex flex-col justify-between rounded-2xl border border-slate-200/80 bg-white p-6 shadow-xs transition-all duration-200 hover:border-blue-500/30 hover:shadow-md"
+                            key={number}
+                            className="group grid gap-5 py-8 md:grid-cols-[90px_1fr_1fr_60px] md:items-center"
                         >
-                            <div>
-                                {/* Baris Atas Kartu */}
-                                <div className="mb-4 flex items-center justify-between">
-                                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50 transition-colors group-hover:bg-blue-50">
-                                        <step.icon className="h-5 w-5 text-slate-700 transition-colors group-hover:text-blue-600" />
-                                    </div>
-                                    <span className="text-2xl font-black tracking-tight text-slate-100 transition-colors group-hover:text-blue-100">
-                                        {step.number}
-                                    </span>
-                                </div>
-
-                                {/* Tag Tahapan */}
-                                <span className="mb-2 inline-block rounded-sm bg-slate-100 px-2 py-0.5 text-[10px] font-bold tracking-wider text-slate-600 uppercase">
-                                    {step.badge}
-                                </span>
-
-                                {/* Konten Utama */}
-                                <h3 className="text-base font-bold text-slate-900 transition-colors group-hover:text-blue-600">
-                                    {step.title}
-                                </h3>
-                                <p className="mt-2 text-xs leading-relaxed font-medium text-slate-400">
-                                    {step.desc}
-                                </p>
-                            </div>
-
-                            {/* Indikator Langkah Kecil */}
-                            <div className="mt-6 flex items-center justify-between border-t border-slate-50 pt-3 text-[11px] font-semibold text-slate-400">
-                                <span>Step {i + 1}</span>
-                                <span className="text-slate-300">Done ●</span>
-                            </div>
+                            <span className="font-serif text-3xl font-black text-[#f6c453]">
+                                {number}
+                            </span>
+                            <h3 className="font-serif text-3xl font-black tracking-tight sm:text-4xl">
+                                {title}
+                            </h3>
+                            <p className="max-w-lg leading-7 text-[#c3d7d1]">
+                                {desc}
+                            </p>
+                            <span className="grid h-12 w-12 place-items-center rounded-full border border-white/30 transition group-hover:translate-x-2 group-hover:bg-[#f26a3d]">
+                                <ArrowRight className="h-5 w-5" />
+                            </span>
                         </div>
                     ))}
                 </div>
             </div>
         </section>
     );
-};
-
-export default HowItWorks;
+}

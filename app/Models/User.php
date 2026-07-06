@@ -36,7 +36,7 @@ class User extends Authenticatable implements FilamentUser
         ];
     }
 
-    // Relasi Utama
+    // Primary relationships.
     public function role(): BelongsTo
     {
         return $this->belongsTo(Role::class);
@@ -63,7 +63,7 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasOne(AdminProfile::class);
     }
 
-    // Helpers untuk role checking
+    // Role-checking helpers.
     public function isAdmin(): bool
     {
         return $this->role?->slug === 'admin';

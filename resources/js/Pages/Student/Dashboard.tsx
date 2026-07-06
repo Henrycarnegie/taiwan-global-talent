@@ -31,9 +31,9 @@ export default function StudentDashboard({ profile }: any) {
             {/* GLOBAL TOP NAVBAR */}
             <header className="sticky top-0 z-50 border-b border-gray-200 bg-white shadow-sm">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    {/* Konten Utama */}
+                    {/* Main content. */}
                     <div className="flex flex-col items-center justify-between gap-4 py-4 md:h-20 md:flex-row md:py-0">
-                        {/* Bagian Logo dan Identitas */}
+                        {/* Logo and identity. */}
                         <div className="flex w-full items-center gap-3 md:w-auto">
                             <div className="shrink-0 rounded-lg bg-blue-600 p-2 text-lg font-bold tracking-wider text-white shadow-sm">
                                 TW
@@ -52,7 +52,7 @@ export default function StudentDashboard({ profile }: any) {
                         </div>
 
                         {/* Reusable Tab Navigation */}
-                        {/* Menggunakan overflow-x-auto agar di mobile bisa di-swipe ke samping jika menunya panjang */}
+                        {/* Horizontal scrolling keeps long menus usable on mobile. */}
                         <nav className="no-scrollbar flex w-full items-center justify-start space-x-2 pb-2 md:h-full md:w-auto md:justify-center md:pt-2 md:pb-0">
                             <TabButton
                                 label="Overview"
@@ -80,8 +80,8 @@ export default function StudentDashboard({ profile }: any) {
                             />
                         </nav>
 
-                        {/* Info Akun / Avatar */}
-                        {/* Di mobile, diletakkan di pojok kanan atas memanfaatkan posisi absolute atau disesuaikan tata letaknya */}
+                        {/* Account information and avatar. */}
+                        {/* Positioned in the upper-right corner on mobile. */}
                         <div className="absolute top-4 right-4 shrink-0 md:static">
                             <ProfileDropdown
                                 profile={profile}
@@ -98,7 +98,7 @@ export default function StudentDashboard({ profile }: any) {
                                             },
                                             onError: (errors) => {
                                                 console.error(
-                                                    'Gagal menyimpan profil:',
+                                                    'Failed to save profile:',
                                                     errors,
                                                 );
                                             },
@@ -126,18 +126,18 @@ export default function StudentDashboard({ profile }: any) {
                                 Complete Your Profile
                             </h2>
                             <p className="text-sm text-gray-500">
-                                Data ini akan langsung diajukan ke sistem kurasi
-                                mitra industri Taiwan.
+                                This information will be submitted directly to
+                                our Taiwanese industry partner review system.
                             </p>
                         </div>
                         <ProfileForm profile={profile} />
                     </div>
                 )}
 
-                {/* Memanggil Komponen Halaman Mandarin */}
+                {/* Mandarin course page. */}
                 {activeTab === 'mandarin' && <MandarinCourse />}
 
-                {/* Memanggil Komponen Halaman Community */}
+                {/* Community page. */}
                 {activeTab === 'community' && <Community />}
             </main>
         </div>

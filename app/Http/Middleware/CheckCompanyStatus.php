@@ -11,12 +11,13 @@ class CheckCompanyStatus
     public function handle(Request $request, Closure $next)
     {
         $user = Auth::user();
-        $company = $user->companyProfile; 
+        $company = $user->companyProfile;
 
-        if (!$company) {
+        if (! $company) {
             if ($request->routeIs('company.register') || $request->routeIs('company.store')) {
                 return $next($request);
             }
+
             return redirect()->route('company.register');
         }
 
@@ -24,6 +25,7 @@ class CheckCompanyStatus
             if ($request->routeIs('company.waiting')) {
                 return $next($request);
             }
+
             return redirect()->route('company.waiting');
         }
 
@@ -31,7 +33,8 @@ class CheckCompanyStatus
             if ($request->routeIs('company.register') || $request->routeIs('company.store')) {
                 return $next($request);
             }
-            return redirect()->route('company.register')->with('error', 'Pendaftaran ditolak: ' . $company->rejection_reason);
+
+            return redirect()->route('company.register')->with('error', 'Registration rejected: '.$company->rejection_reason);
         }
 
         return $next($request);

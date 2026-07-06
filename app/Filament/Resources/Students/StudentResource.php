@@ -92,7 +92,7 @@ class StudentResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->label('Nama')
+                    ->label('Name')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('email')

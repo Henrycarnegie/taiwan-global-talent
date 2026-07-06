@@ -144,7 +144,7 @@ export default function MandarinCourse() {
                             <div className="pt-2 md:pt-0">
                                 <button
                                     disabled={course.status === 'Locked'}
-                                    className={`min-w-44 max-w-full flex items-center justify-center rounded-xl border px-5 py-2.5 text-xs font-bold tracking-wide transition-all active:scale-[0.98] md:w-auto ${
+                                    className={`flex max-w-full min-w-44 items-center justify-center rounded-xl border px-5 py-2.5 text-xs font-bold tracking-wide transition-all active:scale-[0.98] md:w-auto ${
                                         course.status === 'Completed'
                                             ? 'border-emerald-200 bg-white text-emerald-600 hover:bg-emerald-50'
                                             : course.status === 'In Progress'
@@ -153,11 +153,17 @@ export default function MandarinCourse() {
                                     }`}
                                 >
                                     {course.status === 'Completed' ? (
-                                        <CheckCircleIcon size={16} className="mr-2" />
+                                        <CheckCircleIcon
+                                            size={16}
+                                            className="mr-2"
+                                        />
                                     ) : course.status === 'In Progress' ? (
                                         <PlayIcon size={16} className="mr-2" />
                                     ) : (
-                                        <LockKeyholeIcon size={16} className="mr-2" />
+                                        <LockKeyholeIcon
+                                            size={16}
+                                            className="mr-2"
+                                        />
                                     )}
                                     {course.status === 'Completed'
                                         ? 'Review Modules'

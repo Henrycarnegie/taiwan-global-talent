@@ -12,15 +12,15 @@ class AccountSettingsController extends Controller
     {
         $user = Auth::user();
 
-        // Validasi input data esensial akun
+        // Validate essential account data.
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
         ]);
 
-        // Eksekusi update ke tabel users
+        // Update the users table.
         $user->update($validated);
 
-        // Berikan feedback kembali ke halaman Inertia
+        // Return feedback to the Inertia page.
         return back()->with('success', 'Account settings updated successfully.');
     }
 }

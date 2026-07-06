@@ -40,8 +40,8 @@ export default function MandarinCourse() {
                         Mandarin Learning Center 華語中心
                     </h2>
                     <p className="text-sm text-gray-500">
-                        Tingkatkan kemampuan bahasa Mandarin Anda untuk
-                        mempermudah karier profesional di Taiwan.
+                        Improve your Mandarin skills to advance your
+                        professional career in Taiwan.
                     </p>
                 </div>
                 <button className="rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-blue-700">
@@ -49,19 +49,19 @@ export default function MandarinCourse() {
                 </button>
             </div>
 
-            {/* Ringkasan Progres Menggunakan Reusable Card */}
+            {/* Progress summary using reusable cards. */}
             <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                 <Card
                     title="Current Level"
-                    subTitle=" saat ini"
+                    subTitle=" current"
                     value="TOCFL A2"
                     footerText="Target berikutnya: B1 Mid"
                 />
                 <Card
                     title="Hours Practiced"
-                    subTitle="Total jam belajar"
-                    value="48 Jam"
-                    footerText="2.5 jam minggu ini"
+                    subTitle="Total study time"
+                    value="48 Hours"
+                    footerText="2.5 hours this week"
                 />
                 <Card
                     title="Vocabulary Mastered"
@@ -72,11 +72,11 @@ export default function MandarinCourse() {
                 />
             </div>
 
-            {/* Daftar Kursus */}
+            {/* Course list. */}
             <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
                 <div className="border-b border-gray-100 p-5">
                     <h3 className="font-bold text-gray-900">
-                        Tersedia untuk Anda (Available Courses)
+                        Available to You
                     </h3>
                 </div>
                 <div className="divide-y divide-gray-100">

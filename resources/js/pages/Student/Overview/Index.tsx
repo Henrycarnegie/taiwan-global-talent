@@ -20,9 +20,9 @@ export default function DashboardOverview({
                         Ready to Build Your Career in Taiwan?
                     </h2>
                     <p className="text-sm leading-relaxed text-slate-300">
-                        Lengkapi profil Anda untuk membuka peluang magang,
-                        kerja, dan program inkubasi digital langsung dari
-                        perusahaan teknologi terkemuka di Taiwan.
+                        Complete your profile to unlock internships, jobs, and
+                        digital incubation programs from Taiwan’s leading
+                        technology companies.
                     </p>
                 </div>
                 <div className="absolute inset-0 bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-size-[24px_24px] opacity-10"></div>
@@ -48,7 +48,7 @@ export default function DashboardOverview({
                     title="Active Applications"
                     subTitle="投遞進度"
                     value="3"
-                    footerText="Perusahaan Taiwan"
+                    footerText="Taiwanese Companies"
                 />
                 <Card
                     title="Certificates"
@@ -60,7 +60,7 @@ export default function DashboardOverview({
 
             {/* Baris Pengumuman & Forum Teaser */}
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-                {/* Kolom Berita / Announcement */}
+                {/* News and announcements column. */}
                 <div className="space-y-4 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm lg:col-span-2">
                     <h3 className="flex items-center justify-between border-b pb-3 font-bold text-gray-900">
                         <span>Latest Announcement</span>
@@ -75,7 +75,7 @@ export default function DashboardOverview({
                             </p>
                             <p className="text-sm font-medium text-gray-800">
                                 Registrasi kuota khusus talent internasional
-                                resmi dibuka minggu ini.
+                                officially opens this week.
                             </p>
                         </div>
                         <div className="cursor-pointer rounded-xl bg-gray-50 p-3 transition hover:bg-gray-100">
@@ -83,8 +83,8 @@ export default function DashboardOverview({
                                 Mandarin Center
                             </p>
                             <p className="text-sm font-medium text-gray-800">
-                                Ujian simulasi (Mock Test) TOCFL gratis tersedia
-                                di tab Mandarin Courses.
+                                A free TOCFL mock test is available in the
+                                Mandarin Courses tab.
                             </p>
                         </div>
                     </div>
@@ -97,28 +97,31 @@ export default function DashboardOverview({
                             Community Activity
                         </h3>
                         <p className="mb-4 text-xs text-gray-400">
-                            Interaksi hangat sesama mahasiswa di Taiwan
+                            Friendly conversations among students in Taiwan
                         </p>
                         <div className="space-y-3 text-sm">
                             <p className="text-gray-600">
                                 💬{' '}
                                 <span className="font-medium text-gray-800">
-                                    "Ada yang tahu info beasiswa MOE terbaru?"
+                                    "Does anyone have the latest MOE scholarship
+                                    information?"
                                 </span>
                             </p>
                             <p className="text-gray-600">
                                 💬{' '}
                                 <span className="font-medium text-gray-800">
-                                    "Sharing pengalaman magang di Hsinchu..."
+                                    "Sharing an internship experience in
+                                    Hsinchu..."
                                 </span>
                             </p>
                         </div>
                     </div>
                     <button
                         onClick={onNavigateToCommunity}
-                        className="mt-4 w-full flex items-center justify-center gap-2 rounded-lg bg-blue-50 p-2 text-center text-xs font-semibold text-blue-600 transition hover:bg-blue-100 hover:text-blue-700"
+                        className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg bg-blue-50 p-2 text-center text-xs font-semibold text-blue-600 transition hover:bg-blue-100 hover:text-blue-700"
                     >
-                        Buka Forum Diskusi <ArrowRight className="ml-1 h-4 w-4" />
+                        Open Discussion Forum{' '}
+                        <ArrowRight className="ml-1 h-4 w-4" />
                     </button>
                 </div>
             </div>

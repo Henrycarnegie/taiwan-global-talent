@@ -1,43 +1,56 @@
-import React from 'react';
+import { Check, Sparkles } from 'lucide-react';
+
+const benefits = [
+    'A public talent profile',
+    'Community and mentor access',
+    'Scholarship discovery',
+    'Career matching',
+];
 
 export default function Membership() {
     return (
-        <section className="px-6 py-24 bg-linear-to-b from-slate-50 to-white">
-            <div className="mx-auto max-w-5xl">
-                <div className="rounded-3xl bg-slate-950 p-8 md:p-12 text-white relative overflow-hidden shadow-2xl">
-                    <div className="absolute top-0 right-0 -mt-12 -mr-12 w-48 h-48 bg-blue-600 rounded-full blur-3xl opacity-20" />
-                    <div className="absolute bottom-0 left-0 -mb-12 -ml-12 w-48 h-48 bg-red-600 rounded-full blur-3xl opacity-20" />
-
-                    <div className="relative z-10 grid md:grid-cols-5 gap-8 items-center">
-                        <div className="md:col-span-3 space-y-4">
-                            <span className="text-xs font-bold uppercase tracking-widest text-amber-400 bg-amber-400/10 px-3 py-1 rounded-full border border-amber-400/20">
-                                Launch Promotion 🚀
-                            </span>
-                            <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight">
-                                Mulai Langkahmu dengan Free Digital Talent Membership
-                            </h2>
-                            <p className="text-sm text-slate-400 leading-relaxed">
-                                Dapatkan akses instan ke forum diskusi komunitas pihak ketiga, pembuatan portofolio publik yang dapat dilirik HRD Taiwan, serta info dasar beasiswa secara gratis tanpa biaya langganan bulanan.
-                            </p>
-                            <ul className="text-xs text-slate-300 space-y-2 grid grid-cols-2 pt-2">
-                                <li className="flex items-center gap-2">✔ Public Profile Visibility</li>
-                                <li className="flex items-center gap-2">✔ Community Discussion Forum</li>
-                                <li className="flex items-center gap-2">✔ Free Live Webinar Access</li>
-                                <li className="flex items-center gap-2">✔ Basic Scholarship Aggregator</li>
-                            </ul>
-                        </div>
-
-                        <div className="md:col-span-2 bg-white/5 border border-white/10 rounded-2xl p-6 text-center backdrop-blur-sm">
-                            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Biaya Keanggotaan</p>
-                            <div className="mt-2 flex items-baseline justify-center gap-1">
-                                <span className="text-4xl font-extrabold tracking-tight">NT$ 0</span>
-                                <span className="text-xs text-slate-400">/ selamanya</span>
+        <section className="bg-[#fffaf0] px-5 py-24 sm:px-8 lg:py-32">
+            <div className="mx-auto grid max-w-7xl overflow-hidden rounded-[2.5rem] border-2 border-[#173b36] bg-[#f6c453] shadow-[10px_12px_0_#173b36] lg:grid-cols-[1.2fr_0.8fr]">
+                <div className="p-8 sm:p-12 lg:p-16">
+                    <div className="inline-flex items-center gap-2 rounded-full border border-[#173b36]/20 bg-[#fffaf0]/70 px-4 py-2 text-xs font-black tracking-widest uppercase">
+                        <Sparkles className="h-4 w-4" /> Free membership
+                    </div>
+                    <h2 className="mt-7 max-w-2xl font-serif text-5xl leading-[0.95] font-black tracking-[-0.04em] text-[#173b36] sm:text-6xl">
+                        Big plans should have an easy first step.
+                    </h2>
+                    <p className="mt-6 max-w-xl text-lg leading-8 text-[#294f48]/80">
+                        Join the platform at no cost and start building a future
+                        in Taiwan with useful tools, real opportunities, and a
+                        community beside you.
+                    </p>
+                    <div className="mt-8 grid gap-3 sm:grid-cols-2">
+                        {benefits.map((benefit) => (
+                            <div
+                                key={benefit}
+                                className="flex items-center gap-3 font-bold text-[#173b36]"
+                            >
+                                <span className="grid h-7 w-7 place-items-center rounded-full bg-[#173b36] text-white">
+                                    <Check className="h-4 w-4" />
+                                </span>
+                                {benefit}
                             </div>
-                            <p className="text-[11px] text-slate-400 mt-1">Non-charging membership account</p>
-                            <button className="w-full mt-6 bg-white text-slate-950 hover:bg-slate-100 font-bold text-sm px-4 py-2.5 rounded-xl transition shadow-lg">
-                                Buat Akun Gratis
-                            </button>
-                        </div>
+                        ))}
+                    </div>
+                </div>
+                <div className="grid place-items-center border-t-2 border-[#173b36] bg-[#f38b66] p-10 text-center lg:border-t-0 lg:border-l-2">
+                    <div>
+                        <p className="text-xs font-black tracking-[0.2em] text-[#173b36]/65 uppercase">
+                            Forever free
+                        </p>
+                        <p className="mt-3 font-serif text-7xl font-black tracking-tight text-[#173b36]">
+                            NT$0
+                        </p>
+                        <a
+                            href="/login"
+                            className="mt-7 inline-flex rounded-full bg-[#173b36] px-7 py-4 text-sm font-black text-white transition hover:-translate-y-1"
+                        >
+                            Create your profile
+                        </a>
                     </div>
                 </div>
             </div>

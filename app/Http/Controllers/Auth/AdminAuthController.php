@@ -20,23 +20,23 @@ class AdminAuthController extends Controller
 
         if (! $user || ! $user->hasRole('admin')) {
             return response()->json([
-                'message' => 'Akses ditolak. Anda bukan Admin.',
+                'message' => 'Access denied. You are not an administrator.',
             ], 403);
         }
 
         if (Auth::attempt($credentials, $request->filled('remember'))) {
-            // Regenerate session untuk keamanan
+            // Regenerate the session for security.
             $request->session()->regenerate();
 
             return response()->json([
                 'success' => true,
                 'user' => Auth::user(),
-                'message' => 'Login Admin berhasil menggunakan Session!',
+                'message' => 'Admin signed in successfully.',
             ], 200);
         }
 
         return response()->json([
-            'message' => 'Email atau password Admin salah.',
+            'message' => 'The admin email or password is incorrect.',
         ], 401);
     }
 }

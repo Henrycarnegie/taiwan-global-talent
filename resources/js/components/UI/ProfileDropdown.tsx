@@ -10,7 +10,7 @@ export default function ProfileDropdown() {
     const roleMapping: Record<number, string> = {
         1: 'Admin',
         2: 'Teacher',
-        3: 'Student'
+        3: 'Student',
     };
 
     const role = roleMapping[user.role as unknown as number] || 'Student';
@@ -21,29 +21,35 @@ export default function ProfileDropdown() {
 
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+            if (
+                dropdownRef.current &&
+                !dropdownRef.current.contains(event.target as Node)
+            ) {
                 setIsOpen(false);
             }
         }
         document.addEventListener('mousedown', handleClickOutside);
 
-        return () => document.removeEventListener('mousedown', handleClickOutside);
+        return () =>
+            document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
     return (
         <div className="relative" ref={dropdownRef}>
-            {/* TRIGGER: Avatar & Nama */}
-            <button 
-                onClick={() => setIsOpen(!isOpen)} 
-                className="flex items-center gap-2.5 rounded-full p-1 text-left outline-none transition duration-200 hover:bg-gray-100 md:rounded-xl md:py-1.5 md:pr-3 md:pl-2"
+            {/* Trigger: avatar and name. */}
+            <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="flex items-center gap-2.5 rounded-full p-1 text-left transition duration-200 outline-none hover:bg-gray-100 md:rounded-xl md:py-1.5 md:pr-3 md:pl-2"
             >
-                {/* Avatar Wrapper dengan Ring Indikator Aktif */}
-                <div className={`relative shrink-0 rounded-full p-0.5 transition duration-200 ${isOpen ? 'ring-2 ring-blue-500 ring-offset-1' : 'group-hover:ring-2 group-hover:ring-gray-300'}`}>
+                {/* Avatar wrapper with an active indicator ring. */}
+                <div
+                    className={`relative shrink-0 rounded-full p-0.5 transition duration-200 ${isOpen ? 'ring-2 ring-blue-500 ring-offset-1' : 'group-hover:ring-2 group-hover:ring-gray-300'}`}
+                >
                     {user?.avatar ? (
-                        <img 
-                            src={user.avatar} 
-                            alt={user.name} 
-                            className="h-9 w-9 rounded-full object-cover shadow-sm bg-gray-100"
+                        <img
+                            src={user.avatar}
+                            alt={user.name}
+                            className="h-9 w-9 rounded-full bg-gray-100 object-cover shadow-sm"
                         />
                     ) : (
                         <div className="flex h-9 w-9 items-center justify-center rounded-full bg-linear-to-br from-blue-500 to-indigo-600 text-sm font-bold text-white shadow-sm">
@@ -51,8 +57,8 @@ export default function ProfileDropdown() {
                         </div>
                     )}
                 </div>
-                
-                {/* Info Text (Hanya muncul di desktop) */}
+
+                {/* Information shown on desktop only. */}
                 <div className="hidden max-w-30 text-left md:block">
                     <p className="truncate text-xs leading-none font-semibold text-gray-800">
                         {user.name}
@@ -65,20 +71,27 @@ export default function ProfileDropdown() {
 
             {/* POPUP / DROPDOWN MENU */}
             {isOpen && (
-                <div className="absolute right-0 mt-2 w-64 origin-top-right rounded-xl border border-gray-100 bg-white p-1.5 shadow-xl ring-1 ring-black/5 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-                    
+                <div className="animate-in fade-in slide-in-from-top-2 absolute right-0 z-50 mt-2 w-64 origin-top-right rounded-xl border border-gray-100 bg-white p-1.5 shadow-xl ring-1 ring-black/5 duration-200">
                     {/* User Mini Info Header */}
-                    <div className="flex items-center gap-3 px-2.5 py-3 border-b border-gray-50 mb-1">
+                    <div className="mb-1 flex items-center gap-3 border-b border-gray-50 px-2.5 py-3">
                         {user?.avatar ? (
-                            <img src={user.avatar} alt="" className="h-9 w-9 rounded-full object-cover" />
+                            <img
+                                src={user.avatar}
+                                alt=""
+                                className="h-9 w-9 rounded-full object-cover"
+                            />
                         ) : (
                             <div className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-50 text-sm font-bold text-blue-600">
                                 {user.name.charAt(0).toUpperCase()}
                             </div>
                         )}
                         <div className="min-w-0 flex-1">
-                            <p className="truncate text-sm font-bold text-gray-900 leading-tight">{user.name}</p>
-                            <p className="truncate text-xs text-gray-400 mt-0.5">{user.email}</p>
+                            <p className="truncate text-sm leading-tight font-bold text-gray-900">
+                                {user.name}
+                            </p>
+                            <p className="mt-0.5 truncate text-xs text-gray-400">
+                                {user.email}
+                            </p>
                         </div>
                     </div>
 
@@ -89,10 +102,12 @@ export default function ProfileDropdown() {
                                 setIsModalOpen(true);
                                 setIsOpen(false);
                             }}
-                            className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-sm text-gray-600 hover:bg-slate-50 hover:text-gray-900 transition duration-150"
+                            className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-sm text-gray-600 transition duration-150 hover:bg-slate-50 hover:text-gray-900"
                         >
-                            <Settings className="h-4 w-4 text-gray-400" /> 
-                            <span className="font-medium">Account Settings</span>
+                            <Settings className="h-4 w-4 text-gray-400" />
+                            <span className="font-medium">
+                                Account Settings
+                            </span>
                         </button>
                     </div>
 
@@ -103,19 +118,19 @@ export default function ProfileDropdown() {
                     <div>
                         <button
                             onClick={() => router.post('/logout')}
-                            className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-sm font-medium text-red-600 hover:bg-red-50/70 transition duration-150"
+                            className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-sm font-medium text-red-600 transition duration-150 hover:bg-red-50/70"
                         >
-                            <LogOut className="h-4 w-4" /> 
+                            <LogOut className="h-4 w-4" />
                             <span>Log Out</span>
                         </button>
                     </div>
                 </div>
             )}
 
-            {/* MODAL UNTUK CRUD DATA PROFIL */}
-            <EditProfileModal 
-                isOpen={isModalOpen} 
-                onClose={() => setIsModalOpen(false)} 
+            {/* Profile data management modal. */}
+            <EditProfileModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
             />
         </div>
     );

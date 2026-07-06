@@ -32,7 +32,7 @@ class TeacherForm
                     ->maxLength(20),
 
                 TextInput::make('expertise')
-                    ->label('Expertise / Keahlian')
+                    ->label('Expertise')
                     ->placeholder('e.g. Mathematics, English')
                     ->maxLength(255),
 

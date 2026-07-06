@@ -18,10 +18,10 @@ use App\Http\Controllers\Teacher\TeacherApplyController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-// Route Umum (Tanpa Login)
+// Public routes (no authentication required).
 Route::inertia('/', 'Landing')->name('landing-page');
 
-// Login & Auth Google
+// Login and Google authentication.
 Route::get('/login', function () {
     return Inertia::render('Auth/LoginPage');
 })->name('login');
@@ -32,11 +32,11 @@ Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback']);
 
 Route::post('/login-admin', [AdminAuthController::class, 'login']);
 
-// Group Route yang Membutuhkan Login
+// Routes that require authentication.
 Route::middleware(['auth', 'verified'])->group(function () {
 
     // ---------------------------------------------------------
-    // (Apply & Waiting) - Access before Approved
+    // Applications and waiting pages available before approval.
     // ---------------------------------------------------------
 
     // Company Apply & Waiting
@@ -56,7 +56,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/teacher/waiting-approval', [TeacherApplyController::class, 'waiting'])->name('teacher.waiting');
 
     // ---------------------------------------------------------
-    // Main Page/Dashboard (Only Approved)
+    // Main pages and dashboards (approved users only).
     // ---------------------------------------------------------
 
     // Student

@@ -12,7 +12,7 @@ const LoginPage = () => {
         'student' | 'teacher' | 'company' | 'admin'
     >('student');
 
-    // State baru khusus untuk menampung inputan form Admin
+    // State for admin form input.
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -38,7 +38,7 @@ const LoginPage = () => {
                 body: JSON.stringify({ email, password }),
             });
 
-            // Cek apakah response berupa JSON
+            // Check whether the response is JSON.
             const contentType = response.headers.get('content-type');
 
             if (contentType && contentType.indexOf('application/json') !== -1) {
@@ -51,18 +51,18 @@ const LoginPage = () => {
 
                     window.location.href = '/admin';
                 } else {
-                    alert(data.message || 'Gagal login.');
+                    alert(data.message || 'Login failed.');
                 }
             } else {
-                // Jika yang kembali adalah teks HTML error dari Laravel
+                // Handle an HTML error response from Laravel.
                 const textError = await response.text();
                 console.error('Laravel Error HTML:', textError);
                 alert(
-                    'Terjadi kesalahan internal pada server (Error 500). Silakan cek log Laravel.',
+                    'An internal server error occurred (Error 500). Please check the Laravel logs.',
                 );
             }
         } catch (error) {
-            console.error('Gagal terhubung ke backend Laravel', error);
+            console.error('Failed to connect to the Laravel backend', error);
         }
     };
 
@@ -70,25 +70,25 @@ const LoginPage = () => {
         {
             id: 'student',
             label: 'Student',
-            desc: 'Belajar & cari lowongan',
+            desc: 'Learn & find opportunities',
             icon: '🎓',
         },
         {
             id: 'teacher',
             label: 'Teacher',
-            desc: 'Mengajar & kelola kelas',
+            desc: 'Teach & manage classes',
             icon: '👨‍🏫',
         },
         {
             id: 'company',
             label: 'Company',
-            desc: 'Rekrut talenta terbaik',
+            desc: 'Recruit top talent',
             icon: '🏢',
         },
         {
             id: 'admin',
             label: 'Admin',
-            desc: 'Kelola sistem platform',
+            desc: 'Manage the platform',
             icon: '🛡️',
         },
     ];
@@ -105,7 +105,7 @@ const LoginPage = () => {
                         Taiwan Global Talent
                     </h2>
                     <p className="mt-2 text-sm text-gray-500">
-                        Pilih peran Anda untuk melanjutkan masuk
+                        Choose your role to continue
                     </p>
                 </div>
 
@@ -139,7 +139,7 @@ const LoginPage = () => {
                     ))}
                 </div>
 
-                {/* Kondisional Rendering Berdasarkan Role */}
+                {/* Conditional rendering based on role. */}
                 {selectedRole === 'admin' ? (
                     /* FORM LOGIN KHUSUS ADMIN */
                     <form onSubmit={handleAdminLogin} className="space-y-4">
@@ -175,11 +175,11 @@ const LoginPage = () => {
                             type="submit"
                             className="flex w-full cursor-pointer items-center justify-center rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-blue-700 hover:shadow-md focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none active:bg-blue-800"
                         >
-                            Masuk sebagai Admin
+                            Sign in as Admin
                         </button>
                     </form>
                 ) : (
-                    /* BUTTON GOOGLE UNTUK STUDENT, TEACHER, COMPANY */
+                    /* Google sign-in button for students, teachers, and companies. */
                     <div className="space-y-4">
                         <button
                             onClick={loginWithGoogle}
@@ -209,7 +209,7 @@ const LoginPage = () => {
                                 />
                             </svg>
                             <span>
-                                Masuk sebagai{' '}
+                                Sign in as{' '}
                                 {
                                     roles.find((r) => r.id === selectedRole)
                                         ?.label
@@ -219,9 +219,9 @@ const LoginPage = () => {
                     </div>
                 )}
 
-                {/* Footer Ketentuan Layanan */}
+                {/* Terms of service footer. */}
                 <p className="mt-4 text-center text-xs text-gray-400">
-                    Dengan masuk, Anda menyetujui Ketentuan Layanan & Kebijakan
+                    By signing in, you agree to the Terms of Service & Privacy
                     Privasi kami.
                 </p>
             </div>

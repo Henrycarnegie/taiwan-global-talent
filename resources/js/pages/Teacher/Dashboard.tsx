@@ -67,15 +67,15 @@ export default function TeacherDashboard({ auth, stats }: DashboardProps) {
     const students = [
         {
             name: 'Bima',
-            class: 'Kelas 10A',
-            status: 'Sudah Kumpul',
+            class: 'Class 10A',
+            status: 'Submitted',
             grade: 85,
             id: 'STU-0102',
         },
         {
             name: 'Sari',
-            class: 'Kelas 9C',
-            status: 'Belum Kumpul',
+            class: 'Class 9C',
+            status: 'Not Submitted',
             grade: 92,
             id: 'STU-0084',
         },
@@ -150,7 +150,7 @@ export default function TeacherDashboard({ auth, stats }: DashboardProps) {
                 </div>
             </aside>
 
-            {/* Konten Utama */}
+            {/* Main content. */}
             <main className="flex-1 overflow-y-auto p-8">
                 <header className="mb-8 flex items-center justify-between border-b border-slate-200 pb-5">
                     <div>
@@ -180,9 +180,9 @@ export default function TeacherDashboard({ auth, stats }: DashboardProps) {
                     </div>
                 </header>
 
-                {/* Statistik yang dihubungkan langsung dari Controller */}
+                {/* Statistics supplied directly by the controller. */}
                 <div className="mb-8 grid grid-cols-1 gap-5 md:grid-cols-3">
-                    {/* Card Progress - Menggunakan stats.progress */}
+                    {/* Progress card using stats.progress. */}
                     <div className="flex items-center justify-between rounded border border-slate-200 bg-white p-5 shadow-sm">
                         <div>
                             <p className="mb-1 text-xs font-semibold tracking-wider text-slate-400 uppercase">
@@ -198,7 +198,7 @@ export default function TeacherDashboard({ auth, stats }: DashboardProps) {
                         <SimpleDoughnut percentage={stats?.progress || 0} />
                     </div>
 
-                    {/* Card Courses - Menggunakan stats.courses */}
+                    {/* Courses card using stats.courses. */}
                     <div className="flex items-center justify-between rounded border border-l-4 border-slate-200 border-l-teal-500 bg-white p-5 shadow-sm">
                         <div>
                             <p className="mb-1 text-xs font-semibold tracking-wider text-slate-400 uppercase">
@@ -216,7 +216,7 @@ export default function TeacherDashboard({ auth, stats }: DashboardProps) {
                         </div>
                     </div>
 
-                    {/* Card Certificates - Menggunakan stats.certificates */}
+                    {/* Certificates card using stats.certificates. */}
                     <div className="flex items-center justify-between rounded border border-l-4 border-slate-200 border-l-orange-500 bg-white p-5 shadow-sm">
                         <div>
                             <p className="mb-1 text-xs font-semibold tracking-wider text-slate-400 uppercase">
@@ -235,7 +235,7 @@ export default function TeacherDashboard({ auth, stats }: DashboardProps) {
                     </div>
                 </div>
 
-                {/* Tabel Data Siswa */}
+                {/* Student data table. */}
                 <div className="overflow-hidden rounded border border-slate-200 bg-white shadow-sm">
                     <div className="border-slate-150 flex items-center justify-between border-b bg-slate-50/70 p-5">
                         <h2 className="text-sm font-bold tracking-tight text-slate-900">
@@ -282,16 +282,15 @@ export default function TeacherDashboard({ auth, stats }: DashboardProps) {
                                             <span
                                                 className={`inline-flex items-center rounded border px-2 py-0.5 text-[11px] font-medium ${
                                                     student.status ===
-                                                    'Sudah Kumpul'
+                                                    'Submitted'
                                                         ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
                                                         : 'border-rose-200 bg-rose-50 text-rose-700'
                                                 }`}
                                             >
                                                 <span
-                                                    className={`mr-1.5 h-1.5 w-1.5 rounded-full ${student.status === 'Sudah Kumpul' ? 'bg-emerald-500' : 'bg-rose-500'}`}
+                                                    className={`mr-1.5 h-1.5 w-1.5 rounded-full ${student.status === 'Submitted' ? 'bg-emerald-500' : 'bg-rose-500'}`}
                                                 ></span>
-                                                {student.status ===
-                                                'Sudah Kumpul'
+                                                {student.status === 'Submitted'
                                                     ? '已繳交'
                                                     : '未繳交'}
                                             </span>

@@ -2,10 +2,10 @@
 
 namespace App\Filament\Resources\CourseRoutes\Schemas;
 
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\TextInput;
 use App\Models\CourseRoute;
-use Filament\Schemas\Components\Utilities\Set; // 👈 Class Set yang benar untuk versi ini
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema; // Correct Set class for this version.
 
 class CourseRouteForm
 {
@@ -16,8 +16,7 @@ class CourseRouteForm
                 TextInput::make('title')
                     ->required()
                     ->live(onBlur: true)
-                    ->afterStateUpdated(fn (string $operation, $state, Set $set) => 
-                        $operation === 'create' ? $set('slug', \Str::slug($state)) : null
+                    ->afterStateUpdated(fn (string $operation, $state, Set $set) => $operation === 'create' ? $set('slug', \Str::slug($state)) : null
                     ),
 
                 TextInput::make('slug')
@@ -32,6 +31,6 @@ class CourseRouteForm
                 TextInput::make('order')
                     ->numeric()
                     ->default(0),
-        ]);
+            ]);
     }
 }

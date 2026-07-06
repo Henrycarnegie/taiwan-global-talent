@@ -30,15 +30,15 @@ class TeacherApplyController extends Controller
             $cvPath = $request->file('cv')->store('teachers/cvs', 'public');
         }
 
-        // 3. Handle upload Sertifikat
+        // 3. Handle the certificate upload.
         $certificatePath = null;
         if ($request->hasFile('certificate')) {
             $certificatePath = $request->file('certificate')->store('teachers/certificates', 'public');
         }
 
-        // 4. Update data to teacher_profiles tabel
+        // 4. Update the teacher_profiles table.
         auth()->user()->teacherProfile()->updateOrCreate(
-            ['user_id' => auth()->id()], // Cari berdasarkan user_id yang sedang login
+            ['user_id' => auth()->id()], // Find the currently authenticated user by ID.
             [
                 'full_name' => $request->full_name,
                 'phone' => $request->phone,

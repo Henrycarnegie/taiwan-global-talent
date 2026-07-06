@@ -17,12 +17,12 @@ class TeachersTable
         return $table
             ->columns([
                 TextColumn::make('teacherProfile.full_name')
-                    ->label('Nama Lengkap')
+                    ->label('Full Name')
                     ->sortable()
                     ->searchable(),
 
                 TextColumn::make('email')
-                    ->label('Email Akun')
+                    ->label('Account Email')
                     ->sortable()
                     ->searchable(),
 
@@ -31,15 +31,15 @@ class TeachersTable
                     ->searchable(),
 
                 TextColumn::make('teacherProfile.expertise')
-                    ->label('Keahlian')
+                    ->label('Expertise')
                     ->searchable(),
 
                 TextColumn::make('teacherProfile.learning_goal')
-                    ->label('Target Mengajar')
+                    ->label('Teaching Objective')
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('teacherProfile.bio')
-                    ->label('Bio / Pengalaman')
+                    ->label('Bio / Experience')
                     ->limit(50)
                     ->tooltip(fn ($record) => $record->teacherProfile?->bio),
                 TextColumn::make('teacherProfile.status')

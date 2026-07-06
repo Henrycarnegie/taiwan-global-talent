@@ -1,4 +1,3 @@
-import React from 'react';
 import Companies from '@/components/Landing/Companies';
 import CTA from '@/components/Landing/CTA';
 import Features from '@/components/Landing/Features';
@@ -8,23 +7,20 @@ import HowItWorks from '@/components/Landing/HowItWorks';
 import Membership from '@/components/Landing/Membership';
 import Navbar from '@/components/Landing/Navbar';
 import Stats from '@/components/Landing/Stats';
-import CorePillars from '@/components/UI/CorePillars';
 
 export default function Landing() {
     return (
-        <div className="font-sans text-slate-900 bg-slate-50/50 antialiased selection:bg-red-500 selection:text-white">
+        <div className="min-h-screen overflow-x-hidden bg-[#fffaf0] font-sans text-[#173b36] antialiased selection:bg-[#f6c453] selection:text-[#173b36]">
             <Navbar />
-            <Hero />
-            <Stats />
-            
-            <CorePillars />
-            
-            <Features />
-            <Membership />
-            
-            <HowItWorks />
-            <Companies />
-            <CTA />
+            <main>
+                <Hero />
+                <Stats />
+                <Features />
+                <HowItWorks />
+                <Membership />
+                <Companies />
+                <CTA />
+            </main>
             <Footer />
         </div>
     );

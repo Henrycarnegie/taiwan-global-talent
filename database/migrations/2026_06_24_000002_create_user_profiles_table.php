@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('student_profiles', function (Blueprint $table) {
             $table->id();
 
-            // Ganti foreignId() dengan dua baris eksplisit ini:
+            // Replace foreignId() with these two explicit lines.
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
@@ -37,15 +37,15 @@ return new class extends Migration
         Schema::create('company_profiles', function (Blueprint $table) {
             $table->id();
 
-            // 1. Akun Pemilik / Admin Utama Perusahaan
+            // 1. Company owner or primary administrator account.
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
 
-            // 2. Informasi Legal & Verifikasi (Untuk Keperluan Admin Web)
+            // 2. Legal and verification information for web administrators.
             $table->string('company_legal_name');
             $table->string('tax_id')->nullable()->unique();
             $table->string('business_registration_path')->nullable();
 
-            // 3. Informasi Branding Publik (Ditampilkan di Halaman Lowongan)
+            // 3. Public branding information displayed on job pages.
             $table->string('company_display_name');
             $table->string('slug')->unique();
             $table->string('logo_path')->nullable();
@@ -57,24 +57,24 @@ return new class extends Migration
             $table->text('bio')->nullable();
             $table->longText('description')->nullable();
 
-            // 4. Informasi Lokasi & Kontak Resmi Perusahaan
+            // 4. Company location and official contact information.
             $table->text('hq_address')->nullable();
             $table->string('city')->nullable();
             $table->string('country')->default('Taiwan');
             $table->string('official_email')->nullable();
 
-            // 5. Informasi Person In Charge (PIC) / Pendaftar Pertama
-            $table->string('pic_name'); 
+            // 5. Person in charge (PIC) or initial registrant information.
+            $table->string('pic_name');
             $table->string('pic_phone');
-            $table->string('pic_position'); 
+            $table->string('pic_position');
 
-            // 6. Sistem Manajemen Status & Verifikasi
+            // 6. Status and verification management.
             $table->enum('status', ['pending', 'approved', 'rejected', 'suspended'])->default('pending');
 
             $table->text('rejection_reason')->nullable();
 
             $table->timestamp('verified_at')->nullable();
-            
+
             $table->timestamps();
             $table->softDeletes();
         });
@@ -83,7 +83,7 @@ return new class extends Migration
         Schema::create('teacher_profiles', function (Blueprint $table) {
             $table->id();
 
-            // Gunakan cara eksplisit yang sama
+            // Use the same explicit approach.
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
@@ -101,7 +101,7 @@ return new class extends Migration
             $table->text('rejection_reason')->nullable();
 
             $table->timestamp('verified_at')->nullable();
-            
+
             $table->timestamps();
         });
     }

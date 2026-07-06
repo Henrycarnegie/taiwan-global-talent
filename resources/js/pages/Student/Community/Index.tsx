@@ -2,53 +2,53 @@ export default function Community() {
     const threads = [
         {
             id: 1,
-            tag: 'Beasiswa & Birokrasi',
-            title: 'Tips perpanjangan ARC (Alien Resident Certificate) terbaru tahun 2026 di Taipei',
+            tag: 'Scholarships & Bureaucracy',
+            title: 'Latest tips for renewing an ARC (Alien Resident Certificate) in Taipei in 2026',
             author: 'Budi Santoso (NTUST)',
             replies: 14,
             views: 124,
-            time: '2 jam yang lalu',
+            time: '2 hours ago',
         },
         {
             id: 2,
-            tag: 'Info Magang',
-            title: 'Mencari rekan tim untuk program kompetisi inovasi digital dari ASUS Taiwan, kuota sisa 2 orang',
+            tag: 'Internship Information',
+            title: 'Looking for two more teammates for the ASUS Taiwan digital innovation competition',
             author: 'Siti Rahma (NTU)',
             replies: 8,
             views: 95,
-            time: '5 jam yang lalu',
+            time: '5 hours ago',
         },
         {
             id: 3,
-            tag: 'Kehidupan di Taiwan',
-            title: 'Rekomendasi toko makanan Indonesia atau restoran ramah muslim di daerah Hsinchu?',
+            tag: 'Life in Taiwan',
+            title: 'Any recommendations for Indonesian food shops or Muslim-friendly restaurants in Hsinchu?',
             author: 'Kevin Kevin (NTHU)',
             replies: 32,
             views: 310,
-            time: '1 hari yang lalu',
+            time: '1 day ago',
         },
     ];
 
     return (
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
-            {/* Kolom Kiri: Daftar Thread Utama (3/4 Lebar) */}
+            {/* Left column: main thread list. */}
             <div className="space-y-4 lg:col-span-3">
                 {/* Kontrol Forum */}
                 <div className="flex items-center justify-between rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
                     <div className="flex gap-2">
                         <button className="rounded-lg bg-gray-900 px-3 py-1.5 text-xs font-medium text-white">
-                            Terbaru
+                            Latest
                         </button>
                         <button className="rounded-lg border bg-white px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50">
                             Populer
                         </button>
                     </div>
                     <button className="rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-blue-700">
-                        + Buat Diskusi Baru
+                        + Start a New Discussion
                     </button>
                 </div>
 
-                {/* List Diskusi */}
+                {/* Discussion list. */}
                 <div className="divide-y divide-gray-100 rounded-2xl border border-gray-200 bg-white shadow-sm">
                     {threads.map((thread) => (
                         <div
@@ -76,7 +76,7 @@ export default function Community() {
                                         💬 {thread.replies} Balasan
                                     </span>
                                     <span className="flex items-center gap-1">
-                                        👁️ {thread.views} Dilihat
+                                        👁️ {thread.views} Views
                                     </span>
                                 </div>
                             </div>
@@ -85,7 +85,7 @@ export default function Community() {
                 </div>
             </div>
 
-            {/* Kolom Kanan: Widget Samping (1/4 Lebar - Eksklusif setelah sidebar dihapus) */}
+            {/* Right column: sidebar widget. */}
             <div className="space-y-4">
                 {/* Aturan Komunitas */}
                 <div className="space-y-3 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
@@ -94,16 +94,16 @@ export default function Community() {
                     </h3>
                     <ul className="list-disc space-y-2 pl-4 text-xs leading-relaxed text-gray-500">
                         <li>
-                            Saling menghormati sesama anggota komunitas bakat
-                            digital.
+                            Respect every member of the digital talent
+                            community.
                         </li>
                         <li>
-                            Dilarang menyebarkan lowongan atau informasi palsu
-                            (hoax).
+                            Do not share fraudulent job listings or false
+                            information (hoax).
                         </li>
                         <li>
-                            Gunakan tag yang sesuai agar diskusi mudah dicari
-                            oleh mahasiswa lain.
+                            Use relevant tags so discussions are easy to find by
+                            other students.
                         </li>
                     </ul>
                 </div>
@@ -116,7 +116,7 @@ export default function Community() {
                     <div className="flex flex-wrap gap-1.5">
                         {[
                             '#InfoMagang',
-                            '#BeasiswaMOE',
+                            '#MOEScholarships',
                             '#TOCFL',
                             '#TaipeiTech',
                             '#PartTime',

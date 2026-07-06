@@ -61,7 +61,7 @@ class VocabularyForm
 
                             $hash = md5($text);
 
-                            // Audio sudah sesuai
+                            // The audio is already correct.
                             if (
                                 $get('audio_hash') === $hash &&
                                 filled($get('audio_path')) &&
@@ -77,7 +77,7 @@ class VocabularyForm
 
                             try {
 
-                                // Hapus audio lama jika ada
+                                // Remove the old audio when present.
                                 if (
                                     filled($get('audio_path')) &&
                                     Storage::disk('public')->exists($get('audio_path'))

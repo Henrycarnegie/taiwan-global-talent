@@ -36,12 +36,12 @@ class GoogleAuthController extends Controller
         try {
             $googleUser = Socialite::driver('google')->stateless()->user();
         } catch (\Exception $e) {
-            return redirect('/login')->with('error', 'Gagal masuk menggunakan Google.');
+            return redirect('/login')->with('error', 'Failed to sign in with Google.');
         }
 
         $roleName = session()->pull('register_role', 'student');
 
-        // 1. Cari user berdasarkan google_id atau email
+        // 1. Find the user by Google ID or email.
         $user = User::where('google_id', $googleUser->getId())
             ->orWhere('email', $googleUser->getEmail())
             ->first();
@@ -49,7 +49,7 @@ class GoogleAuthController extends Controller
         try {
             $user = DB::transaction(function () use ($user, $googleUser, $roleName) {
                 if (! $user) {
-                    // Jika User baru, buat akunnya
+                    // Create an account for a new user.
                     $newUser = User::create([
                         'email' => $googleUser->getEmail(),
                         'google_id' => $googleUser->getId(),
@@ -58,10 +58,10 @@ class GoogleAuthController extends Controller
                         'email_verified_at' => now(),
                     ]);
 
-                    // Assign role ke user yang baru dibuat
+                    // Assign a role to the newly created user.
                     $newUser->assignRole($roleName);
 
-                    // Buat data profil awal berdasarkan role
+                    // Create initial profile data based on the role.
                     if ($roleName === 'student') {
                         $newUser->studentProfile()->create(['country' => 'Taiwan']);
                     } elseif ($roleName === 'teacher') {
@@ -70,13 +70,13 @@ class GoogleAuthController extends Controller
                             'status' => 'pending',
                         ]);
                     } elseif ($roleName === 'company') {
-                        // KITA JANGAN BUAT PROFIL DULU DI SINI JIKA MAU HR MENGISI FORM NYA SENDIRI
-                        // Cukup biarkan kosong, karena nanti akan dibuat saat submit form pendaftaran (store)
+                        // Do not create the profile here if HR should complete the form themselves.
+                        // Leave it empty; it will be created when the registration form is submitted.
                     }
 
                     return $newUser;
                 } else {
-                    // Jika User lama, update data google-nya jika ada perubahan
+                    // Update Google data for an existing user when it changes.
                     $user->update([
                         'google_id' => $googleUser->getId(),
                         'name' => $googleUser->getName(),
@@ -87,14 +87,14 @@ class GoogleAuthController extends Controller
                 }
             });
         } catch (\Exception $e) {
-            // PENTING: Jika error, tampilkan detail error-nya di layar agar kita tahu field apa yang bermasalah
+            // Show error details so the problematic field can be identified.
             dd($e->getMessage(), $e->getTraceAsString());
         }
 
         Auth::login($user, true);
         request()->session()->regenerate();
 
-        // 2. LOGIKA REDIRECT SETELAH BERHASIL LOGIN
+        // 2. Redirect after a successful login.
         if ($user->hasRole('student')) {
             return redirect()->route('student.dashboard');
         }
@@ -102,12 +102,12 @@ class GoogleAuthController extends Controller
         if ($user->hasRole('company')) {
             $companyProfile = $user->companyProfile;
 
-            // Goal Anda: HR baru -> Belum punya profil -> Masuk ke Form Pendaftaran
+            // New HR user without a profile: send them to the registration form.
             if (! $companyProfile) {
                 return redirect()->route('company.register');
             }
 
-            // Jika sudah isi form, cek statusnya
+            // If the form is complete, check its status.
             if ($companyProfile->status === 'pending' || $companyProfile->status === 'rejected') {
                 return redirect()->route('company.waiting');
             }

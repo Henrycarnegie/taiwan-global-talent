@@ -1,107 +1,120 @@
+import { ArrowDownRight, ArrowRight, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { Building2, CreditCard, GraduationCap } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { translations } from '@/i18n/Landing';
+
+const pathways = [
+    {
+        number: '01',
+        title: 'Learn Mandarin',
+        color: 'bg-[#f6c453]',
+        rotate: '-rotate-3',
+    },
+    {
+        number: '02',
+        title: 'Find Scholarships',
+        color: 'bg-[#f38b66]',
+        rotate: 'rotate-2',
+    },
+    {
+        number: '03',
+        title: 'Launch Your Career',
+        color: 'bg-[#9bc7b8]',
+        rotate: '-rotate-1',
+    },
+];
 
 export default function Hero() {
     const { lang } = useLanguage();
     const t = translations[lang];
 
     return (
-        <section className="relative overflow-hidden bg-white pt-36 pb-24">
-            {/* Latar Belakang Gradasi Halus Berestetika Tinggi */}
-            <div className="pointer-events-none absolute inset-0 z-0 opacity-40 mix-blend-multiply">
-                <div className="absolute top-[-10%] left-[-10%] h-[50%] w-[50%] rounded-full bg-linear-to-br from-[#E60012]/20 to-transparent blur-3xl" />
-                <div className="absolute right-[-10%] bottom-[10%] h-[60%] w-[60%] rounded-full bg-linear-to-tl from-[#0A2A66]/20 to-transparent blur-3xl" />
-            </div>
+        <section
+            id="top"
+            className="relative overflow-hidden bg-[#fffaf0] px-5 pt-36 pb-20 sm:px-8 lg:pt-44 lg:pb-28"
+        >
+            <div className="absolute top-32 -left-24 h-72 w-72 rounded-full bg-[#f6c453]/25 blur-3xl" />
+            <div className="absolute right-0 bottom-0 h-96 w-96 rounded-full bg-[#9bc7b8]/25 blur-3xl" />
 
-            <div className="relative z-10 mx-auto max-w-5xl space-y-8 px-6 text-center">
-                {/* Lencana Atas dengan Animasi */}
-                <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                    className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50/80 px-4 py-1.5 text-xs font-semibold text-slate-700 shadow-xs backdrop-blur"
-                >
-                    🇹🇼 Taiwan Digital Talent Hub v2.0
-                </motion.div>
+            <div className="relative mx-auto grid max-w-7xl items-center gap-16 lg:grid-cols-[1.08fr_0.92fr]">
+                <div>
+                    <motion.div
+                        initial={{ opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#173b36]/15 bg-white/70 px-4 py-2 text-xs font-black tracking-[0.16em] text-[#1f4d46] uppercase"
+                    >
+                        <Sparkles className="h-4 w-4 text-[#f26a3d]" /> Your
+                        Taiwan journey starts here
+                    </motion.div>
 
-                {/* Judul Utama yang Kuat */}
-                <motion.h1
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.1 }}
-                    className="mx-auto max-w-4xl text-4xl font-extrabold tracking-tight text-slate-950 sm:text-5xl md:text-6xl md:leading-[1.15]"
-                >
-                    {t.heroTitle.split('&').map((text, index) => (
-                        <span
-                            key={index}
-                            className={
-                                index === 1
-                                    ? 'block bg-linear-to-r from-[#E60012] to-[#0A2A66] bg-clip-text text-transparent'
-                                    : ''
-                            }
+                    <motion.h1
+                        initial={{ opacity: 0, y: 18 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.08 }}
+                        className="max-w-4xl font-serif text-[clamp(3.7rem,8vw,7.5rem)] leading-[0.86] font-black tracking-[-0.065em] text-[#173b36]"
+                    >
+                        Build a future that feels
+                        <span className="relative ml-3 inline-block text-[#f26a3d] italic">
+                            possible.
+                        </span>
+                    </motion.h1>
+
+                    <motion.p
+                        initial={{ opacity: 0, y: 18 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.16 }}
+                        className="mt-8 max-w-xl text-lg leading-8 text-[#55716c] sm:text-xl"
+                    >
+                        {t.heroDesc} Learn the language, meet the right people,
+                        and turn your ambition into a life in Taiwan.
+                    </motion.p>
+
+                    <motion.div
+                        initial={{ opacity: 0, y: 18 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.24 }}
+                        className="mt-9 flex flex-col gap-3 sm:flex-row"
+                    >
+                        <a
+                            href="/login"
+                            className="inline-flex items-center justify-center gap-3 rounded-full bg-[#f26a3d] px-7 py-4 text-sm font-black text-white shadow-[0_10px_0_#173b36] transition hover:-translate-y-1 hover:shadow-[0_14px_0_#173b36]"
                         >
-                            {index === 1 ? ` & ${text}` : text}
-                        </span>
+                            Start your journey{' '}
+                            <ArrowRight className="h-4 w-4" />
+                        </a>
+                        <a
+                            href="#features"
+                            className="inline-flex items-center justify-center gap-3 rounded-full border-2 border-[#173b36] px-7 py-4 text-sm font-black text-[#173b36] transition hover:bg-[#173b36] hover:text-white"
+                        >
+                            Explore programs{' '}
+                            <ArrowDownRight className="h-4 w-4" />
+                        </a>
+                    </motion.div>
+                </div>
+
+                <div className="relative mx-auto min-h-[430px] w-full max-w-lg">
+                    <div className="absolute top-0 right-3 rounded-full bg-[#173b36] px-5 py-3 text-xs font-black tracking-widest text-white uppercase">
+                        One platform · Every step
+                    </div>
+                    {pathways.map((pathway, index) => (
+                        <motion.div
+                            key={pathway.number}
+                            initial={{ opacity: 0, x: 30 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.18 + index * 0.1 }}
+                            className={`absolute ${pathway.rotate} ${pathway.color} flex w-[88%] items-center justify-between rounded-[2rem] border-2 border-[#173b36] p-6 shadow-[8px_9px_0_#173b36]`}
+                            style={{ top: 72 + index * 112, right: index * 10 }}
+                        >
+                            <span className="text-xs font-black tracking-[0.2em] text-[#173b36]/60">
+                                {pathway.number}
+                            </span>
+                            <span className="font-serif text-2xl font-black tracking-tight text-[#173b36] sm:text-3xl">
+                                {pathway.title}
+                            </span>
+                            <ArrowDownRight className="h-6 w-6 text-[#173b36]" />
+                        </motion.div>
                     ))}
-                </motion.h1>
-
-                {/* Deskripsi Sub-judul */}
-                <motion.p
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.2 }}
-                    className="mx-auto max-w-2xl text-base leading-relaxed text-slate-500 sm:text-lg"
-                >
-                    {t.heroDesc}
-                </motion.p>
-
-                {/* Tombol Aksi Interaktif */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.3 }}
-                    className="flex flex-wrap justify-center gap-4 pt-2"
-                >
-                    <button className="group relative rounded-full bg-[#E60012] px-8 py-3.5 text-sm font-bold text-white shadow-lg shadow-red-500/20 transition-all duration-200 hover:bg-[#c80010] hover:shadow-xl hover:shadow-red-500/30 active:scale-98">
-                        {t.cta}
-                        <span className="ml-2 inline-block transition-transform duration-200 group-hover:translate-x-1">
-                            →
-                        </span>
-                    </button>
-
-                    <button className="rounded-full border border-slate-200 bg-white px-8 py-3.5 text-sm font-bold text-slate-700 shadow-xs transition-all duration-200 hover:border-slate-300 hover:bg-slate-50 active:scale-98">
-                        {t.company}
-                    </button>
-                </motion.div>
-
-                {/* Info Fitur Mini di Bawah CTA */}
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 1, delay: 0.5 }}
-                    className="mx-auto flex max-w-xl flex-wrap items-center justify-center gap-x-6 gap-y-2 border-t border-slate-100 pt-6 text-xs font-medium text-slate-400"
-                >
-                    <span className="flex items-center gap-1.5">
-                        <CreditCard className="h-4 w-4 text-yellow-400" />
-                        No Credit Card Required
-                    </span>
-
-                    <span className="text-slate-200">•</span>
-
-                    <span className="flex items-center gap-1.5">
-                        <GraduationCap className="h-4 w-4 text-blue-400" />
-                        Verified University Partner
-                    </span>
-
-                    <span className="text-slate-200">•</span>
-
-                    <span className="flex items-center gap-1.5">
-                        <Building2 className="h-4 w-4 text-emerald-400" />
-                        Direct HR Integration
-                    </span>
-                </motion.div>
+                </div>
             </div>
         </section>
     );

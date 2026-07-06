@@ -1,15 +1,12 @@
-import { Link } from "@inertiajs/react";
-import { LoginPage } from "@/routes/Auth";
+import { Link } from '@inertiajs/react';
+import { LoginPage } from '@/routes/Auth';
 
 export default function Login() {
-
     return (
-        <Link href={LoginPage()} className="flex items-center justify-center bg-gray-50">
-            <button
-                className="hover:bg-gray-05 flex items-center justify-center gap-3 rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition-all duration-200 hover:shadow-md cursor-pointer active:bg-gray-200"
-            >
+        <Link href={LoginPage()} className="flex items-center justify-center">
+            <button className="flex cursor-pointer items-center justify-center gap-2 rounded-full bg-[#173b36] px-5 py-3 text-sm font-black text-white transition hover:-translate-y-0.5 hover:bg-[#f26a3d]">
                 <svg
-                    className="h-5 w-5"
+                    className="h-4 w-4"
                     viewBox="0 0 24 24"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
@@ -31,7 +28,7 @@ export default function Login() {
                         fill="#EA4335"
                     />
                 </svg>
-                <span>Continue with Google</span>
+                <span className="hidden sm:inline">Get started</span>
             </button>
         </Link>
     );
