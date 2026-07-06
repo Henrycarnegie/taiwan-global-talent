@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('pinyin');
             $table->string('meaning');
             $table->string('audio_path');
-            $table->string('audio_hash')->nullable()->after('audio_path');
             $table->integer('sort_order')->default(1);
             $table->boolean('is_active')->default(true);
             $table->timestamps();
