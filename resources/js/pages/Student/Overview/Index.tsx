@@ -1,9 +1,9 @@
-import { ArrowRight } from 'lucide-react';
-import Card from '@/components/UI/Card';
+// import { ArrowRight } from 'lucide-react';
+// import Card from '@/components/UI/Card';
 
-interface DashboardOverviewProps {
-    onNavigateToCommunity: () => void;
-}
+// interface DashboardOverviewProps {
+//     onNavigateToCommunity: () => void;
+// }
 
 export default function DashboardOverview({
     onNavigateToCommunity,

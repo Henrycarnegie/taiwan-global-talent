@@ -1,3 +1,5 @@
+import Layout from '../Layout';
+
 export default function Community() {
     const threads = [
         {

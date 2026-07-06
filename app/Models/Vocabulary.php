@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Vocabulary extends Model
 {
@@ -17,9 +18,11 @@ class Vocabulary extends Model
         'is_active',
     ];
 
-    public function lesson()
+    public function lessons(): BelongsToMany
     {
-        return $this->belongsTo(Lesson::class);
+        return $this->belongsToMany(Lesson::class, 'lesson_vocabulary')
+                    ->withPivot('sort_order')
+                    ->withTimestamps();
     }
 
     public function getPronunciationAttribute()

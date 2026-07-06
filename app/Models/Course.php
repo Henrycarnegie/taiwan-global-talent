@@ -4,17 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Course extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'title',
-        'description',
-        'mandarin_level',
-        'is_published',
-    ];
+    protected $fillable = ['title', 'description', 'mandarin_level', 'is_published'];
 
     public function isCompletedByUser($userId)
     {
@@ -29,7 +25,7 @@ class Course extends Model
 
     public function lessons()
     {
-        return $this->hasMany(Lesson::class);
+        return $this->hasMany(Lesson::class)->orderBy('order');;
     }
 
     public function category()

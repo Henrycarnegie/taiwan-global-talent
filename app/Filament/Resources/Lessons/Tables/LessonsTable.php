@@ -17,6 +17,11 @@ class LessonsTable
     {
         return $table
             ->columns([
+                TextColumn::make('course.title')
+                    ->label('Course')
+                    ->sortable()
+                    ->searchable(),
+
                 TextColumn::make('title')
                     ->sortable()
                     ->searchable(),

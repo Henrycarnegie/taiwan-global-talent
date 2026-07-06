@@ -24,16 +24,13 @@ class VocabularyForm
     public static function configure(Schema $schema): Schema
     {
         return $schema->components([
-            Select::make('lesson_id')
-                ->label('Lesson')
-                ->relationship('lesson', 'title')
-                ->required()
-                ->searchable(),
-
-            TextInput::make('sort_order')
-                ->numeric()
-                ->default(1)
-                ->required(),
+            Select::make('lessons')
+                ->label('Lessons')
+                ->relationship('lessons', 'title')
+                ->multiple()
+                ->preload()
+                ->searchable()
+                ->columnSpanFull(),
 
             Hidden::make('audio_hash'),
 
@@ -44,10 +41,9 @@ class VocabularyForm
                     Action::make('generateAudio')
                         ->label('Generate')
                         ->icon('heroicon-o-speaker-wave')
-                        ->button() // tampil sebagai tombol, bukan icon saja
+                        ->button()
                         ->color('primary')
                         ->action(function (callable $get, callable $set) {
-
                             $text = trim($get('hanzi'));
 
                             if (blank($text)) {
@@ -85,21 +81,18 @@ class VocabularyForm
                                     Storage::disk('public')->delete($get('audio_path'));
                                 }
 
-                                $credentialsPath = storage_path(env('GOOGLE_APPLICATION_CREDENTIALS'));
+                                $credentialsPath = storage_path(env('GOOGLE_TTS_APPLICATION_CREDENTIALS'));
 
                                 $client = new TextToSpeechClient([
                                     'credentials' => $credentialsPath,
                                 ]);
 
-                                $input = (new SynthesisInput)
-                                    ->setText($text);
-
-                                $voice = (new VoiceSelectionParams)
-                                    ->setLanguageCode('cmn-TW');
+                                $input = (new SynthesisInput)->setText($text);
+                                $voice = (new VoiceSelectionParams)->setLanguageCode('cmn-TW');
 
                                 $audioConfig = (new AudioConfig)
                                     ->setAudioEncoding(AudioEncoding::MP3)
-                                    ->setSpeakingRate(0.75)
+                                    ->setSpeakingRate(0.70)
                                     ->setPitch(0);
 
                                 $request = (new SynthesizeSpeechRequest)
@@ -108,7 +101,6 @@ class VocabularyForm
                                     ->setAudioConfig($audioConfig);
 
                                 $response = $client->synthesizeSpeech($request);
-
                                 $filename = 'tts/'.Str::uuid().'.mp3';
 
                                 Storage::disk('public')->put(
@@ -127,7 +119,6 @@ class VocabularyForm
                                     ->send();
 
                             } catch (\Exception $e) {
-
                                 \Log::error($e);
 
                                 Notification::make()
@@ -149,11 +140,12 @@ class VocabularyForm
                 ->helperText('Auto-generated from Hanzi'),
 
             TextInput::make('pinyin')
-                ->label('Pinyin (display only)')
+                ->label('Pinyin')
                 ->required(),
 
+            // --- 2. DISESUAIKAN DENGAN NAMA KOLOM MIGRATION (translation) ---
             TextInput::make('meaning')
-                ->label('Meaning')
+                ->label('Meaning / Translation')
                 ->required(),
 
             Toggle::make('is_active')
