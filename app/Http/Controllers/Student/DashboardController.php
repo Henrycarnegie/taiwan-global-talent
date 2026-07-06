@@ -14,7 +14,7 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Student/Dashboard', [
+        return Inertia::render('Student/Index', [
             'stats' => [
                 'courses' => 3,
                 'certificates' => 2,

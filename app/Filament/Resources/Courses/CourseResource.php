@@ -18,6 +18,8 @@ use Filament\Tables\Table;
 use Filament\Tables\Filters\SelectFilter;
 use App\Models\CourseCategory;
 
+use App\Filament\Resources\Courses\RelationManagers\LessonsRelationManager;
+
 class CourseResource extends Resource
 {
     protected static ?string $model = Course::class;
@@ -41,7 +43,7 @@ class CourseResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            LessonsRelationManager::class, // <-- Tambahkan ini
         ];
     }
 

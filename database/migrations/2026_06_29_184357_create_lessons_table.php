@@ -12,11 +12,25 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('lessons', function (Blueprint $table) {
+            // $table->id();
+            // // Menghubungkan Lesson ke Course
+            // $table->foreignId('course_id')->constrained()->cascadeOnDelete(); 
+            // $table->string('title');
+            // $table->text('content');
+            // $table->integer('order')->default(0);
+            // $table->timestamps();
             $table->id();
-            $table->foreignId('course_id')->constrained()->onDelete('cascade'); // This links to courses
+            
+            $table->foreignId('course_id')->constrained()->cascadeOnDelete(); 
+            
             $table->string('title');
-            $table->text('content'); // The actual lesson text or video link
-            $table->integer('order'); // To keep them in sequence
+            $table->text('content');
+            
+            $table->text('sentence_hanzi')->nullable(); 
+            $table->string('audio_path')->nullable();   
+            $table->string('audio_hash')->nullable();  
+            
+            $table->integer('order')->default(0);
             $table->timestamps();
         });
     }
