@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             RoleSeeder::class,
+            VocabularySeeder::class,
         ]);
 
         $user = User::create([

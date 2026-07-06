@@ -87,7 +87,6 @@ class GoogleAuthController extends Controller
                 }
             });
         } catch (\Exception $e) {
-            // PENTING: Jika error, tampilkan detail error-nya di layar agar kita tahu field apa yang bermasalah
             dd($e->getMessage(), $e->getTraceAsString());
         }
 

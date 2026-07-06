@@ -22,11 +22,6 @@ class VocabulariesTable
     {
         return $table
             ->columns([
-                TextColumn::make('lesson.title')
-                    ->label('Lesson')
-                    ->sortable()
-                    ->searchable(),
-
                 TextColumn::make('hanzi')
                     ->label('Hanzi')
                     ->sortable()
@@ -59,7 +54,7 @@ class VocabulariesTable
                     ]),
             ])
             ->filters([
-                //
+                // 
             ])
             ->recordActions([
                 EditAction::make(),
