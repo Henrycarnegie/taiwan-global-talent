@@ -4,8 +4,8 @@
 use App\Http\Controllers\Auth\AdminAuthController;
 use App\Http\Controllers\Auth\GoogleAuthController;
 // Company
-use App\Http\Controllers\Company\DashboardController as CompanyDashboardController;
 use App\Http\Controllers\Company\CompanyApplyController;
+use App\Http\Controllers\Company\DashboardController as CompanyDashboardController;
 // Course
 use App\Http\Controllers\CourseRouteController;
 // Profile
@@ -46,7 +46,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/waiting', [CompanyApplyController::class, 'waiting'])->name('waiting');
     });
 
-    Route::middleware(['check.company.status'])->prefix('company')->name('company.')->group(function () {
+    Route::middleware(['role:company', 'check.company.status'])->prefix('company')->name('company.')->group(function () {
         Route::get('/dashboard', [CompanyDashboardController::class, 'index'])->name('dashboard');
     });
 
@@ -69,19 +69,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/teacher/dashboard', [TeacherDashboardController::class, 'index'])->name('teacher.dashboard');
     });
 
-    // Company Dashboard
-    Route::middleware('role:company')->group(function () {
-        Route::get('/company/dashboard', [CompanyDashboardController::class, 'index'])->name('company.dashboard');
-    });
-
     // Admin
     Route::middleware('role:admin')->group(function () {
         Route::get('/courses/c/{courseRoute}', [CourseRouteController::class, 'show'])->name('dynamic.courses.route');
     });
 
     // Profile & Logout
-    Route::get('/profile', [ProfileController::class, 'edit']);
-    Route::post('/profile', [ProfileController::class, 'update']);
+    Route::middleware('role:student')->group(function () {
+        Route::get('/profile', [ProfileController::class, 'edit']);
+        Route::post('/profile', [ProfileController::class, 'update']);
+    });
 
     Route::post('/logout', function () {
         auth()->logout();

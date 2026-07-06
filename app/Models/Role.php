@@ -3,15 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 class Role extends Model
 {
     protected $fillable = ['name', 'slug'];
 
-    protected static function booted()
+    protected static function booted(): void
     {
-        static::creating(function ($role) {
+        static::creating(function (Role $role): void {
             if (empty($role->slug)) {
                 $role->slug = Str::slug($role->name);
             }

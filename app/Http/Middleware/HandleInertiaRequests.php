@@ -37,10 +37,9 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         $user = Auth::user();
+        $relation = null;
 
         if ($user) {
-            $relation = null;
-
             if ($user->hasRole('teacher')) {
                 $relation = 'teacherProfile';
             } elseif ($user->hasRole('student')) {
@@ -77,7 +76,7 @@ class HandleInertiaRequests extends Middleware
                             'id' => $activeProfile->id,
                             'bio' => $activeProfile->bio,
                             'expertise' => $activeProfile->expertise,
-                            'certification_path' => $activeProfile->certification_path,
+                            'certificate_path' => $activeProfile->certificate_path,
                         ],
                         // Student
                         'student' => [
@@ -89,10 +88,10 @@ class HandleInertiaRequests extends Middleware
                         // Company
                         'company' => [
                             'id' => $activeProfile->id,
-                            'company_name' => $activeProfile->company_name,
+                            'company_name' => $activeProfile->company_display_name,
                             'industry' => $activeProfile->industry,
-                            'website' => $activeProfile->website,
-                            'address' => $activeProfile->address,
+                            'website' => $activeProfile->website_url,
+                            'address' => $activeProfile->hq_address,
                         ],
                         default => null,
                     } : null,

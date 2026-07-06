@@ -27,6 +27,10 @@ class AdminPanelProvider extends PanelProvider
 {
     private function getCourseDynamicMenu(): array
     {
+        if (app()->runningInConsole()) {
+            return [];
+        }
+
         if (! Schema::hasTable('course_routes')) {
             return [];
         }
@@ -35,7 +39,7 @@ class AdminPanelProvider extends PanelProvider
             return CourseRoute::where('is_active', true)
                 ->orderBy('order')
                 ->get(['title', 'slug', 'icon'])
-                ->toArray(); 
+                ->toArray();
         });
 
         $menuItems = [];

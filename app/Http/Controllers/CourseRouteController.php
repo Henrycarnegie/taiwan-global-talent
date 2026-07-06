@@ -3,18 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\CourseRoute;
-use App\Models\Course;
-use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class CourseRouteController extends Controller
 {
-    public function show(CourseRoute $courseRoute)
+    public function show(CourseRoute $courseRoute): Response
     {
-        if (!$courseRoute->is_active) {
+        if (! $courseRoute->is_active) {
             abort(404);
         }
 
-        return view('courses.dynamic-index', [
+        return Inertia::render('Student/MandarinCourse/Index', [
             'courseRoute' => $courseRoute,
         ]);
     }
