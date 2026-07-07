@@ -128,6 +128,6 @@ class GoogleAuthController extends Controller
             return redirect()->route('teacher.dashboard');
         }
 
-        return redirect('/home');
+        return redirect('/');
     }
 }

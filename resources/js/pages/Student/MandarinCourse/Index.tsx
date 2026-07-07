@@ -3,102 +3,111 @@ import { LockKeyholeIcon, PlayIcon } from 'lucide-react';
 import Card from '@/components/UI/Card';
 import Layout from '../Layout';
 
-interface Course {
+interface Category {
     id: number;
-    title: string;
-    chineseTitle: string;
-    level: string;
-    modules_count: number;
-    progress: number;
-    status: 'Completed' | 'In Progress' | 'Locked';
+    name: string;
+    slug: string;
 }
 
 interface Props {
-    courses: Course[];
+    courses: any[];
     stats: any;
+    currentCategory: Category;
+    allCategories: Category[];
 }
 
-export default function Index({ courses = [], stats }: Props) {
+export default function Index({ courses = [], stats, currentCategory, allCategories = [] }: Props) {
+    const isMandarin = currentCategory.id === 1;
+
     return (
         <Layout>
             <div className="space-y-8">
+                {/* 1. DINAMIS TAB NAVIGASI KATEGORI */}
+                <div className="flex border-b border-gray-200 space-x-4 bg-white p-4 rounded-2xl shadow-xs">
+                    {allCategories.map((cat) => (
+                        <Link
+                            key={cat.id}
+                            href={`/student/courses/${cat.slug}`}
+                            className={`px-4 py-2 text-sm font-bold rounded-xl transition-all ${
+                                currentCategory.id === cat.id
+                                    ? 'bg-blue-600 text-white'
+                                    : 'text-gray-500 hover:bg-gray-50'
+                            }`}
+                        >
+                            {cat.name}
+                        </Link>
+                    ))}
+                </div>
+
+                {/* Header Judul Dinamis */}
                 <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-xs md:p-8">
-                    <h2 className="flex items-center gap-2 text-xl font-bold text-gray-900">
-                        Mandarin Learning Center{' '}
-                        <span className="text-sm font-normal text-gray-400">
-                            華語中心
-                        </span>
+                    <h2 className="text-xl font-bold text-gray-900">
+                        {currentCategory.name} Learning Center{' '}
+                        {isMandarin && <span className="text-sm font-normal text-gray-400">華語中心</span>}
                     </h2>
                 </div>
 
+                {/* 2. STATISTIK KONDISIONAL CERDAS */}
                 <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
-                    <Card
-                        title="Current Proficiency"
-                        value={stats?.proficiency || 'TOCFL A1'}
-                        subTitle="Assessed level"
-                    />
+                    {isMandarin && (
+                        <Card
+                            title="Current Proficiency"
+                            value={stats?.proficiency || 'TOCFL A1'}
+                            subTitle="Assessed level"
+                        />
+                    )}
                     <Card
                         title="Learning Hours"
                         value={`${stats?.learning_hours || 0} Hours`}
                         subTitle="Total time invested"
                     />
-                    <Card
-                        title="Vocabulary Mastered"
-                        value={`${stats?.vocab_count || 0} Words`}
-                        subTitle="Total words learned"
-                    />
+                    {isMandarin && (
+                        <Card
+                            title="Vocabulary Mastered"
+                            value={`${stats?.vocab_count || 0} Words`}
+                            subTitle="Total words learned"
+                        />
+                    )}
                 </div>
 
+                {/* Daftar Kursus */}
                 <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-xs">
                     <div className="divide-y divide-gray-100">
-                        {courses.map((course: any) => (
-                            <div
-                                key={course.id}
-                                className="flex flex-col justify-between gap-6 p-6 transition-colors hover:bg-gray-50/40 md:flex-row md:items-center"
-                            >
-                                <div className="flex-1 space-y-1">
-                                    <span className="rounded-md bg-blue-50 px-2 py-0.5 text-xs font-bold text-blue-600 uppercase">
-                                        {course.level}
-                                    </span>
-                                    <h4 className="text-base font-bold text-gray-900">
-                                        {course.title}
-                                    </h4>
-                                    <p className="text-xs text-gray-400">
-                                        {course.chineseTitle}
-                                    </p>
-                                </div>
+                        {courses.length === 0 ? (
+                            <div className="p-8 text-center text-gray-400 text-sm">Belum ada kelas yang tersedia di kategori ini.</div>
+                        ) : (
+                            courses.map((course: any) => (
+                                <div key={course.id} className="flex flex-col justify-between gap-6 p-6 transition-colors hover:bg-gray-50/40 md:flex-row md:items-center">
+                                    <div className="flex-1 space-y-1">
+                                        <span className="rounded-md bg-blue-50 px-2 py-0.5 text-xs font-bold text-blue-600 uppercase">
+                                            {course.level}
+                                        </span>
+                                        <h4 className="text-base font-bold text-gray-900">{course.title}</h4>
+                                    </div>
 
-                                <div className="w-full space-y-1 md:w-48">
-                                    <div className="h-1.5 w-full overflow-hidden rounded-full bg-gray-100">
-                                        <div
-                                            className="h-full rounded-full bg-blue-600"
-                                            style={{
-                                                width: `${course.progress}%`,
-                                            }}
-                                        ></div>
+                                    <div className="w-full space-y-1 md:w-48">
+                                        <div className="h-1.5 w-full overflow-hidden rounded-full bg-gray-100">
+                                            <div className="h-full rounded-full bg-blue-600" style={{ width: `${course.progress}%` }}></div>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        {course.status === 'Locked' ? (
+                                            <button disabled className="flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-xl border border-gray-200 bg-gray-50 px-5 py-2.5 text-xs font-bold text-gray-400 md:w-auto">
+                                                <LockKeyholeIcon size={14} /> Locked
+                                            </button>
+                                        ) : (
+                                            <Link
+                                                href={`/student/courses/${currentCategory.slug}/${course.id}`}
+                                                className="flex w-full items-center justify-center gap-2 rounded-xl border border-transparent bg-blue-600 px-5 py-2.5 text-xs font-bold text-white transition-all hover:bg-blue-700 active:scale-95 md:w-auto"
+                                            >
+                                                <PlayIcon size={14} /> Resume Learning
+                                            </Link>
+                                        )}
                                     </div>
                                 </div>
-
-                                <div>
-                                    {course.status === 'Locked' ? (
-                                        <button
-                                            disabled
-                                            className="flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-xl border border-gray-200 bg-gray-50 px-5 py-2.5 text-xs font-bold text-gray-400 md:w-auto"
-                                        >
-                                            <LockKeyholeIcon size={14} /> Locked
-                                        </button>
-                                    ) : (
-                                        <Link
-                                            href={`/mandarin-courses/${course.id}`}
-                                            className="flex w-full items-center justify-center gap-2 rounded-xl border border-transparent bg-blue-600 px-5 py-2.5 text-xs font-bold text-white transition-all hover:bg-blue-700 active:scale-95 md:w-auto"
-                                        >
-                                            <PlayIcon size={14} /> Resume
-                                            Learning
-                                        </Link>
-                                    )}
-                                </div>
-                            </div>
-                        ))}
+                            ))
+                        )}
                     </div>
                 </div>
             </div>

@@ -19,7 +19,7 @@ class CoursesTable
             ->columns([
                 TextColumn::make('title')
                     ->searchable(),
-                TextColumn::make('mandarin_level')
+                TextColumn::make('level')
                     ->searchable(),
                 IconColumn::make('is_published')
                     ->boolean(),

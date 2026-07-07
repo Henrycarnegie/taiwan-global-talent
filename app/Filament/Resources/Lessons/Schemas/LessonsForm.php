@@ -2,12 +2,13 @@
 
 namespace App\Filament\Resources\Lessons\Schemas;
 
+use App\Models\Course;
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Schema;
@@ -28,8 +29,10 @@ class LessonsForm
             ->components([
                 Select::make('course_id')
                     ->relationship('course', 'title')
-                    ->label('Course')
-                    ->preload(),
+                    ->label('Course / Kursus')
+                    ->required()
+                    ->preload()
+                    ->reactive(),
 
                 ...self::getRepeaterComponents(),
             ]);
@@ -37,41 +40,96 @@ class LessonsForm
 
     public static function getRepeaterComponents(): array
     {
+        $isMandarin = function (callable $get) {
+            $courseId = $get('course_id');
+            if (! $courseId) {
+                return false;
+            }
+            $course = Course::find($courseId);
+
+            return $course && $course->category_id === 1;
+        };
+
         return [
             TextInput::make('title')
-                ->label('Title')
-                ->required(),
-
-            Textarea::make('content')
-                ->label('Content')
+                ->label('Lesson Title')
                 ->required(),
 
             TextInput::make('order')
-                ->label('Order')
+                ->label('Order / Urutan Materi')
                 ->numeric()
+                ->default(0)
                 ->required(),
 
+            
+            Select::make('content_type')
+                ->label('Tipe Konten Pembelajaran')
+                ->options([
+                    'text' => '📝 Teks Paragraf / Artikel',
+                    'video' => '🎥 Video Materi',
+                    'audio' => '🎵 Audio Podcast / Listening',
+                    'pdf' => '📄 Dokumen PDF / E-Book',
+                ])
+                ->default('text')
+                ->required()
+                ->reactive(), 
+
+            // Muncul jika tipe konten adalah "text"
+            RichEditor::make('content')
+                ->label('Isi Artikel Materi')
+                ->columnSpanFull()
+                ->visible(fn (callable $get) => $get('content_type') === 'text')
+                ->required(fn (callable $get) => $get('content_type') === 'text'),
+
+            // Muncul jika tipe konten adalah "video" (Bisa upload langsung atau tempel link YouTube)
+            TextInput::make('video_url')
+                ->label('Link URL Video (YouTube / Vimeo)')
+                ->placeholder('https://www.youtube.com/watch?v=...')
+                ->columnSpanFull()
+                ->visible(fn (callable $get) => $get('content_type') === 'video'),
+
+            FileUpload::make('video_path')
+                ->label('Atau Upload File Video')
+                ->disk('public')
+                ->directory('courses/videos')
+                ->visible(fn (callable $get) => $get('content_type') === 'video')
+                ->acceptedFileTypes(['video/mp4', 'video/mkv']),
+
+            // Muncul jika tipe konten adalah "audio"
+            FileUpload::make('lesson_audio_path')
+                ->label('Upload File Audio Pembelajaran')
+                ->disk('public')
+                ->directory('courses/audios')
+                ->acceptedFileTypes(['audio/mpeg', 'audio/mp3', 'audio/wav'])
+                ->visible(fn (callable $get) => $get('content_type') === 'audio')
+                ->required(fn (callable $get) => $get('content_type') === 'audio'),
+
+            // Muncul jika tipe konten adalah "pdf"
+            FileUpload::make('pdf_path')
+                ->label('Upload Dokumen PDF')
+                ->disk('public')
+                ->directory('courses/documents')
+                ->acceptedFileTypes(['application/pdf'])
+                ->visible(fn (callable $get) => $get('content_type') === 'pdf')
+                ->required(fn (callable $get) => $get('content_type') === 'pdf'),
+
+            // -------------------------------------------------------
+            // BLOK ATRIBUT KHUSUS MANDARIN (Hanya Muncul jika Kategori = 1)
+            // -------------------------------------------------------
             Repeater::make('sentences')
                 ->relationship('sentences')
-                ->label('List of sentences in this lesson')
+                ->label('List of Sentences (Daftar Kalimat)')
                 ->columnSpanFull()
                 ->reorderable('sort_order')
                 ->collapsible()
+                ->hidden(fn (callable $get) => ! $isMandarin($get)) // Proteksi Kunci Mandarin
                 ->addActionLabel('Add new sentences')
                 ->schema([
-                    TextInput::make('pinyin')
-                        ->label('Pinyin')
-                        ->required(),
-
-                    TextInput::make('meaning')
-                        ->label('Meaning in English')
-                        ->required(),
-
+                    TextInput::make('pinyin')->label('Pinyin')->required(),
+                    TextInput::make('meaning')->label('Meaning')->required(),
                     Hidden::make('audio_hash'),
-
                     TextInput::make('hanzi')
-                        ->label('Chinese Sentence')
-                        ->placeholder('Example: 我要點這個。')
+                        ->label('Chinese Sentence (Hanzi)')
                         ->required()
                         ->suffixAction(
                             Action::make('generateSentenceAudio')
@@ -80,78 +138,42 @@ class LessonsForm
                                 ->button()
                                 ->color('success')
                                 ->action(function (callable $get, callable $set) {
-                                    // Mengambil teks Hanzi spesifik dari baris repeater ini
                                     $text = trim($get('hanzi'));
-
                                     if (blank($text)) {
                                         Notification::make()->title('Sentence cannot be empty')->danger()->send();
 
                                         return;
                                     }
-
                                     $hash = md5($text);
-
-                                    if (
-                                        $get('audio_hash') === $hash &&
-                                        filled($get('audio_path')) &&
-                                        Storage::disk('public')->exists($get('audio_path'))
-                                    ) {
-                                        Notification::make()->title('Audio is already up to date').info()->send();
+                                    if ($get('audio_hash') === $hash && filled($get('audio_path')) && Storage::disk('public')->exists($get('audio_path'))) {
+                                        Notification::make()->title('Audio is already up to date')->info()->send();
 
                                         return;
                                     }
-
                                     try {
-                                        if (
-                                            filled($get('audio_path')) &&
-                                            Storage::disk('public')->exists($get('audio_path'))
-                                        ) {
+                                        if (filled($get('audio_path')) && Storage::disk('public')->exists($get('audio_path'))) {
                                             Storage::disk('public')->delete($get('audio_path'));
                                         }
-
                                         $credentialsPath = storage_path(env('GOOGLE_TTS_APPLICATION_CREDENTIALS'));
                                         $client = new TextToSpeechClient(['credentials' => $credentialsPath]);
-
                                         $input = (new SynthesisInput)->setText($text);
                                         $voice = (new VoiceSelectionParams)->setLanguageCode('cmn-TW');
-                                        $audioConfig = (new AudioConfig)
-                                            ->setAudioEncoding(AudioEncoding::MP3)
-                                            ->setSpeakingRate(0.70)
-                                            ->setPitch(0);
-
-                                        $request = (new SynthesizeSpeechRequest)
-                                            ->setInput($input)
-                                            ->setVoice($voice)
-                                            ->setAudioConfig($audioConfig);
-
+                                        $audioConfig = (new AudioConfig)->setAudioEncoding(AudioEncoding::MP3)->setSpeakingRate(0.70)->setPitch(0);
+                                        $request = (new SynthesizeSpeechRequest)->setInput($input)->setVoice($voice)->setAudioConfig($audioConfig);
                                         $response = $client->synthesizeSpeech($request);
                                         $filename = 'tts/sentences/'.Str::uuid().'.mp3';
-
                                         Storage::disk('public')->put($filename, $response->getAudioContent());
-
                                         $set('audio_path', $filename);
                                         $set('audio_hash', $hash);
                                         $client->close();
-
                                         Notification::make()->title('Sentence audio generated successfully')->success()->send();
-
                                     } catch (\Exception $e) {
                                         \Log::error($e);
-                                        Notification::make()
-                                            ->title('Failed to generate audio')
-                                            ->body($e->getMessage())
-                                            ->danger()->send();
+                                        Notification::make()->title('Failed to generate audio')->body($e->getMessage())->danger()->send();
                                     }
                                 })
                         ),
-
-                    FileUpload::make('audio_path')
-                        ->label('Sentence Audio')
-                        ->disk('public')
-                        ->directory('tts/sentences')
-                        ->disabled()
-                        ->dehydrated()
-                        ->helperText('Auto generated from button above'),
+                    FileUpload::make('audio_path')->label('Sentence Audio File')->disk('public')->directory('tts/sentences')->disabled()->dehydrated(),
                 ]),
 
             Select::make('vocabularies')
@@ -160,7 +182,8 @@ class LessonsForm
                 ->searchable(['hanzi', 'pinyin', 'meaning'])
                 ->preload()
                 ->label('Reference Vocabulary')
-                ->columnSpanFull(),
+                ->columnSpanFull()
+                ->hidden(fn (callable $get) => ! $isMandarin($get)), // Proteksi Kunci Mandarin
         ];
     }
 }
