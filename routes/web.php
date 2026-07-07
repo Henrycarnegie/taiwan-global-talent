@@ -6,8 +6,6 @@ use App\Http\Controllers\Auth\GoogleAuthController;
 // Company
 use App\Http\Controllers\Company\CompanyApplyController;
 use App\Http\Controllers\Company\DashboardController as CompanyDashboardController;
-// Course
-use App\Http\Controllers\CourseRouteController;
 // Profile
 use App\Http\Controllers\Profile\ProfileController;
 // Student
@@ -63,13 +61,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Student
     Route::middleware('role:student')->group(function () {
         Route::get('/student/dashboard', [StudentDashboardController::class, 'index'])->name('student.dashboard');
-
-        // Rute Fitur Komunitas Siswa (Sesuai Struktur Folder Baru)
         Route::get('/student/community', [CommunityController::class, 'index'])->name('student.community');
 
-        // Rute Kursus Mandarin Halaman Terpisah
-        Route::get('/mandarin-courses', [MandarinCourseController::class, 'index'])->name('mandarin-courses.index');
-        Route::get('/mandarin-courses/{course}', [MandarinCourseController::class, 'show'])->name('mandarin-courses.show');
+        // REVOLUSI RUTE: Sekarang mendukung semua jenis kursus murni lewat Slug Kategori
+        Route::get('/student/courses/{categorySlug}', [MandarinCourseController::class, 'index'])->name('student.courses.index');
+        Route::get('/student/courses/{categorySlug}/{course}', [MandarinCourseController::class, 'show'])->name('student.courses.show');
     });
 
     // TEACHER ROLE
@@ -79,7 +75,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // ADMIN ROLE
     Route::middleware('role:admin')->group(function () {
-        Route::get('/courses/c/{courseRoute}', [CourseRouteController::class, 'show'])->name('dynamic.courses.route');
     });
 
     // Profile & Logout

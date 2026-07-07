@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Middleware;
+use App\Models\CourseCategory;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -66,6 +67,7 @@ class HandleInertiaRequests extends Middleware
                     'avatar' => $user->avatar,
                     'roles' => $user->getRoleNames(),
                     'role' => $user->roles->first()?->name,
+                    'course_categories' => CourseCategory::orderBy('order')->get(['id', 'name', 'slug']),
                     'profile' => $activeProfile ? match ($user->roles?->first()?->name) {
                         // Admin
                         'admin' => [

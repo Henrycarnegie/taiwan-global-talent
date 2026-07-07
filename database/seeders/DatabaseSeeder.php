@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RoleSeeder::class,
             VocabularySeeder::class,
+            CourseCategorySeeder::class,
+            LessonMandarinSeeder::class,
         ]);
 
         $user = User::create([

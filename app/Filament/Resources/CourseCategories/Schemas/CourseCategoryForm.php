@@ -3,17 +3,22 @@
 namespace App\Filament\Resources\CourseCategories\Schemas;
 
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Str;
+
 class CourseCategoryForm
 {
     public static function configure(Schema $schema): Schema
     {
         return $schema->schema([
             TextInput::make('name')
-                ->required(),
+                ->live(onBlur: true)
+                ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
 
             TextInput::make('slug')
-                ->required(),
+                ->disabled()
+                ->dehydrated(),
 
             TextInput::make('order')
                 ->numeric()
