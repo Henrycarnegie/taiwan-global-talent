@@ -20,6 +20,12 @@ class Lesson extends Model
         'sentence_hanzi',
         'audio_path',
         'audio_hash',
+        
+        'content_type',
+        'video_url',
+        'video_path',
+        'lesson_audio_path',
+        'pdf_path',
     ];
 
     public function course(): BelongsTo

@@ -8,7 +8,6 @@ use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
-
 class CourseCategoriesTable
 {
     public static function configure(Table $table): Table
@@ -18,9 +17,11 @@ class CourseCategoriesTable
                 TextColumn::make('name')
                     ->sortable()
                     ->searchable(),
+
                 TextColumn::make('slug')
                     ->sortable()
                     ->searchable(),
+
                 TextColumn::make('order')
                     ->sortable(),
             ])

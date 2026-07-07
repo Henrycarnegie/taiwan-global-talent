@@ -2,7 +2,6 @@
 
 namespace App\Providers\Filament;
 
-use App\Models\CourseRoute;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -25,31 +24,6 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class AdminPanelProvider extends PanelProvider
 {
-    private function getCourseDynamicMenu(): array
-    {
-        if (! Schema::hasTable('course_routes')) {
-            return [];
-        }
-
-        $dynamicRoutesData = Cache::remember('dynamic_course_sidebar_data', now()->addDays(7), function () {
-            return CourseRoute::where('is_active', true)
-                ->orderBy('order')
-                ->get(['title', 'slug', 'icon'])
-                ->toArray(); 
-        });
-
-        $menuItems = [];
-
-        foreach ($dynamicRoutesData as $route) {
-            $menuItems[] = NavigationItem::make($route['title'])
-                ->icon($route['icon'] ?? 'heroicon-o-chevron-right')
-                ->group('Course Navigator')
-                ->url("/courses/c/{$route['slug']}");
-        }
-
-        return $menuItems;
-    }
-
     public function panel(Panel $panel): Panel
     {
         return $panel
@@ -68,7 +42,6 @@ class AdminPanelProvider extends PanelProvider
                 'Course Resource',
                 'System',
             ])
-            ->navigationItems($this->getCourseDynamicMenu())
             ->pages([
                 Dashboard::class,
             ])

@@ -13,7 +13,8 @@ class ListCourses extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()
+                ->url(fn () => static::getResource()::getUrl('create', ['category' => request()->query('category')])),
         ];
     }
 }
