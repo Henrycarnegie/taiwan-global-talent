@@ -15,16 +15,18 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('description');
-            // $table->string('mandarin_level');
             $table->string('level')->nullable();
             $table->foreignId('category_id')
                 ->nullable()
                 ->constrained('course_categories')
                 ->onDelete('set null');
+    
             $table->boolean('is_published')->default(false);
+
+            $table->string('google_slides_template_id')->nullable();
+
             $table->timestamps();
         });
-
     }
 
     /**

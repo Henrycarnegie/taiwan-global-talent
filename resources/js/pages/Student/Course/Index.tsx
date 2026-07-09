@@ -1,5 +1,5 @@
-import { Link } from '@inertiajs/react';
-import { LockKeyholeIcon, PlayIcon } from 'lucide-react';
+import { Link, router } from '@inertiajs/react';
+import { PlayIcon, PlusCircleIcon } from 'lucide-react';
 import Card from '@/components/UI/Card';
 import Layout from '../Layout';
 
@@ -18,6 +18,23 @@ interface Props {
 
 export default function Index({ courses = [], stats, currentCategory, allCategories = [] }: Props) {
     const isMandarin = currentCategory.id === 1;
+
+    console.log(courses)
+
+    const handleEnroll = (courseId: number) => {
+        if (confirm('Apakah Anda yakin ingin mendaftar ke kursus ini?')) {
+            router.post(`/student/courses/${courseId}/enroll`, {}, {
+                onSuccess: () => {
+                    alert('Pendaftaran berhasil! Kelas sekarang terbuka.');
+                },
+                onError: (errors: any) => {
+                    // Tampilkan pesan error spesifik jika ada dari Laravel
+                    const errorMessages = Object.values(errors).join('\n');
+                    alert(`Gagal mendaftar kelas.\n${errorMessages}`);
+                }
+            });
+        }
+    };
 
     return (
         <Layout>
@@ -93,8 +110,11 @@ export default function Index({ courses = [], stats, currentCategory, allCategor
 
                                     <div>
                                         {course.status === 'Locked' ? (
-                                            <button disabled className="flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-xl border border-gray-200 bg-gray-50 px-5 py-2.5 text-xs font-bold text-gray-400 md:w-auto">
-                                                <LockKeyholeIcon size={14} /> Locked
+                                            <button 
+                                                onClick={() => handleEnroll(course.id)}
+                                                className="flex w-full items-center justify-center gap-2 rounded-xl border border-transparent bg-emerald-600 px-5 py-2.5 text-xs font-bold text-white transition-all hover:bg-emerald-700 active:scale-95 md:w-auto"
+                                            >
+                                                <PlusCircleIcon size={14} /> Enroll Now
                                             </button>
                                         ) : (
                                             <Link

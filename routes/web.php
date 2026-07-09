@@ -3,15 +3,21 @@
 // Auth
 use App\Http\Controllers\Auth\AdminAuthController;
 use App\Http\Controllers\Auth\GoogleAuthController;
+
 // Company
 use App\Http\Controllers\Company\CompanyApplyController;
 use App\Http\Controllers\Company\DashboardController as CompanyDashboardController;
+
 // Profile
 use App\Http\Controllers\Profile\ProfileController;
+
 // Student
 use App\Http\Controllers\Student\CommunityController;
 use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
-use App\Http\Controllers\Student\MandarinCourseController; // Pastikan Anda membuat Controller ini
+use App\Http\Controllers\Student\CourseController;
+use App\Http\Controllers\Student\LessonProgressController;
+use App\Http\Controllers\Student\EnrollmentController;
+
 // Teacher
 use App\Http\Controllers\Teacher\DashboardController as TeacherDashboardController;
 use App\Http\Controllers\Teacher\TeacherApplyController;
@@ -50,11 +56,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/student/dashboard', [StudentDashboardController::class, 'index'])->name('student.dashboard');
         Route::get('/student/community', [CommunityController::class, 'index'])->name('student.community');
 
-        // REVOLUSI RUTE: Sekarang mendukung semua jenis kursus murni lewat Slug Kategori
-        Route::get('/student/courses/{categorySlug}', [MandarinCourseController::class, 'index'])->name('student.courses.index');
-        Route::get('/student/courses/{categorySlug}/{course}', [MandarinCourseController::class, 'show'])->name('student.courses.show');
-    });
+        // 1. Pindahkan rute POST ke atas dan pastikan prefix /student/ terpasang rapi
+        Route::post('/student/courses/{course}/enroll', [EnrollmentController::class, 'enroll'])->name('student.courses.enroll');
+        Route::post('/student/courses/{course}/lessons/{lesson}/complete', [LessonProgressController::class, 'completeLesson'])->name('student.lessons.complete');
 
+        // 2. RUTE WILDCARD SLUG DI BAWAHNYA
+        Route::get('/student/courses/{categorySlug}', [CourseController::class, 'index'])->name('student.courses.index');
+        Route::get('/student/courses/{categorySlug}/{course}', [CourseController::class, 'show'])->name('student.courses.show');
+    });
+    
     // TEACHER ROLE
     Route::middleware('role:teacher')->group(function () {
         Route::get('/teacher/dashboard', [TeacherDashboardController::class, 'index'])->name('teacher.dashboard');
@@ -66,8 +76,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     // ADMIN ROLE
-    Route::middleware('role:admin')->group(function () {
-    });
+    Route::middleware('role:admin')->group(function () {});
 
     // ---------------------------------------------------------
     // Global Authenticated Routes (Profile & Logout)

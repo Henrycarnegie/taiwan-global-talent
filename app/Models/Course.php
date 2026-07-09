@@ -16,6 +16,7 @@ class Course extends Model
         'level',
         'category_id',
         'is_published',
+        'google_slides_template_id',
     ];
 
     public function isCompletedByUser($userId)
@@ -27,6 +28,13 @@ class Course extends Model
             })->count();
 
         return $totalLessons > 0 && $completedLessons === $totalLessons;
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'enrollments')
+            ->withPivot('completed_lessons_count', 'is_completed', 'completed_at')
+            ->withTimestamps();
     }
 
     public function lessons()
