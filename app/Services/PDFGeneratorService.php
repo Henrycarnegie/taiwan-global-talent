@@ -4,82 +4,81 @@ namespace App\Services;
 
 use App\Models\Course;
 use App\Models\User;
+use Exception;
 use Google\Client;
 use Google\Service\Drive;
 use Google\Service\Drive\DriveFile;
 use Google\Service\Slides;
 use Google\Service\Slides\BatchUpdatePresentationRequest;
 use Google\Service\Slides\Request;
-use Exception;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class PDFGeneratorService
 {
     protected Drive $driveService;
+
     protected Slides $slidesService;
 
     public function __construct()
     {
-        $client = new Client();
-        $client->setAuthConfig(storage_path('app/google/taiwan-global-talent-e1d95c4f9649.json'));
+        $client = new Client;
+
+        $client->setClientId(env('GOOGLE_CLIENT_ID'));
+        $client->setClientSecret(env('GOOGLE_CLIENT_SECRET'));
+        $client->refreshToken(env('GOOGLE_REFRESH_TOKEN'));
+
         $client->addScope([Drive::DRIVE, Slides::PRESENTATIONS]);
+        $client->setAccessType('offline');
 
         $this->driveService = new Drive($client);
         $this->slidesService = new Slides($client);
     }
 
-    public function generate(User $user, Course $course, string $certCode): array
+    public function generate(User $user, Course $course, string $certCode): string
     {
         $templateId = $course->google_slides_template_id;
 
         if (!$templateId) {
-            throw new Exception("Template Google Slides belum diatur untuk kursus: {$course->title}");
+            throw new Exception("Google Slides Template is not set for course: {$course->title}");
         }
 
-        // 1. DUPLIKAT TEMPLATE KE SHARED DRIVE
-        $copyFile = new DriveFile([
-            'name' => "Temp_Cert_{$certCode}",
-            // PASTIKAN INI ADALAH ID SHARED DRIVE ORGANISASI, BUKAN FOLDER PRIBADI
-            'parents' => ['1_7QDEdzkzjYXpPMHkUTGZDwf9cNY16-Z'] 
-        ]);
+        // Proses Google Drive & Slides API ...
+        $copyFile = $this->driveService->files->copy($templateId, new DriveFile([
+            'name' => "Temp_Cert_{$certCode}_{$user->name}",
+        ]));
         
-        // Parameter supportsAllDrives wajib bernilai true saat menggunakan Shared Drive
-        $copiedSlide = $this->driveService->files->copy($templateId, $copyFile, [
-            'supportsAllDrives' => true 
-        ]);
-        
-        $tempSlideId = $copiedSlide->id;
+        $documentId = $copyFile->getId(); 
 
         try {
-            // 2. GANTI PLACEHOLDER TEKS
+            // Replace placeholder ...
             $requests = [
-                new Request(['replaceAllText' => ['containsText' => ['text' => '{{nama}}', 'matchCase' => true], 'replaceText' => $user->name]]),
-                new Request(['replaceAllText' => ['containsText' => ['text' => '{{kursus}}', 'matchCase' => true], 'replaceText' => $course->title]]),
-                new Request(['replaceAllText' => ['containsText' => ['text' => '{{kode}}', 'matchCase' => true], 'replaceText' => $certCode]]),
-                new Request(['replaceAllText' => ['containsText' => ['text' => '{{tanggal}}', 'matchCase' => true], 'replaceText' => now()->translatedFormat('d F Y')]]),
+                new Request(['replaceAllText' => ['containsText' => ['text' => '{{name}}', 'matchCase' => true], 'replaceText' => $user->name]]),
+                new Request(['replaceAllText' => ['containsText' => ['text' => '{{course}}', 'matchCase' => true], 'replaceText' => $course->title]]),
+                new Request(['replaceAllText' => ['containsText' => ['text' => '{{code}}', 'matchCase' => true], 'replaceText' => $certCode]]),
+                new Request(['replaceAllText' => ['containsText' => ['text' => '{{date}}', 'matchCase' => true], 'replaceText' => now()->translatedFormat('d F Y')]]),
             ];
 
             $batchUpdateRequest = new BatchUpdatePresentationRequest(['requests' => $requests]);
-            $this->slidesService->presentations->batchUpdate($tempSlideId, $batchUpdateRequest);
+            $this->slidesService->presentations->batchUpdate($documentId, $batchUpdateRequest);
 
-            // 3. EKSPOR KE PDF (STREAM)
-            $response = $this->driveService->files->export($tempSlideId, 'application/pdf', ['alt' => 'media']);
+            // Export to PDF format
+            $response = $this->driveService->files->export($documentId, 'application/pdf', ['alt' => 'media']);
             $pdfContent = $response->getBody()->getContents();
 
-            if (ob_get_length()) {
-                ob_end_clean(); // Mencegah file PDF corrupt
-            }
+            $filename = "certificates/Certificate-{$certCode}.pdf";
             
-            return [
-                'filename' => "Certificate-{$certCode}.pdf",
-                'content' => $pdfContent,
-            ];
+            // Upload langsung ke Cloudflare R2 / S3
+            Storage::disk('s3')->put($filename, $pdfContent);
+            ob_end_clean();
+            return $filename; 
 
         } finally {
-            // 4. HAPUS FILE TEMPORARY DI GOOGLE DRIVE (Selalu dijalankan)
+            // Delete temporary file in Drive to prevent storage accumulation
             try {
-                $this->driveService->files->delete($tempSlideId, ['supportsAllDrives' => true]);
+                $this->driveService->files->delete($documentId);
             } catch (Exception $e) {
-                \Illuminate\Support\Facades\Log::error("Gagal menghapus file temp: " . $e->getMessage());
+                Log::error("Failed to delete Google Slides temp file: " . $e->getMessage());
             }
         }
     }

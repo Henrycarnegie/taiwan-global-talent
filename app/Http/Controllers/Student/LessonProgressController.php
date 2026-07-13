@@ -3,16 +3,17 @@
 namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\GenerateCertificateJob;
 use App\Models\Course;
 use App\Models\Lesson;
-use App\Services\PDFGeneratorService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class LessonProgressController extends Controller
 {
-    public function completeLesson(Request $request, Course $course, Lesson $lesson, PDFGeneratorService $pdfService)
+    public function completeLesson(Request $request, Course $course, Lesson $lesson)
     {
         $user = Auth::user();
 
@@ -43,18 +44,14 @@ class LessonProgressController extends Controller
             DB::table('enrollments')->where('id', $enrollment->id)->update($updateData);
         });
 
-        // JIKA KELAS SELESAI, LANGSUNG GENERATE & DOWNLOAD PDF
+        // 💡 PERUBAHAN PRODUCTION: Dispatch Background Job
         if (!$enrollment->is_completed && $isCompletedNow) {
-            $certCode = 'CERT-' . strtoupper(uniqid()); // Sesuaikan logikamu
             
-            // Panggil service secara sinkron (sekali jalan)
-            $pdfData = $pdfService->generate($user, $course, $certCode);
+            GenerateCertificateJob::dispatch($user, $course);
 
-            // Return file PDF langsung ke browser
-            return response()->streamDownload(function () use ($pdfData) {
-                echo $pdfData['content'];
-            }, $pdfData['filename'], [
-                'Content-Type' => 'application/pdf',
+            // Karena proses butuh waktu, frontend tidak akan langsung mendownload
+            return redirect()->back()->with([
+                'success' => 'Selamat! Anda telah lulus. Sertifikat Anda sedang dibuat, silakan cek dashboard/profil dalam beberapa menit.',
             ]);
         }
 

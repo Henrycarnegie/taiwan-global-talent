@@ -13,13 +13,12 @@ return new class extends Migration
     {
         Schema::create('vocabularies', function (Blueprint $table) {
             $table->id();
-            //  lesson_id DAN index-nya SUDAH DIHAPUS dari sini, karena pindah ke lesson_vocabulary
-
             $table->string('hanzi')->nullable();
             $table->string('pinyin');
-            $table->string('meaning'); // Kita tetap pakai 'meaning' sesuai struktur asli Anda
+            $table->string('meaning');
             $table->string('audio_path');
-            $table->string('audio_hash')->nullable(); // Tambahkan ini agar fitur auto-update TTS Anda bekerja
+            $table->string('audio_hash')->nullable();
+            $table->string('image_url')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });

@@ -25,7 +25,7 @@ class VocabularyForm
     {
         return $schema->components([
             Select::make('lessons')
-                ->label('Lessons')
+                ->label('Lessons (Optional)')
                 ->relationship('lessons', 'title')
                 ->multiple()
                 ->preload()
@@ -60,7 +60,7 @@ class VocabularyForm
                             if (
                                 $get('audio_hash') === $hash &&
                                 filled($get('audio_path')) &&
-                                Storage::disk('public')->exists($get('audio_path'))
+                                Storage::disk('s3')->exists($get('audio_path'))
                             ) {
                                 Notification::make()
                                     ->title('Audio is already up to date')
@@ -73,9 +73,9 @@ class VocabularyForm
                             try {
                                 if (
                                     filled($get('audio_path')) &&
-                                    Storage::disk('public')->exists($get('audio_path'))
+                                    Storage::disk('s3')->exists($get('audio_path'))
                                 ) {
-                                    Storage::disk('public')->delete($get('audio_path'));
+                                    Storage::disk('s3')->delete($get('audio_path'));
                                 }
 
                                 $credentialsPath = storage_path(env('GOOGLE_TTS_APPLICATION_CREDENTIALS'));
@@ -100,7 +100,7 @@ class VocabularyForm
                                 $response = $client->synthesizeSpeech($request);
                                 $filename = 'tts/'.Str::uuid().'.mp3';
 
-                                Storage::disk('public')->put(
+                                Storage::disk('s3')->put(
                                     $filename,
                                     $response->getAudioContent()
                                 );
@@ -129,12 +129,18 @@ class VocabularyForm
 
             FileUpload::make('audio_path')
                 ->label('Audio')
-                ->disk('public')
+                ->disk('s3')
                 ->directory('tts')
                 ->required()
                 ->disabled()
                 ->dehydrated()
                 ->helperText('Auto-generated from Hanzi'),
+
+            FileUpload::make('image_url')
+                ->label('Image')
+                ->disk('s3')
+                ->directory('vocabularies')
+                ->required(),
 
             TextInput::make('pinyin')
                 ->label('Pinyin')

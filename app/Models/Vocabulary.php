@@ -16,6 +16,7 @@ class Vocabulary extends Model
         'audio_path',
         'sort_order',
         'is_active',
+        'image_url',
     ];
 
     public function lessons(): BelongsToMany

@@ -68,7 +68,7 @@ class CompanyForm
                                 return 'No logo uploaded.';
                             }
 
-                            $url = Storage::disk('public')->url($path);
+                            $url = Storage::disk('s3')->url($path);
 
                             return new HtmlString("
                                 <img src='{$url}'
@@ -95,7 +95,7 @@ class CompanyForm
                                 return 'No document uploaded.';
                             }
 
-                            $url = Storage::disk('public')->url($path);
+                            $url = Storage::disk('s3')->url($path);
                             $file = strtolower($path);
 
                             // PDF preview
@@ -178,7 +178,7 @@ class CompanyForm
                                 return 'No banner uploaded.';
                             }
 
-                            $url = Storage::disk('public')->url($path);
+                            $url = Storage::disk('s3')->url($path);
 
                             return new HtmlString("
                     <img src='{$url}'

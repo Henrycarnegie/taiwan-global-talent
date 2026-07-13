@@ -17,6 +17,9 @@ export default function Show({ course, currentCategory }: any) {
         course.lessons?.[0] || null,
     );
 
+    console.log(course)
+    console.log(course.lessons)
+
     const [loading, setLoading] = useState(false);
     const isMandarin = currentCategory.id === 1;
 
@@ -58,19 +61,36 @@ export default function Show({ course, currentCategory }: any) {
             `/student/courses/${course.id}/lessons/${activeLesson.id}/complete`,
             {},
             {
-                onSuccess: () => {
-                    alert('Selamat! Progres materi Anda berhasil disimpan.');
+                onSuccess: (page: any) => {
+                    // Ambil session data terbaru setelah request berhasil
+                    const flashData = page.props.flash || {};
 
-                    // Cari index materi saat ini untuk memindahkan activeLesson ke materi berikutnya secara otomatis
-                    const currentIdx = course.lessons.findIndex(
-                        (l: any) => l.id === activeLesson.id,
-                    );
+                    // STEP 2: Cek apakah kursus sudah 100% dan butuh download
+                    if (flashData.trigger_download && flashData.download_url) {
+                        alert(
+                            flashData.success ||
+                                'Selamat! Kelas telah diselesaikan, sertifikat Anda sedang diunduh...',
+                        );
 
-                    if (
-                        currentIdx !== -1 &&
-                        currentIdx + 1 < course.lessons.length
-                    ) {
-                        setActiveLesson(course.lessons[currentIdx + 1]);
+                        // Eksekusi trigger download menggunakan GET request bawaan browser
+                        window.location.href = flashData.download_url;
+                    } else {
+                        alert(
+                            flashData.success ||
+                                'Progres materi Anda berhasil disimpan.',
+                        );
+
+                        // Pindah ke materi selanjutnya jika belum selesai
+                        const currentIdx = course.lessons.findIndex(
+                            (l: any) => l.id === activeLesson.id,
+                        );
+
+                        if (
+                            currentIdx !== -1 &&
+                            currentIdx + 1 < course.lessons.length
+                        ) {
+                            setActiveLesson(course.lessons[currentIdx + 1]);
+                        }
                     }
                 },
                 onError: (errors) => {
@@ -80,7 +100,6 @@ export default function Show({ course, currentCategory }: any) {
                 onFinish: () => {
                     setLoading(false);
                 },
-                // Menjaga agar posisi scroll halaman tidak lompat kembali ke atas setelah klik tombol
                 preserveScroll: true,
             },
         );
@@ -355,18 +374,20 @@ export default function Show({ course, currentCategory }: any) {
                                 )}
 
                                 {/* TOMBOL AKSI SELESAI MATERI */}
-                                <div className="flex justify-end rounded-2xl border border-gray-100 bg-white p-4 shadow-xs">
-                                    <button
-                                        onClick={handleCompleteLesson}
-                                        disabled={loading}
-                                        className="flex items-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-xs font-bold text-white transition-all hover:bg-blue-700 active:scale-95 disabled:bg-gray-400"
-                                    >
-                                        <CheckCircle2 size={16} />
-                                        {loading
-                                            ? 'Saving Progress...'
-                                            : 'Mark as Completed & Next'}
-                                    </button>
-                                </div>
+                                {activeLesson && (
+                                    <div className="flex justify-end rounded-2xl border border-gray-100 bg-white p-4 shadow-xs">
+                                        <button
+                                            onClick={handleCompleteLesson}
+                                            disabled={loading}
+                                            className="flex items-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-xs font-bold text-white transition-all hover:bg-blue-700 active:scale-95 disabled:bg-gray-400"
+                                        >
+                                            <CheckCircle2 size={16} />
+                                            {loading
+                                                ? 'Saving Progress...'
+                                                : 'Mark as Completed & Next'}
+                                        </button>
+                                    </div>
+                                )}
                             </>
                         )}
                     </div>

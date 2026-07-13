@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Inertia\Middleware;
 use App\Models\CourseCategory;
 
@@ -37,69 +36,94 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        $user = Auth::user();
-
-        if ($user) {
-            $relation = null;
-
-            if ($user->hasRole('teacher')) {
-                $relation = 'teacherProfile';
-            } elseif ($user->hasRole('student')) {
-                $relation = 'studentProfile';
-            } elseif ($user->hasRole('company')) {
-                $relation = 'companyProfile';
-            }
-
-            if ($relation) {
-                $user->load($relation);
-            }
-        }
-
-        $activeProfile = $user && $relation ? $user->{$relation} : null;
-
         return [
             ...parent::share($request),
             'name' => config('app.name'),
+            
+            // 💡 BLOK FLASH: Evaluasi malas (Lazy) agar session hanya dibaca saat ada isinya
+            'flash' => [
+                'success' => fn () => $request->session()->get('success'),
+                'error' => fn () => $request->session()->get('error'),
+                'trigger_download' => fn () => $request->session()->get('trigger_download'),
+                'download_url' => fn () => $request->session()->get('download_url'),
+            ],
+
             'auth' => [
-                'user' => $user ? [
-                    'id' => $user->id,
-                    'name' => $user->name,
-                    'email' => $user->email,
-                    'avatar' => $user->avatar,
-                    'roles' => $user->getRoleNames(),
-                    'role' => $user->roles->first()?->name,
-                    'course_categories' => CourseCategory::orderBy('order')->get(['id', 'name', 'slug']),
-                    'profile' => $activeProfile ? match ($user->roles?->first()?->name) {
-                        // Admin
-                        'admin' => [
-                            'id' => $activeProfile->id,
-                        ],
-                        // Teacher
-                        'teacher' => [
-                            'id' => $activeProfile->id,
-                            'bio' => $activeProfile->bio,
-                            'expertise' => $activeProfile->expertise,
-                            'certification_path' => $activeProfile->certification_path,
-                        ],
-                        // Student
-                        'student' => [
-                            'id' => $activeProfile->id,
-                            'country' => $activeProfile->country,
-                            'university' => $activeProfile->university,
-                            'major' => $activeProfile->major,
-                        ],
-                        // Company
-                        'company' => [
-                            'id' => $activeProfile->id,
-                            'company_name' => $activeProfile->company_name,
-                            'industry' => $activeProfile->industry,
-                            'website' => $activeProfile->website,
-                            'address' => $activeProfile->address,
-                        ],
-                        default => null,
-                    } : null,
+                // 💡 BLOK USER: Seluruh array user dibungkus fungsi fn() 
+                // Ini memastikan semua query di dalamnya TIDAK jalan jika user belum login
+                'user' => fn () => $request->user() ? [
+                    'id' => $request->user()->id,
+                    'name' => $request->user()->name,
+                    'email' => $request->user()->email,
+                    'avatar' => $request->user()->avatar,
+                    'roles' => $request->user()->getRoleNames(),
+                    'role' => $request->user()->roles->first()?->name,
+                    
+                    // Kategori kursus juga dibungkus fungsi agar query tidak dieksekusi sia-sia
+                    'course_categories' => fn () => CourseCategory::orderBy('order')->get(['id', 'name', 'slug']),
+                    
+                    // Panggil fungsi pembantu untuk menangani relasi dengan aman
+                    'profile' => $this->getProfileData($request->user())
                 ] : null,
             ],
         ];
+    }
+
+    /**
+     * Helper method untuk mengambil data profil berdasarkan role user secara efisien.
+     */
+    private function getProfileData($user)
+    {
+        // Cegah eksekusi jika user kosong
+        if (!$user) return null;
+
+        $role = $user->roles?->first()?->name;
+
+        // Gunakan loadMissing agar tidak terjadi N+1 problem,
+        // dan hanya meload relasi jika belum ter-load sebelumnya.
+        if ($role === 'teacher') {
+            $user->loadMissing('teacherProfile');
+            $profile = $user->teacherProfile;
+            
+            return $profile ? [
+                'id' => $profile->id,
+                'bio' => $profile->bio,
+                'expertise' => $profile->expertise,
+                'certification_path' => $profile->certification_path,
+            ] : null;
+        }
+
+        if ($role === 'student') {
+            $user->loadMissing('studentProfile');
+            $profile = $user->studentProfile;
+            
+            return $profile ? [
+                'id' => $profile->id,
+                'country' => $profile->country,
+                'university' => $profile->university,
+                'major' => $profile->major,
+            ] : null;
+        }
+
+        if ($role === 'company') {
+            $user->loadMissing('companyProfile');
+            $profile = $user->companyProfile;
+            
+            return $profile ? [
+                'id' => $profile->id,
+                'company_name' => $profile->company_name,
+                'industry' => $profile->industry,
+                'website' => $profile->website,
+                'address' => $profile->address,
+            ] : null;
+        }
+
+        if ($role === 'admin') {
+            return [
+                'id' => $user->id,
+            ];
+        }
+
+        return null;
     }
 }

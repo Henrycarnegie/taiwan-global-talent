@@ -17,6 +17,7 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use UnitEnum;
 
 class StudentResource extends Resource
 {
@@ -27,6 +28,8 @@ class StudentResource extends Resource
     protected static ?string $navigationLabel = 'Students';
 
     protected static ?string $slug = 'students';
+    
+    protected static UnitEnum|string|null $navigationGroup = 'User Management';
 
     public static function getEloquentQuery(): Builder
     {
