@@ -61,7 +61,6 @@ class LessonsForm
                 ->default(0)
                 ->required(),
 
-            
             Select::make('content_type')
                 ->label('Tipe Konten Pembelajaran')
                 ->options([
@@ -72,7 +71,7 @@ class LessonsForm
                 ])
                 ->default('text')
                 ->required()
-                ->reactive(), 
+                ->reactive(),
 
             // Muncul jika tipe konten adalah "text"
             RichEditor::make('content')
@@ -90,7 +89,7 @@ class LessonsForm
 
             FileUpload::make('video_path')
                 ->label('Atau Upload File Video')
-                ->disk('public')
+                ->disk('s3')
                 ->directory('courses/videos')
                 ->visible(fn (callable $get) => $get('content_type') === 'video')
                 ->acceptedFileTypes(['video/mp4', 'video/mkv']),
@@ -98,7 +97,7 @@ class LessonsForm
             // Muncul jika tipe konten adalah "audio"
             FileUpload::make('lesson_audio_path')
                 ->label('Upload File Audio Pembelajaran')
-                ->disk('public')
+                ->disk('s3')
                 ->directory('courses/audios')
                 ->acceptedFileTypes(['audio/mpeg', 'audio/mp3', 'audio/wav'])
                 ->visible(fn (callable $get) => $get('content_type') === 'audio')
@@ -107,7 +106,7 @@ class LessonsForm
             // Muncul jika tipe konten adalah "pdf"
             FileUpload::make('pdf_path')
                 ->label('Upload Dokumen PDF')
-                ->disk('public')
+                ->disk('s3')
                 ->directory('courses/documents')
                 ->acceptedFileTypes(['application/pdf'])
                 ->visible(fn (callable $get) => $get('content_type') === 'pdf')
@@ -144,25 +143,35 @@ class LessonsForm
 
                                         return;
                                     }
+
                                     $hash = md5($text);
-                                    if ($get('audio_hash') === $hash && filled($get('audio_path')) && Storage::disk('public')->exists($get('audio_path'))) {
+
+                                    // 💡 UBAH 'public' MENJADI 's3' DI SINI
+                                    if ($get('audio_hash') === $hash && filled($get('audio_path')) && Storage::disk('s3')->exists($get('audio_path'))) {
                                         Notification::make()->title('Audio is already up to date')->info()->send();
 
                                         return;
                                     }
+
                                     try {
-                                        if (filled($get('audio_path')) && Storage::disk('public')->exists($get('audio_path'))) {
-                                            Storage::disk('public')->delete($get('audio_path'));
+                                        // 💡 UBAH 'public' MENJADI 's3' DI SINI
+                                        if (filled($get('audio_path')) && Storage::disk('s3')->exists($get('audio_path'))) {
+                                            Storage::disk('s3')->delete($get('audio_path'));
                                         }
+
                                         $credentialsPath = storage_path(env('GOOGLE_TTS_APPLICATION_CREDENTIALS'));
                                         $client = new TextToSpeechClient(['credentials' => $credentialsPath]);
                                         $input = (new SynthesisInput)->setText($text);
                                         $voice = (new VoiceSelectionParams)->setLanguageCode('cmn-TW');
                                         $audioConfig = (new AudioConfig)->setAudioEncoding(AudioEncoding::MP3)->setSpeakingRate(0.70)->setPitch(0);
+
                                         $request = (new SynthesizeSpeechRequest)->setInput($input)->setVoice($voice)->setAudioConfig($audioConfig);
                                         $response = $client->synthesizeSpeech($request);
                                         $filename = 'tts/sentences/'.Str::uuid().'.mp3';
-                                        Storage::disk('public')->put($filename, $response->getAudioContent());
+
+                                        // 💡 UBAH 'public' MENJADI 's3' DI SINI UNTUK UPLOAD KE CLOUDFLARE R2
+                                        Storage::disk('s3')->put($filename, $response->getAudioContent());
+
                                         $set('audio_path', $filename);
                                         $set('audio_hash', $hash);
                                         $client->close();
@@ -173,7 +182,14 @@ class LessonsForm
                                     }
                                 })
                         ),
-                    FileUpload::make('audio_path')->label('Sentence Audio File')->disk('public')->directory('tts/sentences')->disabled()->dehydrated(),
+
+                    // 💡 UBAH 'public' MENJADI 's3' PADA FILE UPLOAD INI JUGA
+                    FileUpload::make('audio_path')
+                        ->label('Sentence Audio File')
+                        ->disk('s3')
+                        ->directory('tts/sentences')
+                        ->disabled()
+                        ->dehydrated(),
                 ]),
 
             Select::make('vocabularies')

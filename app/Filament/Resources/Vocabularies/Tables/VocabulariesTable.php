@@ -39,11 +39,6 @@ class VocabulariesTable
                 TextColumn::make('audio_path')
                     ->label('Audio')
                     ->toggleable(isToggledHiddenByDefault: true),
-
-                TextColumn::make('sort_order')
-                    ->label('Sort Order')
-                    ->limit(50)
-                    ->tooltip(fn($record) => $record->sort_order),
                     
                 TextColumn::make('is_active')
                     ->label('Status')

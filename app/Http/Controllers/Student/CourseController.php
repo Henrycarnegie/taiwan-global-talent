@@ -5,45 +5,57 @@ namespace App\Http\Controllers\Student;
 use App\Http\Controllers\Controller;
 use App\Models\Course;
 use App\Models\CourseCategory;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
-class MandarinCourseController extends Controller
+class CourseController extends Controller
 {
     public function index($categorySlug)
     {
-        // 1. Ambil Kategori saat ini berdasarkan Slug URL
         $category = CourseCategory::where('slug', $categorySlug)->firstOrFail();
 
-        // 2. Ambil semua kategori untuk kebutuhan Tab Navigasi / Dropdown di Global Layout
         $allCategories = CourseCategory::orderBy('order')->get(['id', 'name', 'slug']);
 
-        // 3. Ambil data course sesuai kategori saat ini beserta jumlah pelajaran
+        $userId = Auth::id();
+
         $courses = Course::where('category_id', $category->id)
             ->withCount('lessons')
+            ->with(['users' => function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            }])
             ->get()
             ->map(function ($course) {
-                // Dummy progress logic (Silakan sesuaikan dengan tabel user_progress Anda nanti)
-                $progress = $course->id === 1 ? 100 : ($course->id === 2 ? 40 : 0);
-                $status = $course->id === 1 ? 'Completed' : ($course->id === 2 ? 'In Progress' : 'Locked');
+                $enrollment = $course->users->first()?->pivot;
+
+                $totalLessons = $course->lessons_count;
+                $completedCount = $enrollment?->completed_lessons_count ?? 0;
+
+                $progress = $totalLessons > 0 ? (int) (($completedCount / $totalLessons) * 100) : 0;
+
+                if ($enrollment) {
+                    $status = $enrollment->is_completed ? 'Completed' : 'In Progress';
+                } else {
+                    $status = 'Locked'; 
+                }
 
                 return [
                     'id' => $course->id,
                     'title' => $course->title,
                     'level' => $course->level ?? 'General',
-                    'modules_count' => $course->lessons_count,
-                    'progress' => $progress,
-                    'status' => $status,
+                    'modules_count' => $totalLessons,
+                    'progress' => $progress, 
+                    'status' => $status,    
                 ];
             });
 
-        // 4. Statistik Cerdas: Sembunyikan data spesifik jika BUKAN kategori Mandarin (ID: 1)
+        // 4. Statistik Cerdas
         $stats = [
             'proficiency' => $category->id === 1 ? 'TOCFL A2' : 'N/A',
             'learning_hours' => 48,
             'vocab_count' => $category->id === 1 ? 450 : 0, 
         ];
 
-        return Inertia::render('Student/MandarinCourse/Index', [
+        return Inertia::render('Student/Course/Index', [
             'currentCategory' => $category,
             'allCategories' => $allCategories,
             'courses' => $courses,
@@ -53,31 +65,31 @@ class MandarinCourseController extends Controller
 
     public function show($categorySlug, Course $course)
     {
-        // Pastikan kategori valid sesuai slug URL
         $category = CourseCategory::where('slug', $categorySlug)->firstOrFail();
 
-        // Mengambil struktur data materi lengkap beserta multimedia barunya
+        $enrollment = $course->users()->where('user_id', Auth::id())->first();
+        if (!$enrollment) {
+            return redirect()->route('student.courses.index', $categorySlug)
+                ->with('error', 'Anda harus mendaftar di kursus ini terlebih dahulu.');
+        }
+
         $courseData = [
             'id' => $course->id,
             'title' => $course->title,
             'lessons' => $course->lessons()
                 ->orderBy('order')
-                ->with(['sentences', 'vocabularies']) // Eager loading relasi pendukung Mandarin
+                ->with(['sentences', 'vocabularies'])
                 ->get()
                 ->map(function ($lesson) {
                     return [
                         'id' => $lesson->id,
                         'title' => $lesson->title,
                         'content' => $lesson->content,
-                        
-                        // PEMBARUAN: Daftarkan semua field konten multimedia yang baru saja ditambahkan di SQL database
                         'content_type' => $lesson->content_type ?? 'text',
                         'video_url' => $lesson->video_url,
                         'video_path' => $lesson->video_path,
                         'lesson_audio_path' => $lesson->lesson_audio_path,
                         'pdf_path' => $lesson->pdf_path,
-
-                        // Field Khusus Mandarin
                         'sentence_hanzi' => $lesson->sentence_hanzi, 
                         'sentences' => $lesson->sentences->map(fn ($s) => [
                             'id' => $s->id, 
@@ -97,9 +109,13 @@ class MandarinCourseController extends Controller
                 }),
         ];
 
-        return Inertia::render('Student/MandarinCourse/Show', [
+        return Inertia::render('Student/Course/Show', [
             'currentCategory' => $category,
             'course' => $courseData,
+            'enrollment' => [
+                'completed_lessons_count' => $enrollment->pivot->completed_lessons_count,
+                'is_completed' => $enrollment->pivot->is_completed
+            ]
         ]);
     }
 }

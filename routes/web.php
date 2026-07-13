@@ -10,8 +10,11 @@ use App\Http\Controllers\Company\DashboardController as CompanyDashboardControll
 use App\Http\Controllers\Profile\ProfileController;
 // Student
 use App\Http\Controllers\Student\CommunityController;
+use App\Http\Controllers\Student\CourseController;
 use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
-use App\Http\Controllers\Student\MandarinCourseController; // Pastikan Anda membuat Controller ini
+use App\Http\Controllers\Student\DownloadCertificateController;
+use App\Http\Controllers\Student\EnrollmentController;
+use App\Http\Controllers\Student\LessonProgressController;
 // Teacher
 use App\Http\Controllers\Teacher\DashboardController as TeacherDashboardController;
 use App\Http\Controllers\Teacher\TeacherApplyController;
@@ -50,9 +53,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/student/dashboard', [StudentDashboardController::class, 'index'])->name('student.dashboard');
         Route::get('/student/community', [CommunityController::class, 'index'])->name('student.community');
 
-        // REVOLUSI RUTE: Sekarang mendukung semua jenis kursus murni lewat Slug Kategori
-        Route::get('/student/courses/{categorySlug}', [MandarinCourseController::class, 'index'])->name('student.courses.index');
-        Route::get('/student/courses/{categorySlug}/{course}', [MandarinCourseController::class, 'show'])->name('student.courses.show');
+        // 1. Rute POST
+        Route::post('/student/courses/{course}/enroll', [EnrollmentController::class, 'enroll'])->name('student.courses.enroll');
+        Route::post('/student/courses/{course}/lessons/{lesson}/complete', [LessonProgressController::class, 'completeLesson'])->name('student.lessons.complete');
+
+        // 2. RUTE SPESIFIK (DOWNLOAD) HARUS DI ATAS WILDCARD
+        Route::get('/student/courses/certificate', [DownloadCertificateController::class, 'index'])
+            ->name('student.courses.certificate.index');
+
+        // Endpoint khusus untuk memicu download file fisik PDF dari S3/R2
+        Route::get('/student/courses/{course}/certificate', [DownloadCertificateController::class, 'downloadCertificate'])
+            ->middleware('throttle:certificate-download')
+            ->name('student.courses.certificate.download');
+
+        // 3. RUTE WILDCARD SLUG DI PALING BAWAH
+        Route::get('/student/courses/{categorySlug}', [CourseController::class, 'index'])->name('student.courses.index');
+        Route::get('/student/courses/{categorySlug}/{course}', [CourseController::class, 'show'])->name('student.courses.show');
     });
 
     // TEACHER ROLE
@@ -66,8 +82,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     // ADMIN ROLE
-    Route::middleware('role:admin')->group(function () {
-    });
+    Route::middleware('role:admin')->group(function () {});
 
     // ---------------------------------------------------------
     // Global Authenticated Routes (Profile & Logout)

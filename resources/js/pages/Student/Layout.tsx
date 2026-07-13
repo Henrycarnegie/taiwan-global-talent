@@ -136,7 +136,7 @@ export default function Layout({ children }: Props) {
                                                                     false,
                                                                 )
                                                             }
-                                                            className={`block rounded-xl px-4 py-3 transition ${
+                                                            className={`block rounded-xl px-4 py-3 text-sm transition ${
                                                                 active
                                                                     ? 'bg-blue-600 text-white'
                                                                     : 'hover:bg-gray-100'

@@ -16,6 +16,7 @@ use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use UnitEnum;
 
 class TeacherResource extends Resource
 {
@@ -26,6 +27,8 @@ class TeacherResource extends Resource
     protected static ?string $navigationLabel = 'Teachers';
 
     protected static ?string $slug = 'teachers';
+
+    protected static UnitEnum|string|null $navigationGroup = 'User Management';
 
     public static function getEloquentQuery(): Builder
     {
