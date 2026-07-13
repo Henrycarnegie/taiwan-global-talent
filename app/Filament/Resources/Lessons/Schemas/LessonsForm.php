@@ -73,14 +73,12 @@ class LessonsForm
                 ->required()
                 ->reactive(),
 
-            // Muncul jika tipe konten adalah "text"
             RichEditor::make('content')
                 ->label('Isi Artikel Materi')
                 ->columnSpanFull()
                 ->visible(fn (callable $get) => $get('content_type') === 'text')
                 ->required(fn (callable $get) => $get('content_type') === 'text'),
 
-            // Muncul jika tipe konten adalah "video" (Bisa upload langsung atau tempel link YouTube)
             TextInput::make('video_url')
                 ->label('Link URL Video (YouTube / Vimeo)')
                 ->placeholder('https://www.youtube.com/watch?v=...')
@@ -94,12 +92,22 @@ class LessonsForm
                 ->visible(fn (callable $get) => $get('content_type') === 'video')
                 ->acceptedFileTypes(['video/mp4', 'video/mkv']),
 
-            // Muncul jika tipe konten adalah "audio"
-            FileUpload::make('lesson_audio_path')
-                ->label('Upload File Audio Pembelajaran')
-                ->disk('s3')
-                ->directory('courses/audios')
-                ->acceptedFileTypes(['audio/mpeg', 'audio/mp3', 'audio/wav'])
+            Repeater::make('audios')
+                ->relationship('audios')
+                ->label('Audio Lessons')
+                ->columnSpanFull()
+                ->reorderable('sort_order')
+                ->collapsible()
+                ->addActionLabel('Add new audio')
+                ->schema([
+                    TextInput::make('lesson_audio_description')->label('Lesson Audio Description')->required(),
+                    FileUpload::make('lesson_audio_path')
+                        ->label('Upload Learning Audio File')
+                        ->disk('s3')
+                        ->directory('courses/audios')
+                        ->acceptedFileTypes(['audio/mpeg', 'audio/mp3', 'audio/wav'])
+                        ->required(),
+                ])
                 ->visible(fn (callable $get) => $get('content_type') === 'audio')
                 ->required(fn (callable $get) => $get('content_type') === 'audio'),
 
@@ -112,16 +120,13 @@ class LessonsForm
                 ->visible(fn (callable $get) => $get('content_type') === 'pdf')
                 ->required(fn (callable $get) => $get('content_type') === 'pdf'),
 
-            // -------------------------------------------------------
-            // BLOK ATRIBUT KHUSUS MANDARIN (Hanya Muncul jika Kategori = 1)
-            // -------------------------------------------------------
             Repeater::make('sentences')
                 ->relationship('sentences')
                 ->label('List of Sentences (Daftar Kalimat)')
                 ->columnSpanFull()
                 ->reorderable('sort_order')
                 ->collapsible()
-                ->hidden(fn (callable $get) => ! $isMandarin($get)) // Proteksi Kunci Mandarin
+                ->hidden(fn (callable $get) => ! $isMandarin($get))
                 ->addActionLabel('Add new sentences')
                 ->schema([
                     TextInput::make('pinyin')->label('Pinyin')->required(),
@@ -146,7 +151,6 @@ class LessonsForm
 
                                     $hash = md5($text);
 
-                                    // 💡 UBAH 'public' MENJADI 's3' DI SINI
                                     if ($get('audio_hash') === $hash && filled($get('audio_path')) && Storage::disk('s3')->exists($get('audio_path'))) {
                                         Notification::make()->title('Audio is already up to date')->info()->send();
 
@@ -154,7 +158,6 @@ class LessonsForm
                                     }
 
                                     try {
-                                        // 💡 UBAH 'public' MENJADI 's3' DI SINI
                                         if (filled($get('audio_path')) && Storage::disk('s3')->exists($get('audio_path'))) {
                                             Storage::disk('s3')->delete($get('audio_path'));
                                         }
@@ -169,7 +172,6 @@ class LessonsForm
                                         $response = $client->synthesizeSpeech($request);
                                         $filename = 'tts/sentences/'.Str::uuid().'.mp3';
 
-                                        // 💡 UBAH 'public' MENJADI 's3' DI SINI UNTUK UPLOAD KE CLOUDFLARE R2
                                         Storage::disk('s3')->put($filename, $response->getAudioContent());
 
                                         $set('audio_path', $filename);
@@ -183,7 +185,6 @@ class LessonsForm
                                 })
                         ),
 
-                    // 💡 UBAH 'public' MENJADI 's3' PADA FILE UPLOAD INI JUGA
                     FileUpload::make('audio_path')
                         ->label('Sentence Audio File')
                         ->disk('s3')
@@ -199,7 +200,7 @@ class LessonsForm
                 ->preload()
                 ->label('Reference Vocabulary')
                 ->columnSpanFull()
-                ->hidden(fn (callable $get) => ! $isMandarin($get)), // Proteksi Kunci Mandarin
+                ->hidden(fn (callable $get) => ! $isMandarin($get)),
         ];
     }
 }

@@ -44,4 +44,9 @@ class Lesson extends Model
             ->withPivot('sort_order')
             ->withTimestamps();
     }
+
+    public function audios(): HasMany
+    {
+        return $this->hasMany(LessonAudio::class, 'lesson_id')->orderBy('sort_order', 'asc');
+    }
 }
