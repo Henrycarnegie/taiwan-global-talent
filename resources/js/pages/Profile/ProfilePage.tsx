@@ -1,11 +1,9 @@
-import ProfileForm from '@/components/Form/ProfileForm';
+// export default function ProfilePage({ profile }: any) {
+//   return (
+//     <div className="p-6">
+//       <h1 className="text-xl font-bold mb-4">Edit Profile</h1>
 
-export default function ProfilePage({ profile }: any) {
-    return (
-        <div className="p-6">
-            <h1 className="mb-4 text-xl font-bold">Edit Profile</h1>
-
-            <ProfileForm profile={profile} />
-        </div>
-    );
-}
+//       <ProfileForm profile={profile} />
+//     </div>
+//   )
+// }

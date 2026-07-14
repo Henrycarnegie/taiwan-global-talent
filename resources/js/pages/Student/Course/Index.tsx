@@ -24,7 +24,7 @@ export default function Index({
 }: Props) {
     const isMandarin = currentCategory.id === 1;
 
-    console.log(courses)
+    console.log(stats)
 
     const handleEnroll = (courseId: number) => {
         if (confirm('Apakah Anda yakin ingin mendaftar ke kursus ini?')) {
