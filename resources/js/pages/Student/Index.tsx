@@ -1,4 +1,10 @@
-import { ArrowRight } from 'lucide-react';
+import {
+    ArrowRight,
+    Bell,
+    BriefcaseBusiness,
+    MessageCircle,
+    ShieldCheck,
+} from 'lucide-react';
 import Card from '@/components/UI/Card';
 import Layout from './Layout';
 
@@ -6,35 +12,34 @@ export default function StudentDashboard() {
     return (
         <Layout>
             <div className="space-y-6">
-                <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-xs">
-                    <h2 className="text-xl font-bold text-gray-900">
-                        Welcome to Your Dashboard Overview
+                <div className="rounded-md border border-slate-200 bg-white p-6 shadow-sm">
+                    <h2 className="text-xl font-black text-[#173b8f]">
+                        Dashboard overview
                     </h2>
-                    <p className="mt-1 text-sm text-gray-500">
-                        Track your learning progress, industry profile, and
-                        latest updates here.
+                    <p className="mt-2 text-sm leading-6 text-slate-600">
+                        Track learning progress, profile readiness, community
+                        updates, and career activity in one place.
                     </p>
                 </div>
                 <div className="space-y-6">
-                    {/* Welcome Banner */}
-                    <div className="relative overflow-hidden rounded-2xl bg-linear-to-r from-slate-900 to-blue-900 p-6 text-white shadow-sm">
+                    <div className="relative overflow-hidden rounded-md bg-[#102a43] p-6 text-white shadow-[0_22px_70px_rgba(16,42,67,0.18)]">
                         <div className="relative z-10 max-w-2xl">
-                            <span className="rounded-full border border-blue-400/20 bg-blue-500/30 px-2.5 py-1 text-xs font-medium text-blue-200">
-                                Welcome Back • 歡迎回來
+                            <span className="inline-flex items-center gap-2 rounded-full border border-white/14 bg-white/10 px-3 py-1.5 text-xs font-black text-white/82">
+                                <ShieldCheck className="h-3.5 w-3.5 text-[#28a6a1]" />
+                                Goal-based recommendations
                             </span>
-                            <h2 className="mt-3 mb-1 text-2xl font-bold">
-                                Ready to Build Your Career in Taiwan?
+                            <h2 className="mt-4 text-2xl font-black">
+                                Ready to build your next step in Taiwan?
                             </h2>
-                            <p className="text-sm leading-relaxed text-slate-300">
-                                Complete your profile to unlock internships,
-                                jobs, and digital incubation programs directly
-                                from leading technology companies in Taiwan.
+                            <p className="mt-2 text-sm leading-7 text-white/72">
+                                Complete your profile to improve pathway
+                                suggestions, course recommendations, and future
+                                employer matching.
                             </p>
                         </div>
-                        <div className="absolute inset-0 bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-size-[24px_24px] opacity-10"></div>
+                        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.12)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.09)_1px,transparent_1px)] [background-size:28px_28px] opacity-20" />
                     </div>
 
-                    {/* Statistics Grid */}
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
                         <Card
                             title="Profile Completion"
@@ -64,31 +69,32 @@ export default function StudentDashboard() {
                         />
                     </div>
 
-                    {/* Announcement and Forum Teaser Row */}
                     <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-                        {/* News / Announcement Column */}
-                        <div className="space-y-4 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm lg:col-span-2">
-                            <h3 className="flex items-center justify-between border-b pb-3 font-bold text-gray-900">
-                                <span>Latest Announcement</span>
-                                <span className="text-xs font-normal text-gray-400">
+                        <div className="space-y-4 rounded-md border border-slate-200 bg-white p-6 shadow-sm lg:col-span-2">
+                            <h3 className="flex items-center justify-between border-b border-slate-200 pb-3 font-black text-[#173b8f]">
+                                <span className="flex items-center gap-2">
+                                    <Bell className="h-4 w-4 text-[#f47b20]" />
+                                    Latest announcement
+                                </span>
+                                <span className="text-xs font-semibold text-slate-500">
                                     Updated today
                                 </span>
                             </h3>
                             <div className="space-y-3">
-                                <div className="cursor-pointer rounded-xl bg-gray-50 p-3 transition hover:bg-gray-100">
-                                    <p className="mb-1 text-xs font-semibold text-blue-600">
+                                <div className="cursor-pointer rounded-md bg-slate-50 p-4 transition hover:bg-slate-100">
+                                    <p className="mb-1 text-xs font-black text-[#f47b20]">
                                         Taiwan Tech Career Fair 2026
                                     </p>
-                                    <p className="text-sm font-medium text-gray-800">
+                                    <p className="text-sm font-semibold text-slate-800">
                                         Special registration for international
                                         talent officially opens this week.
                                     </p>
                                 </div>
-                                <div className="cursor-pointer rounded-xl bg-gray-50 p-3 transition hover:bg-gray-100">
-                                    <p className="mb-1 text-xs font-semibold text-green-600">
+                                <div className="cursor-pointer rounded-md bg-slate-50 p-4 transition hover:bg-slate-100">
+                                    <p className="mb-1 text-xs font-black text-[#28a6a1]">
                                         Mandarin Center
                                     </p>
-                                    <p className="text-sm font-medium text-gray-800">
+                                    <p className="text-sm font-semibold text-slate-800">
                                         Free TOCFL mock tests are available in
                                         the Mandarin Courses tab.
                                     </p>
@@ -96,40 +102,38 @@ export default function StudentDashboard() {
                             </div>
                         </div>
 
-                        {/* Community Teaser Column */}
-                        <div className="flex flex-col justify-between rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+                        <div className="flex flex-col justify-between rounded-md border border-slate-200 bg-white p-6 shadow-sm">
                             <div>
-                                <h3 className="mb-1 font-bold text-gray-900">
-                                    Community Activity
+                                <h3 className="mb-1 flex items-center gap-2 font-black text-[#173b8f]">
+                                    <MessageCircle className="h-4 w-4 text-[#f47b20]" />
+                                    Community activity
                                 </h3>
-                                <p className="mb-4 text-xs text-gray-400">
-                                    Friendly conversations among students in
-                                    Taiwan
+                                <p className="mb-4 text-xs font-semibold text-slate-500">
+                                    Conversations for learners, applicants, and
+                                    working talent
                                 </p>
                                 <div className="space-y-3 text-sm">
-                                    <p className="text-gray-600">
-                                        💬{' '}
-                                        <span className="font-medium text-gray-800">
-                                            "Does anyone know the latest MOE
-                                            scholarship updates?"
+                                    <p className="flex gap-2 text-slate-600">
+                                        <BriefcaseBusiness className="mt-0.5 h-4 w-4 shrink-0 text-[#28a6a1]" />
+                                        <span className="font-semibold text-slate-800">
+                                            Latest MOE scholarship update thread
                                         </span>
                                     </p>
-                                    <p className="text-gray-600">
-                                        💬{' '}
-                                        <span className="font-medium text-gray-800">
-                                            "Sharing my internship experience in
-                                            Hsinchu..."
+                                    <p className="flex gap-2 text-slate-600">
+                                        <MessageCircle className="mt-0.5 h-4 w-4 shrink-0 text-[#28a6a1]" />
+                                        <span className="font-semibold text-slate-800">
+                                            Internship experience in Hsinchu
                                         </span>
                                     </p>
                                 </div>
                             </div>
-                            <button className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg bg-blue-50 p-2 text-center text-xs font-semibold text-blue-600 transition hover:bg-blue-100 hover:text-blue-700">
+                            <button className="mt-5 flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-[#173b8f] px-4 text-center text-sm font-black text-white transition hover:bg-[#102a43] focus-visible:ring-2 focus-visible:ring-[#f47b20] focus-visible:outline-none">
                                 Open Discussion Forum{' '}
                                 <ArrowRight className="ml-1 h-4 w-4" />
                             </button>
                         </div>
                     </div>
-                </div>{' '}
+                </div>
             </div>
         </Layout>
     );

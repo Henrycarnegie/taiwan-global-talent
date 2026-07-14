@@ -1,5 +1,11 @@
 import { Link, router } from '@inertiajs/react';
-import { PlayIcon, PlusCircleIcon } from 'lucide-react';
+import {
+    BookOpenCheck,
+    Clock3,
+    PlayIcon,
+    PlusCircleIcon,
+    ShieldCheck,
+} from 'lucide-react';
 import Card from '@/components/UI/Card';
 import Layout from '../Layout';
 
@@ -24,56 +30,68 @@ export default function Index({
 }: Props) {
     const isMandarin = currentCategory.id === 1;
 
-    console.log(stats)
-
     const handleEnroll = (courseId: number) => {
-        if (confirm('Apakah Anda yakin ingin mendaftar ke kursus ini?')) {
-            router.post(`/student/courses/${courseId}/enroll`, {}, {
+        router.post(
+            `/student/courses/${courseId}/enroll`,
+            {},
+            {
                 onSuccess: () => {
-                    alert('Pendaftaran berhasil! Kelas sekarang terbuka.');
+                    window.alert('Enrollment successful. You can now start.');
                 },
                 onError: (errors: any) => {
-                    // Tampilkan pesan error spesifik jika ada dari Laravel
                     const errorMessages = Object.values(errors).join('\n');
-                    alert(`Gagal mendaftar kelas.\n${errorMessages}`);
-                }
-            });
-        }
+                    window.alert(`Unable to enroll.\n${errorMessages}`);
+                },
+            },
+        );
     };
 
     return (
         <Layout>
             <div className="space-y-8">
-                {/* 1. Dynamic Category Tab Navigation */}
-                <div className="flex space-x-4 rounded-2xl border-b border-gray-200 bg-white p-4 shadow-xs">
-                    {allCategories.map((cat) => (
-                        <Link
-                            key={cat.id}
-                            href={`/student/courses/${cat.slug}`}
-                            className={`rounded-xl px-4 py-2 text-sm font-bold transition-all ${
-                                currentCategory.id === cat.id
-                                    ? 'bg-blue-600 text-white'
-                                    : 'text-gray-500 hover:bg-gray-50'
-                            }`}
-                        >
-                            {cat.name}
-                        </Link>
-                    ))}
+                <div className="overflow-hidden rounded-md bg-[#102a43] text-white shadow-[0_22px_70px_rgba(16,42,67,0.18)]">
+                    <div className="grid gap-6 p-6 md:grid-cols-[1fr_auto] md:items-end md:p-8">
+                        <div>
+                            <p className="text-xs font-black tracking-widest text-[#f47b20] uppercase">
+                                Learning pathway
+                            </p>
+                            <h2 className="mt-3 text-3xl font-black tracking-tight md:text-4xl">
+                                {currentCategory.name} Learning Center
+                            </h2>
+                            <p className="mt-3 max-w-2xl text-sm leading-7 font-semibold text-white/72">
+                                Choose modules based on your goal, current
+                                level, and available time. Course progress is
+                                saved to your profile for future matching.
+                            </p>
+                        </div>
+                        <div className="flex items-center gap-2 rounded-md bg-white/10 px-4 py-3 text-sm font-bold text-white/82">
+                            <ShieldCheck className="h-5 w-5 text-[#28a6a1]" />
+                            Personalized by pathway activity
+                        </div>
+                    </div>
                 </div>
 
-                {/* Dynamic Title Header */}
-                <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-xs md:p-8">
-                    <h2 className="text-xl font-bold text-gray-900">
-                        {currentCategory.name} Learning Center{' '}
-                        {isMandarin && (
-                            <span className="text-sm font-normal text-gray-400">
-                                華語中心
-                            </span>
-                        )}
-                    </h2>
-                </div>
+                <nav
+                    aria-label="Course categories"
+                    className="overflow-x-auto rounded-md border border-slate-200 bg-white p-2 shadow-sm"
+                >
+                    <div className="flex min-w-max gap-2">
+                        {allCategories.map((cat) => (
+                            <Link
+                                key={cat.id}
+                                href={`/student/courses/${cat.slug}`}
+                                className={`min-h-11 rounded-md px-4 py-3 text-sm font-black transition focus-visible:ring-2 focus-visible:ring-[#f47b20] focus-visible:outline-none ${
+                                    currentCategory.id === cat.id
+                                        ? 'bg-[#173b8f] text-white'
+                                        : 'text-slate-600 hover:bg-slate-100 hover:text-[#173b8f]'
+                                }`}
+                            >
+                                {cat.name}
+                            </Link>
+                        ))}
+                    </div>
+                </nav>
 
-                {/* 2. Conditional Smart Statistics */}
                 <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
                     {isMandarin && (
                         <Card
@@ -96,32 +114,53 @@ export default function Index({
                     )}
                 </div>
 
-                {/* Course List */}
-                <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-xs">
-                    <div className="divide-y divide-gray-100">
+                <section className="overflow-hidden rounded-md border border-slate-200 bg-white shadow-sm">
+                    <div className="border-b border-slate-200 p-5">
+                        <h3 className="text-lg font-black text-[#173b8f]">
+                            Available modules
+                        </h3>
+                        <p className="mt-1 text-sm text-slate-600">
+                            Tap a module to enroll or continue learning.
+                        </p>
+                    </div>
+                    <div className="divide-y divide-slate-100">
                         {courses.length === 0 ? (
-                            <div className="p-8 text-center text-sm text-gray-400">
-                                No classes are available in this category yet.
+                            <div className="p-8 text-center">
+                                <BookOpenCheck className="mx-auto h-10 w-10 text-slate-300" />
+                                <p className="mt-3 text-sm font-semibold text-slate-500">
+                                    No modules are available in this pathway
+                                    yet.
+                                </p>
                             </div>
                         ) : (
                             courses.map((course: any) => (
                                 <div
                                     key={course.id}
-                                    className="flex flex-col justify-between gap-6 p-6 transition-colors hover:bg-gray-50/40 md:flex-row md:items-center"
+                                    className="grid gap-5 p-5 transition-colors hover:bg-slate-50/70 md:grid-cols-[1fr_220px_auto] md:items-center md:p-6"
                                 >
-                                    <div className="flex-1 space-y-1">
-                                        <span className="rounded-md bg-blue-50 px-2 py-0.5 text-xs font-bold text-blue-600 uppercase">
-                                            {course.level}
-                                        </span>
-                                        <h4 className="text-base font-bold text-gray-900">
+                                    <div className="min-w-0">
+                                        <div className="flex flex-wrap items-center gap-2">
+                                            <span className="rounded-full bg-[#f47b20]/12 px-2.5 py-1 text-xs font-black text-[#f47b20] uppercase">
+                                                {course.level}
+                                            </span>
+                                            <span className="inline-flex items-center gap-1 text-xs font-bold text-slate-500">
+                                                <Clock3 className="h-3.5 w-3.5" />
+                                                Flexible pace
+                                            </span>
+                                        </div>
+                                        <h4 className="mt-3 text-lg font-black text-[#173b8f]">
                                             {course.title}
                                         </h4>
                                     </div>
 
-                                    <div className="w-full space-y-1 md:w-48">
-                                        <div className="h-1.5 w-full overflow-hidden rounded-full bg-gray-100">
+                                    <div className="space-y-2">
+                                        <div className="flex justify-between text-xs font-bold text-slate-500">
+                                            <span>Progress</span>
+                                            <span>{course.progress}%</span>
+                                        </div>
+                                        <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
                                             <div
-                                                className="h-full rounded-full bg-blue-600"
+                                                className="h-full rounded-full bg-[#28a6a1]"
                                                 style={{
                                                     width: `${course.progress}%`,
                                                 }}
@@ -131,19 +170,23 @@ export default function Index({
 
                                     <div>
                                         {course.status === 'Locked' ? (
-                                            <button 
-                                                onClick={() => handleEnroll(course.id)}
-                                                className="flex w-full items-center justify-center gap-2 rounded-xl border border-transparent bg-emerald-600 px-5 py-2.5 text-xs font-bold text-white transition-all hover:bg-emerald-700 active:scale-95 md:w-auto"
+                                            <button
+                                                type="button"
+                                                onClick={() =>
+                                                    handleEnroll(course.id)
+                                                }
+                                                className="flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-[#173b8f] px-5 text-sm font-black text-white transition hover:bg-[#102a43] focus-visible:ring-2 focus-visible:ring-[#f47b20] focus-visible:outline-none md:w-auto"
                                             >
-                                                <PlusCircleIcon size={14} /> Enroll Now
+                                                <PlusCircleIcon size={16} />
+                                                Enroll
                                             </button>
                                         ) : (
                                             <Link
                                                 href={`/student/courses/${currentCategory.slug}/${course.id}`}
-                                                className="flex w-full items-center justify-center gap-2 rounded-xl border border-transparent bg-blue-600 px-5 py-2.5 text-xs font-bold text-white transition-all hover:bg-blue-700 active:scale-95 md:w-auto"
+                                                className="flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-[#f47b20] px-5 text-sm font-black text-white transition hover:bg-[#173b8f] focus-visible:ring-2 focus-visible:ring-[#f47b20] focus-visible:outline-none md:w-auto"
                                             >
-                                                <PlayIcon size={14} /> Resume
-                                                Learning
+                                                <PlayIcon size={16} />
+                                                Resume
                                             </Link>
                                         )}
                                     </div>
@@ -151,7 +194,7 @@ export default function Index({
                             ))
                         )}
                     </div>
-                </div>
+                </section>
             </div>
         </Layout>
     );
