@@ -36,7 +36,7 @@ class GoogleAuthController extends Controller
         try {
             $googleUser = Socialite::driver('google')->stateless()->user();
         } catch (\Exception $e) {
-            return redirect('/login')->with('error', 'Gagal masuk menggunakan Google.');
+            return redirect('/login')->with('error', 'Failed to sign in with Google.');
         }
 
         $roleName = session()->pull('register_role', 'student');
@@ -61,7 +61,7 @@ class GoogleAuthController extends Controller
                     // Assign role ke user yang baru dibuat
                     $newUser->assignRole($roleName);
 
-                    // Buat data profil awal berdasarkan role
+                    // Create the initial profile data based on role.
                     if ($roleName === 'student') {
                         $newUser->studentProfile()->create(['country' => 'Taiwan']);
                     } elseif ($roleName === 'teacher') {
@@ -70,8 +70,8 @@ class GoogleAuthController extends Controller
                             'status' => 'pending',
                         ]);
                     } elseif ($roleName === 'company') {
-                        // KITA JANGAN BUAT PROFIL DULU DI SINI JIKA MAU HR MENGISI FORM NYA SENDIRI
-                        // Cukup biarkan kosong, karena nanti akan dibuat saat submit form pendaftaran (store)
+                        // Do not create the company profile here because HR should fill out the form.
+                        // Leave it empty; it will be created when the registration form is submitted.
                     }
 
                     return $newUser;
@@ -101,7 +101,7 @@ class GoogleAuthController extends Controller
         if ($user->hasRole('company')) {
             $companyProfile = $user->companyProfile;
 
-            // Goal Anda: HR baru -> Belum punya profil -> Masuk ke Form Pendaftaran
+            // New HR users without a profile go to the registration form.
             if (! $companyProfile) {
                 return redirect()->route('company.register');
             }

@@ -13,7 +13,7 @@ createInertiaApp({
         const pages = import.meta.glob('./pages/**/*.tsx');
 
         return resolvePageComponent(
-            `./pages/${name}.tsx`, 
+            `./pages/${name}.tsx`,
             pages
         ) as any;
     },

@@ -17,7 +17,7 @@ class TeachersTable
         return $table
             ->columns([
                 TextColumn::make('teacherProfile.full_name')
-                    ->label('Nama Lengkap')
+                    ->label('Full Name')
                     ->sortable()
                     ->searchable(),
 
@@ -35,7 +35,7 @@ class TeachersTable
                     ->searchable(),
 
                 TextColumn::make('teacherProfile.learning_goal')
-                    ->label('Target Mengajar')
+                    ->label('Teaching Goal')
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('teacherProfile.bio')
@@ -53,7 +53,7 @@ class TeachersTable
             ])
             ->filters([
                 SelectFilter::make('status')
-                    ->label('Status Kelulusan')
+                    ->label('Approval Status')
                     ->relationship('teacherProfile', 'status')
                     ->options([
                         'pending' => 'Pending',

@@ -21,7 +21,7 @@ use App\Http\Controllers\Teacher\TeacherApplyController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::inertia('/', 'Landing')->name('landing-page');
+Route::inertia('/', 'Landing')->name('home');
 
 Route::get('/login', function () {
     return Inertia::render('Auth/LoginPage');
