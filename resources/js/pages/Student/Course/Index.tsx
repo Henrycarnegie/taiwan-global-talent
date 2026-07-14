@@ -19,7 +19,7 @@ interface Props {
 export default function Index({ courses = [], stats, currentCategory, allCategories = [] }: Props) {
     const isMandarin = currentCategory.id === 1;
 
-    console.log(courses)
+    console.log(stats)
 
     const handleEnroll = (courseId: number) => {
         if (confirm('Apakah Anda yakin ingin mendaftar ke kursus ini?')) {
