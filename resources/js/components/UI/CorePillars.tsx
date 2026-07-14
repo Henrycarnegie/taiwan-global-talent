@@ -1,79 +1,111 @@
 import {
-    Languages,
-    GraduationCap,
-    BriefcaseBusiness,
-    BadgeCheck,
     ArrowRight,
+    BadgeCheck,
+    BriefcaseBusiness,
+    GraduationCap,
+    Languages,
 } from 'lucide-react';
 
 const pillars = [
     {
         icon: Languages,
         badge: 'Courses & Webinars',
-        title: 'Mandarin & Self Development',
-        desc: 'Kelas bahasa Mandarin bisnis terstruktur persiapan TOCFL dan live webinar bulanan bersama mentor profesional dari industri teknologi Taiwan.',
-        linkText: 'Lihat Jadwal Kelas',
+        title: 'Mandarin for real academic and work settings',
+        desc: 'Business Mandarin, TOCFL prep, and mentor-led practice sessions for classrooms, offices, interviews, and everyday life in Taiwan.',
+        linkText: 'View Class Schedule',
+        color: '#f47b20',
     },
     {
         icon: GraduationCap,
         badge: 'Fully Funded',
-        title: 'Scholarship Discovery Hub',
-        desc: 'Database agregator beasiswa terlengkap dari MOE, ICDF, hingga skema pendanaan jalur riset langsung dari lab profesor universitas top Taiwan.',
-        linkText: 'Cari Beasiswa',
+        title: 'Scholarship planning with adult-level clarity',
+        desc: 'A focused view of MOE, ICDF, university, and research funding paths with reminders for deadlines, documents, and eligibility.',
+        linkText: 'Find Scholarships',
+        color: '#6f5bd9',
     },
     {
         icon: BriefcaseBusiness,
         badge: 'Verified Companies',
-        title: 'Smart Job Finding Program',
-        desc: 'Sistem pencocokan CV otomatis. Lengkapi profil talenta digital Anda dan biarkan HRD dari TSMC, Foxconn, atau MediaTek menghubungi Anda langsung.',
-        linkText: 'Eksplorasi Lowongan',
+        title: 'A professional profile employers can scan',
+        desc: 'Package skills, work history, projects, certificates, and Mandarin progress into a profile Taiwan HR teams can understand quickly.',
+        linkText: 'Explore Jobs',
+        color: '#28a6a1',
     },
     {
         icon: BadgeCheck,
-        badge: 'Automated PDF',
-        title: 'Verified Certificate Programs',
-        desc: 'Selesaikan tantangan coding, bootcamp, atau kelas bahasa, dan dapatkan sertifikat digital instan yang terintegrasi untuk portofolio profesional Anda.',
-        linkText: 'Pelajari Mekanisme',
+        badge: 'Certificates',
+        title: 'Proof of progress that travels with you',
+        desc: 'Complete courses and challenges, then add digital certificates directly to the same profile used for applications and matching.',
+        linkText: 'Learn How It Works',
+        color: '#173b8f',
     },
 ];
 
-
-
 export default function CorePillars() {
     return (
-        <section className="px-6 py-24 bg-white border-y border-slate-100">
-            <div className="mx-auto max-w-6xl">
-                <div className="text-center max-w-3xl mx-auto mb-16">
-                    <span className="text-xs font-bold tracking-widest text-blue-600 uppercase bg-blue-50 px-3 py-1 rounded-full">
-                        Platform Ekosistem Terpadu
-                    </span>
-                    <h2 className="mt-3 text-3xl font-extrabold text-slate-900 md:text-4xl tracking-tight">
-                        Satu Platform, Segudang Peluang Karier di Taiwan
-                    </h2>
-                    <p className="mt-4 text-slate-500 text-base leading-relaxed">
-                        Kami mengintegrasikan persiapan bahasa, info pendanaan studi, hingga penyaluran kerja ke perusahaan internasional dalam satu dasbor terintegrasi.
-                    </p>
-                </div>
+        <section
+            id="programs"
+            className="relative overflow-hidden bg-white px-5 py-24"
+        >
+            <div className="absolute inset-x-0 top-0 h-40 bg-[#f7f3ea]" />
+            <div className="absolute inset-0 [background-image:linear-gradient(rgba(23,59,143,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(23,59,143,0.05)_1px,transparent_1px)] [background-size:52px_52px] opacity-45" />
+            <div className="relative mx-auto max-w-7xl">
+                <div className="grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-start">
+                    <div className="rounded-md bg-[#173b8f] p-8 text-white shadow-[0_22px_70px_rgba(23,59,143,0.22)] lg:sticky lg:top-28">
+                        <span className="inline-flex rounded-full bg-white/10 px-4 py-2 text-xs font-black tracking-widest text-[#f47b20] uppercase">
+                            Integrated platform
+                        </span>
+                        <h2 className="mt-5 text-4xl font-black tracking-tight md:text-5xl">
+                            Practical pathways for every stage of the journey.
+                        </h2>
+                        <p className="mt-5 text-base leading-8 font-semibold text-white/70">
+                            The platform connects learning, funding, and career
+                            preparation for high-school leavers, university
+                            students, graduates, and working adults.
+                        </p>
+                    </div>
 
-                <div className="grid gap-8 md:grid-cols-2">
-                    {pillars.map((pillar, i) => (
-                        <div key={i} className="group relative flex flex-col justify-between rounded-3xl border border-slate-200 p-8 bg-white shadow-sm hover:shadow-xl hover:border-blue-500/20 transition-all duration-300">
-                            <div>
-                                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-50 transition-colors group-hover:bg-blue-50">
-                                    <pillar.icon className="h-6 w-6 text-slate-700 transition-colors group-hover:text-blue-600" />
+                    <div className="grid gap-5 md:grid-cols-2">
+                        {pillars.map((pillar) => (
+                            <article
+                                key={pillar.title}
+                                className="group min-h-80 rounded-md border border-t-4 border-[#173b8f]/10 bg-white p-7 shadow-[0_16px_50px_rgba(23,59,143,0.08)] transition hover:-translate-y-1 hover:shadow-[0_24px_70px_rgba(23,59,143,0.13)]"
+                                style={{
+                                    borderTopColor: pillar.color,
+                                }}
+                            >
+                                <div
+                                    className="flex h-14 w-14 items-center justify-center rounded-md text-white"
+                                    style={{
+                                        backgroundColor: pillar.color,
+                                    }}
+                                >
+                                    <pillar.icon className="h-7 w-7" />
                                 </div>
-                                <span className="inline-block mt-4 text-[11px] font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2 py-0.5 rounded">
+                                <span
+                                    className="mt-7 inline-block rounded-full px-3 py-1 text-[11px] font-black tracking-wider text-white uppercase"
+                                    style={{
+                                        backgroundColor: pillar.color,
+                                    }}
+                                >
                                     {pillar.badge}
                                 </span>
-                                <h3 className="mt-2 text-xl font-bold text-slate-900">{pillar.title}</h3>
-                                <p className="mt-3 text-sm text-slate-500 leading-relaxed">{pillar.desc}</p>
-                            </div>
-                            <div className="mt-6 flex items-center border-t border-slate-50 pt-4 text-xs font-bold text-blue-600 group-hover:text-blue-700">
-                                <span>{pillar.linkText}</span>
-                                <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                            </div>
-                        </div>
-                    ))}
+                                <h3 className="mt-4 text-2xl leading-tight font-black text-[#173b8f]">
+                                    {pillar.title}
+                                </h3>
+                                <p className="mt-4 text-sm leading-7 font-semibold text-[#173b8f]/66">
+                                    {pillar.desc}
+                                </p>
+                                <a
+                                    href="#courses"
+                                    className="mt-8 inline-flex items-center text-sm font-black text-[#f47b20]"
+                                >
+                                    {pillar.linkText}
+                                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                                </a>
+                            </article>
+                        ))}
+                    </div>
                 </div>
             </div>
         </section>

@@ -29,7 +29,7 @@ class LessonsForm
             ->components([
                 Select::make('course_id')
                     ->relationship('course', 'title')
-                    ->label('Course / Kursus')
+                    ->label('Course')
                     ->required()
                     ->preload()
                     ->reactive(),
@@ -122,7 +122,7 @@ class LessonsForm
 
             Repeater::make('sentences')
                 ->relationship('sentences')
-                ->label('List of Sentences (Daftar Kalimat)')
+                ->label('List of Sentences')
                 ->columnSpanFull()
                 ->reorderable('sort_order')
                 ->collapsible()

@@ -163,7 +163,7 @@ export default function Layout({ children }: Props) {
                                                 })
                                             ) : (
                                                 <div className="px-4 py-3 text-sm text-gray-400">
-                                                    Tidak ada kategori
+                                                    No categories available
                                                 </div>
                                             )}
                                         </div>

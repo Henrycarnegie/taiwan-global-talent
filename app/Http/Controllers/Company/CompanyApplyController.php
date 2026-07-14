@@ -11,7 +11,7 @@ use Inertia\Inertia;
 class CompanyApplyController extends Controller
 {
     /**
-     * Menampilkan form pendaftaran perusahaan
+     * Display the company registration form.
      */
     public function create()
     {
@@ -19,7 +19,7 @@ class CompanyApplyController extends Controller
     }
 
     /**
-     * Memproses data pendaftaran perusahaan baru / re-submit jika ditolak
+     * Process a new company registration or resubmission after rejection.
      */
     public function store(Request $request)
     {
@@ -71,10 +71,10 @@ class CompanyApplyController extends Controller
         $validated['status'] = 'pending';
         $validated['user_id'] = auth()->id();
 
-        // Simpan ke database
+        // Save to the database.
         CompanyProfile::create($validated);
 
-        return redirect()->route('company.waiting')->with('success', 'Aplikasi berhasil dikirim!');
+        return redirect()->route('company.waiting')->with('success', 'Application submitted successfully!');
     }
 
     public function waiting()

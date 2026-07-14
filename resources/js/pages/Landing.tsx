@@ -12,16 +12,16 @@ import CorePillars from '@/components/UI/CorePillars';
 
 export default function Landing() {
     return (
-        <div className="font-sans text-slate-900 bg-slate-50/50 antialiased selection:bg-red-500 selection:text-white">
+        <div className="bg-white font-sans text-[#173b8f] antialiased selection:bg-[#ffcb05] selection:text-[#173b8f]">
             <Navbar />
             <Hero />
             <Stats />
-            
+
             <CorePillars />
-            
+
             <Features />
             <Membership />
-            
+
             <HowItWorks />
             <Companies />
             <CTA />

@@ -4,28 +4,28 @@ const steps = [
     {
         number: '01',
         title: 'Create & Auth Profile',
-        desc: 'Masuk instan menggunakan Google Auth dan lengkapi data profil publik talenta Anda.',
+        desc: 'Sign in instantly with Google Auth and complete your public talent profile.',
         icon: ShieldCheck,
         badge: 'Setup',
     },
     {
         number: '02',
         title: 'Build Skills & Language',
-        desc: 'Unggah portofolio digital Anda, ikuti webinar, dan perbarui skor sertifikasi bahasa Mandarin (TOCFL).',
+        desc: 'Upload your digital portfolio, join webinars, and update your Mandarin certification score (TOCFL).',
         icon: TrendingUp,
         badge: 'Develop',
     },
     {
         number: '03',
         title: 'Auto-Match Ecosystem',
-        desc: 'Sistem algoritma mencocokkan kualifikasi profil Anda secara otomatis dengan ribuan lowongan di Taiwan.',
+        desc: 'Our matching system automatically connects your profile qualifications with thousands of opportunities in Taiwan.',
         icon: Handshake,
         badge: 'Matching',
     },
     {
         number: '04',
         title: 'Apply & Claim Scholarship',
-        desc: 'Ajukan lamaran kerja langsung ke perusahaan top atau klaim beasiswa studi yang paling cocok untuk Anda.',
+        desc: 'Apply directly to top companies or claim the study scholarship that best fits you.',
         icon: Target,
         badge: 'Success',
     },
@@ -35,63 +35,63 @@ const HowItWorks = () => {
     return (
         <section
             id="how"
-            className="border-y border-slate-200/60 bg-slate-50 px-6 py-24"
+            className="border-y-4 border-[#173b8f] bg-[#173b8f] px-5 py-24"
         >
-            <div className="mx-auto max-w-6xl">
+            <div className="mx-auto max-w-7xl">
                 {/* Header Section */}
-                <div className="mx-auto mb-20 max-w-2xl text-center">
-                    <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-bold tracking-widest text-[#0A2A66] uppercase">
-                        Alur Kerja Sistem
+                <div className="mx-auto mb-14 max-w-3xl text-center">
+                    <span className="rounded-full bg-[#ffcb05] px-4 py-2 text-xs font-black tracking-widest text-[#173b8f] uppercase">
+                        System Workflow
                     </span>
-                    <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-slate-900 md:text-4xl">
-                        Bagaimana Platform Ini Membantu Anda?
+                    <h2 className="mt-5 text-4xl font-black tracking-tight text-white md:text-5xl">
+                        How This Platform Helps You
                     </h2>
-                    <p className="mt-4 text-sm leading-relaxed text-slate-500">
-                        Proses digitalisasi terstruktur untuk mempersiapkan
-                        karir dan pendidikan masa depan Anda di Taiwan tanpa
-                        birokrasi yang rumit.
+                    <p className="mt-4 text-base leading-relaxed font-semibold text-white/75">
+                        A structured digital process that prepares your career
+                        and education journey in Taiwan without complicated
+                        bureaucracy.
                     </p>
                 </div>
 
                 {/* Steps Timeline Grid */}
                 <div className="relative grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-                    {/* Garis Penghubung Dekoratif (Hanya muncul di desktop) */}
-                    <div className="absolute top-1/2 right-4 left-4 z-0 hidden h-0.5 -translate-y-12 bg-slate-200 lg:block" />
+                    {/* Decorative connector line (desktop only) */}
+                    <div className="absolute top-1/2 right-4 left-4 z-0 hidden h-1 -translate-y-12 bg-white/20 lg:block" />
 
                     {steps.map((step, i) => (
                         <div
                             key={i}
-                            className="group relative z-10 flex flex-col justify-between rounded-2xl border border-slate-200/80 bg-white p-6 shadow-xs transition-all duration-200 hover:border-blue-500/30 hover:shadow-md"
+                            className="group relative z-10 flex flex-col justify-between rounded-lg border-2 border-white bg-white p-6 shadow-[6px_6px_0_#ffcb05] transition-all duration-200 hover:-translate-y-1"
                         >
                             <div>
-                                {/* Baris Atas Kartu */}
+                                {/* Card Top Row */}
                                 <div className="mb-4 flex items-center justify-between">
-                                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50 transition-colors group-hover:bg-blue-50">
-                                        <step.icon className="h-5 w-5 text-slate-700 transition-colors group-hover:text-blue-600" />
+                                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#fff7d7]">
+                                        <step.icon className="h-5 w-5 text-[#f47b20]" />
                                     </div>
-                                    <span className="text-2xl font-black tracking-tight text-slate-100 transition-colors group-hover:text-blue-100">
+                                    <span className="text-2xl font-black tracking-tight text-[#173b8f]/15">
                                         {step.number}
                                     </span>
                                 </div>
 
-                                {/* Tag Tahapan */}
-                                <span className="mb-2 inline-block rounded-sm bg-slate-100 px-2 py-0.5 text-[10px] font-bold tracking-wider text-slate-600 uppercase">
+                                {/* Stage Tag */}
+                                <span className="mb-2 inline-block rounded bg-[#173b8f] px-2 py-1 text-[10px] font-black tracking-wider text-white uppercase">
                                     {step.badge}
                                 </span>
 
-                                {/* Konten Utama */}
-                                <h3 className="text-base font-bold text-slate-900 transition-colors group-hover:text-blue-600">
+                                {/* Main Content */}
+                                <h3 className="text-base font-black text-[#173b8f]">
                                     {step.title}
                                 </h3>
-                                <p className="mt-2 text-xs leading-relaxed font-medium text-slate-400">
+                                <p className="mt-2 text-xs leading-relaxed font-semibold text-[#173b8f]/65">
                                     {step.desc}
                                 </p>
                             </div>
 
-                            {/* Indikator Langkah Kecil */}
-                            <div className="mt-6 flex items-center justify-between border-t border-slate-50 pt-3 text-[11px] font-semibold text-slate-400">
+                            {/* Small Step Indicator */}
+                            <div className="mt-6 flex items-center justify-between border-t-2 border-[#173b8f]/10 pt-3 text-[11px] font-black text-[#f47b20]">
                                 <span>Step {i + 1}</span>
-                                <span className="text-slate-300">Done ●</span>
+                                <span>Done ●</span>
                             </div>
                         </div>
                     ))}

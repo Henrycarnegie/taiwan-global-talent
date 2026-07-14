@@ -1,63 +1,84 @@
 import React from 'react';
+import { ArrowRight, CheckCircle2, ShieldCheck } from 'lucide-react';
+
+const trustItems = [
+    'Free starter membership',
+    'Secure protected data',
+    'Integrated campus and employer ecosystem',
+];
 
 const CTA = () => {
     return (
-        <section className="relative overflow-hidden bg-white px-6 py-28">
-            {/* Kontainer Utama dengan Desain Kartu Melayang yang Masif */}
-            <div className="relative mx-auto max-w-5xl overflow-hidden rounded-3xl bg-slate-950 p-12 text-center shadow-2xl ring-1 ring-white/10 md:p-16">
-                {/* Aksen Lampu Neon Latar Belakang (Glow Effect) */}
-
-                <div className="relative z-10 mx-auto max-w-3xl space-y-6">
-                    {/* BUKTI SOSIAL / LIVE STATS BADGE */}
-                    <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 backdrop-blur-xs">
-                        <span className="flex h-2 w-2 animate-pulse rounded-full bg-amber-400" />
-                        <p className="text-xs font-semibold tracking-wide text-slate-300">
-                            {' '}
-                            <span className="font-bold text-amber-400">
-                                120+ Mahasiswa
-                            </span>{' '}
-                            baru bergabung minggu ini
-                        </p>
+        <section className="relative overflow-hidden bg-[#f7f3ea] px-5 py-24">
+            <div className="mx-auto grid max-w-7xl overflow-hidden rounded-md bg-[#102a43] shadow-[0_28px_90px_rgba(16,42,67,0.28)] lg:grid-cols-[1fr_0.82fr]">
+                <div className="p-8 text-white md:p-14">
+                    <div className="inline-flex items-center gap-2 rounded-full border border-white/14 bg-white/10 px-4 py-2 text-xs font-black tracking-widest text-white uppercase">
+                        <span className="flex h-2 w-2 rounded-full bg-[#f47b20]" />
+                        120+ members joined this week
                     </div>
 
-                    {/* JUDUL UTAMA YANG EMOSIONAL & MEMICU AKSI */}
-                    <h2 className="text-3xl leading-tight font-black tracking-tight text-white md:text-5xl">
-                        Siap Membangun Karier &{' '}
-                        <br className="hidden sm:block" />
-                        <span className="bg-linear-to-r from-red-400 via-amber-400 to-red-400 bg-clip-text text-transparent">
-                            Masa Depanmu di Taiwan?
-                        </span>
+                    <h2 className="mt-7 max-w-3xl text-4xl leading-tight font-black tracking-tight md:text-6xl">
+                        Start with one pathway. Build toward a bigger Taiwan
+                        plan.
                     </h2>
 
-                    {/* DESKRIPSI VALUE PROPOSITION */}
-                    <p className="mx-auto max-w-2xl text-sm leading-relaxed text-slate-400 md:text-base">
-                        Jangan lewatkan kesempatan emas berjejaring langsung
-                        dengan HRD korporat top, mengamankan beasiswa fully
-                        funded, dan menguasai bahasa Mandarin bisnis dalam satu
-                        ekosistem tanpa biaya.
+                    <p className="mt-6 max-w-2xl text-base leading-8 font-semibold text-white/70">
+                        Create a free account, choose the pathway that fits your
+                        stage, and keep scholarship, Mandarin, and career
+                        preparation moving in one focused workspace.
                     </p>
 
-                    {/* DUAL ACTION BUTTONS (Dibuat Kontras & Responsif) */}
-                    <div className="mx-auto flex max-w-md flex-col items-center justify-center gap-4 pt-6 sm:flex-row">
-                        {/* Tombol Utama untuk Mahasiswa / Pencari Kerja */}
-                        <button className="group relative w-full rounded-xl bg-linear-to-r from-[#E60012] to-red-600 px-8 py-4 text-sm font-bold text-white shadow-xl shadow-red-600/20 transition-all duration-200 hover:scale-[1.02] hover:shadow-red-600/30 active:scale-98 sm:w-auto">
-                            Daftar Sebagai Talenta
-                            <span className="ml-2 inline-block transition-transform duration-200 group-hover:translate-x-1">
-                                →
-                            </span>
-                        </button>
+                    <div className="mt-9 flex flex-col gap-4 sm:flex-row">
+                        <a
+                            href="/login"
+                            className="group inline-flex items-center justify-center rounded-md bg-[#f47b20] px-8 py-4 text-sm font-black text-white transition hover:bg-white hover:text-[#173b8f]"
+                        >
+                            Join as Talent
+                            <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                        </a>
 
-                        {/* Tombol Sekunder untuk Perusahaan / Pemberi Kerja */}
-                        <button className="w-full rounded-xl border border-white/20 bg-white/5 px-8 py-4 text-sm font-bold text-white backdrop-blur-xs transition-all duration-200 hover:border-white/30 hover:bg-white/10 active:scale-98 sm:w-auto">
-                            Kemitraan Perusahaan (HR)
-                        </button>
+                        <a
+                            href="/login"
+                            className="inline-flex items-center justify-center rounded-md border border-white/24 bg-white/8 px-8 py-4 text-sm font-black text-white transition hover:bg-white hover:text-[#173b8f]"
+                        >
+                            Company Partnership
+                        </a>
                     </div>
 
-                    {/* MICRO-TRUST FOOTNOTE */}
-                    <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 border-t border-white/5 pt-8 text-[11px] text-slate-500">
-                        <span>🛡️ 100% Free Membership</span>
-                        <span>🔒 Data Terproteksi Aman</span>
-                        <span>🤝 Terintegrasi dengan Ekosistem Kampus</span>
+                    <div className="mt-10 grid gap-3 border-t border-white/10 pt-8 md:grid-cols-3">
+                        {trustItems.map((item) => (
+                            <div
+                                key={item}
+                                className="flex items-start gap-3 text-sm font-bold text-white/72"
+                            >
+                                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#28a6a1]" />
+                                {item}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="relative min-h-96 overflow-hidden">
+                    <img
+                        src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1000&q=82"
+                        alt="Professional group planning together"
+                        className="absolute inset-0 h-full w-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(16,42,67,0.62)_0%,rgba(16,42,67,0.08)_100%)]" />
+                    <div className="absolute right-6 bottom-6 left-6 rounded-md bg-white p-5 text-[#173b8f] shadow-[0_20px_60px_rgba(0,0,0,0.22)]">
+                        <div className="flex items-center gap-3">
+                            <div className="flex h-11 w-11 items-center justify-center rounded-md bg-[#173b8f] text-white">
+                                <ShieldCheck className="h-5 w-5" />
+                            </div>
+                            <div>
+                                <p className="text-xs font-black tracking-widest text-[#173b8f]/45 uppercase">
+                                    Guided setup
+                                </p>
+                                <p className="text-lg font-black">
+                                    Profile, pathway, opportunities
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

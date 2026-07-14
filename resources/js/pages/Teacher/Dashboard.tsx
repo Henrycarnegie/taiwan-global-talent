@@ -67,15 +67,15 @@ export default function TeacherDashboard({ auth, stats }: DashboardProps) {
     const students = [
         {
             name: 'Bima',
-            class: 'Kelas 10A',
-            status: 'Sudah Kumpul',
+            class: 'Class 10A',
+            status: 'Submitted',
             grade: 85,
             id: 'STU-0102',
         },
         {
             name: 'Sari',
-            class: 'Kelas 9C',
-            status: 'Belum Kumpul',
+            class: 'Class 9C',
+            status: 'Not Submitted',
             grade: 92,
             id: 'STU-0084',
         },
@@ -150,7 +150,7 @@ export default function TeacherDashboard({ auth, stats }: DashboardProps) {
                 </div>
             </aside>
 
-            {/* Konten Utama */}
+            {/* Main Content */}
             <main className="flex-1 overflow-y-auto p-8">
                 <header className="mb-8 flex items-center justify-between border-b border-slate-200 pb-5">
                     <div>
@@ -169,7 +169,7 @@ export default function TeacherDashboard({ auth, stats }: DashboardProps) {
                             <Search className="absolute top-2.5 left-3 h-4 w-4 text-slate-400" />
                             <input
                                 type="text"
-                                placeholder="搜尋學生、班級..."
+                                placeholder="Search students or classes..."
                                 className="w-48 rounded border border-slate-200 bg-white py-1.5 pr-4 pl-9 text-xs focus:border-teal-500 focus:outline-none"
                             />
                         </div>
@@ -180,9 +180,9 @@ export default function TeacherDashboard({ auth, stats }: DashboardProps) {
                     </div>
                 </header>
 
-                {/* Statistik yang dihubungkan langsung dari Controller */}
+                {/* Statistics connected directly from the controller */}
                 <div className="mb-8 grid grid-cols-1 gap-5 md:grid-cols-3">
-                    {/* Card Progress - Menggunakan stats.progress */}
+                    {/* Progress Card - Uses stats.progress */}
                     <div className="flex items-center justify-between rounded border border-slate-200 bg-white p-5 shadow-sm">
                         <div>
                             <p className="mb-1 text-xs font-semibold tracking-wider text-slate-400 uppercase">
@@ -198,7 +198,7 @@ export default function TeacherDashboard({ auth, stats }: DashboardProps) {
                         <SimpleDoughnut percentage={stats?.progress || 0} />
                     </div>
 
-                    {/* Card Courses - Menggunakan stats.courses */}
+                    {/* Courses Card - Uses stats.courses */}
                     <div className="flex items-center justify-between rounded border border-l-4 border-slate-200 border-l-teal-500 bg-white p-5 shadow-sm">
                         <div>
                             <p className="mb-1 text-xs font-semibold tracking-wider text-slate-400 uppercase">
@@ -216,7 +216,7 @@ export default function TeacherDashboard({ auth, stats }: DashboardProps) {
                         </div>
                     </div>
 
-                    {/* Card Certificates - Menggunakan stats.certificates */}
+                    {/* Certificates Card - Uses stats.certificates */}
                     <div className="flex items-center justify-between rounded border border-l-4 border-slate-200 border-l-orange-500 bg-white p-5 shadow-sm">
                         <div>
                             <p className="mb-1 text-xs font-semibold tracking-wider text-slate-400 uppercase">
@@ -235,7 +235,7 @@ export default function TeacherDashboard({ auth, stats }: DashboardProps) {
                     </div>
                 </div>
 
-                {/* Tabel Data Siswa */}
+                {/* Student Data Table */}
                 <div className="overflow-hidden rounded border border-slate-200 bg-white shadow-sm">
                     <div className="border-slate-150 flex items-center justify-between border-b bg-slate-50/70 p-5">
                         <h2 className="text-sm font-bold tracking-tight text-slate-900">

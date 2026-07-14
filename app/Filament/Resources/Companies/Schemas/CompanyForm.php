@@ -44,7 +44,7 @@ class CompanyForm
                         ->live(),
 
                     Textarea::make('rejection_reason')
-                        ->label('Alasan Penolakan')
+                        ->label('Rejection Reason')
                         ->visible(fn ($get) => $get('status') === 'rejected')
                         ->required(fn ($get) => $get('status') === 'rejected')
                         ->rows(2),
@@ -203,6 +203,6 @@ class CompanyForm
                         ]),
                 ]),
         ])
-        ->columns(1);
+            ->columns(1);
     }
 }

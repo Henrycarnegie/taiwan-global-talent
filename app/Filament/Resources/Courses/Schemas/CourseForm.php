@@ -15,7 +15,7 @@ class CourseForm
     {
         $record = $schema->getRecord();
 
-        // Jika sedang edit, ambil category_id dari database. Jika bikin baru, ambil dari URL query.
+        // When editing, use category_id from the database. When creating, use the URL query.
         $categoryId = $record ? $record->category_id : (request()->query('category') ?? 1);
 
         return $schema
@@ -23,7 +23,7 @@ class CourseForm
                 TextInput::make('title')
                     ->required(),
 
-                // 1. Amankan category_id secara otomatis dan sembunyikan/kunci
+                // 1. Safely set category_id automatically and keep it locked.
                 Select::make('category_id')
                     ->relationship('category', 'name')
                     ->default($categoryId)
@@ -31,9 +31,9 @@ class CourseForm
                     ->dehydrated()
                     ->required(),
 
-                // 2. Buat field level menjadi dinamis labelnya
+                // 2. Make the level field label dynamic.
                 TextInput::make('level')
-                    ->label(fn () => $categoryId == 1 ? 'Mandarin Level (e.g. HSK 1)' : 'Tingkat Kursus / Level')
+                    ->label(fn () => $categoryId == 1 ? 'Mandarin Level (e.g. HSK 1)' : 'Course Level')
                     ->required(),
 
                 Toggle::make('is_published')
@@ -73,7 +73,7 @@ class CourseForm
                             ->multiple()
                             ->searchable(['hanzi', 'pinyin', 'translation'])
                             ->preload()
-                            ->label('Kosa Kata dalam Pelajaran Ini')
+                            ->label('Vocabulary in This Lesson')
                             ->hidden(fn () => $categoryId != 1)
                             ->columnSpanFull(),
                     ])
