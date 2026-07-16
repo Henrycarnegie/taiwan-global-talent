@@ -56,12 +56,8 @@ const AnimatedNumber = ({
         }
 
         if (prefersReducedMotion) {
-            setCurrentValue(value);
-
             return;
         }
-
-        setCurrentValue(0);
 
         let animationFrame = 0;
         const duration = 1200;
@@ -139,7 +135,7 @@ const Stats = () => {
     return (
         <section
             ref={sectionRef}
-            className="border-y border-[#173b8f]/10 bg-white py-10"
+            className="border-y border-[#173b8f]/10 bg-[#fbfaf7] py-10"
         >
             <div className="mx-auto grid max-w-7xl grid-cols-2 gap-4 px-5 md:grid-cols-4">
                 {stats.map((stat, i) => (
@@ -156,13 +152,13 @@ const Stats = () => {
                             duration: 0.65,
                             ease: 'easeOut',
                         }}
-                        className="rounded-lg border border-[#173b8f]/20 bg-[#173b8f] p-6 text-center text-white shadow-[0_16px_45px_rgba(23,59,143,0.18)] transition-all hover:-translate-y-1"
+                        className="rounded-md border border-[#173b8f]/12 bg-white p-6 text-center text-[#173b8f] shadow-sm transition-colors hover:border-[#f47b20]/40"
                     >
-                        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-white/12">
-                            <stat.icon className="h-6 w-6 text-white" />
+                        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-md bg-[#173b8f]/8">
+                            <stat.icon className="h-6 w-6 text-[#173b8f]" />
                         </div>
 
-                        <h3 className="text-3xl font-black text-white">
+                        <h3 className="text-3xl font-extrabold text-[#173b8f]">
                             <AnimatedNumber
                                 value={stat.value}
                                 suffix={stat.suffix}
@@ -171,7 +167,7 @@ const Stats = () => {
                             />
                         </h3>
 
-                        <p className="mt-1 text-sm font-black text-white/75">
+                        <p className="mt-1 text-sm font-semibold text-[#173b8f]/62">
                             {stat.label}
                         </p>
                     </motion.div>

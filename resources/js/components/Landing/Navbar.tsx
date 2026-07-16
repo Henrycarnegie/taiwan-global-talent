@@ -1,4 +1,3 @@
-import React from 'react';
 import { ChevronDown, Compass } from 'lucide-react';
 import LoginGoogle from '../UI/LoginGoogle';
 
@@ -7,23 +6,23 @@ const Navbar = () => {
         'flex items-center gap-1 px-3 py-2 transition hover:text-[#f47b20]';
 
     return (
-        <nav className="fixed top-0 z-50 w-full border-b border-[#173b8f]/10 bg-white/95 shadow-sm backdrop-blur">
+        <nav className="fixed top-0 z-50 w-full border-b border-[#173b8f]/10 bg-white/96">
             <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4">
                 <a href="/" className="flex items-center gap-3">
-                    <span className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#173b8f] text-lg font-black text-white">
+                    <span className="flex h-12 w-12 items-center justify-center rounded-md bg-[#173b8f] text-lg font-extrabold text-white">
                         TGT
                     </span>
                     <div className="leading-tight">
-                        <div className="text-lg font-black tracking-tight text-[#173b8f]">
+                        <div className="text-lg font-extrabold tracking-tight text-[#173b8f]">
                             Taiwan Global Talent
                         </div>
-                        <div className="text-[11px] font-bold tracking-wide text-[#173b8f]/58 uppercase">
+                        <div className="text-[11px] font-semibold tracking-wide text-[#173b8f]/58 uppercase">
                             Learning • Careers • Mobility
                         </div>
                     </div>
                 </a>
 
-                <div className="hidden items-center gap-2 text-sm font-extrabold text-[#173b8f] lg:flex">
+                <div className="hidden items-center gap-2 text-sm font-bold text-[#173b8f] lg:flex">
                     <a className={dropdownLinkClasses} href="#programs">
                         Programs
                         <ChevronDown className="h-3.5 w-3.5" />
