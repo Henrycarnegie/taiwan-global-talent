@@ -7,9 +7,8 @@ use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Company\CompanyApplyController;
 use App\Http\Controllers\Company\DashboardController as CompanyDashboardController;
 // Profile
-use App\Http\Controllers\Profile\ProfileController;
+use App\Http\Controllers\Profile\ProfilePageController;
 // Student
-use App\Http\Controllers\Student\CommunityController;
 use App\Http\Controllers\Student\CommunityPostController;
 use App\Http\Controllers\Student\CourseController;
 use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
@@ -52,6 +51,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // STUDENT ROLE
     Route::middleware('role:student')->group(function () {
         Route::get('/student/dashboard', [StudentDashboardController::class, 'index'])->name('student.dashboard');
+        Route::get('/student/profile', [ProfilePageController::class, 'show'])->name('profile.show');
+        Route::patch('/profile/update', [ProfilePageController::class, 'update'])->name('profile.update');
 
         // 1. Rute POST
         Route::post('/student/courses/{course}/enroll', [EnrollmentController::class, 'enroll'])->name('student.courses.enroll');
@@ -97,9 +98,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // ---------------------------------------------------------
     // Global Authenticated Routes (Profile & Logout)
     // ---------------------------------------------------------
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
-
     Route::post('/logout', function () {
         auth()->logout();
         request()->session()->invalidate();

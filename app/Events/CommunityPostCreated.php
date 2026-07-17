@@ -20,7 +20,6 @@ class CommunityPostCreated implements ShouldBroadcastNow
      */
     public function __construct(CommunityPost $post)
     {
-        // Format data post agar strukturnya sama persis dengan yang diharapkan oleh API Resource / Frontend TypeScript kamu
         $this->post = [
             'id' => $post->id,
             'user' => [
@@ -50,7 +49,6 @@ class CommunityPostCreated implements ShouldBroadcastNow
      */
     public function broadcastOn(): array
     {
-        // Pancarkan ke channel publik agar semua role yang login bisa mendengar feed terbaru
         return [
             new Channel('community-feed'),
         ];
