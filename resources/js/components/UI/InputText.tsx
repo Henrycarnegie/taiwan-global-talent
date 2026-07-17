@@ -1,4 +1,4 @@
-export default function Input({ label, ...props }: any) {
+export default function InputText({ label, ...props }: any) {
     return (
         <div className="space-y-1">
             <label className="mb-1 block text-xs font-semibold text-gray-700">

@@ -1,8 +1,7 @@
 import { Link, router } from '@inertiajs/react';
-import { LogOut, Settings } from 'lucide-react';
+import { LogOut, User as UserIcon, Award } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
-import EditProfileModal from './EditProfileModal';
 
 export default function ProfileDropdown() {
     const { user } = useAuth();
@@ -16,7 +15,6 @@ export default function ProfileDropdown() {
     const role = roleMapping[user.role as unknown as number] || 'Student';
 
     const [isOpen, setIsOpen] = useState(false);
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -41,9 +39,8 @@ export default function ProfileDropdown() {
                 onClick={() => setIsOpen(!isOpen)}
                 className="flex items-center gap-2.5 rounded-full p-1 text-left transition duration-200 outline-none hover:bg-gray-100 md:rounded-xl md:py-1.5 md:pr-3 md:pl-2"
             >
-                {/* Avatar Wrapper dengan Ring Indikator Aktif */}
                 <div
-                    className={`relative shrink-0 rounded-full p-0.5 transition duration-200 ${isOpen ? 'ring-2 ring-blue-500 ring-offset-1' : 'group-hover:ring-2 group-hover:ring-gray-300'}`}
+                    className={`relative shrink-0 rounded-full p-0.5 transition duration-200 ${isOpen ? 'ring-2 ring-blue-500 ring-offset-1' : ''}`}
                 >
                     {user?.avatar ? (
                         <img
@@ -58,7 +55,6 @@ export default function ProfileDropdown() {
                     )}
                 </div>
 
-                {/* Info Text (Hanya muncul di desktop) */}
                 <div className="hidden max-w-30 text-left md:block">
                     <p className="truncate text-xs leading-none font-semibold text-gray-800">
                         {user.name}
@@ -69,7 +65,7 @@ export default function ProfileDropdown() {
                 </div>
             </button>
 
-            {/* POPUP / DROPDOWN MENU */}
+            {/* DROPDOWN POPUP */}
             {isOpen && (
                 <div className="animate-in fade-in slide-in-from-top-2 absolute right-0 z-50 mt-2 w-64 origin-top-right rounded-xl border border-gray-100 bg-white p-1.5 shadow-xl ring-1 ring-black/5 duration-200">
                     {/* User Mini Info Header */}
@@ -97,34 +93,30 @@ export default function ProfileDropdown() {
 
                     {/* Menu Items Group */}
                     <div className="space-y-0.5">
-                        <button
-                            onClick={() => {
-                                setIsModalOpen(true);
-                                setIsOpen(false);
-                            }}
+                        {/* LINK KE HALAMAN PROFIL PENUH ALA LINKEDIN */}
+                        <Link
+                            href="/student/profile"
+                            onClick={() => setIsOpen(false)}
                             className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-sm text-gray-600 transition duration-150 hover:bg-slate-50 hover:text-gray-900"
                         >
-                            <Settings className="h-4 w-4 text-gray-400" />
-                            <span className="font-medium">
-                                Account Settings
-                            </span>
-                        </button>
+                            <UserIcon className="h-4 w-4 text-gray-400" />
+                            <span className="font-medium">My Profile</span>
+                        </Link>
 
-                        {/* Menu Items Group */}
-                        <div className="space-y-0.5">
-                            <Link
-                                href="/student/courses/certificate"
-                                className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-sm text-gray-600 transition duration-150 hover:bg-slate-50 hover:text-gray-900">
-                                <Settings className="h-4 w-4 text-gray-400" />
-                                <span className="font-medium">Certificate</span>
-                            </Link>
-                        </div>
+                        {/* LINK KE CERTIFICATE */}
+                        <Link
+                            href="/student/courses/certificate"
+                            onClick={() => setIsOpen(false)}
+                            className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-sm text-gray-600 transition duration-150 hover:bg-slate-50 hover:text-gray-900"
+                        >
+                            <Award className="h-4 w-4 text-gray-400" />
+                            <span className="font-medium">Certificates</span>
+                        </Link>
                     </div>
 
-                    {/* Separator */}
                     <div className="my-1 border-t border-gray-100"></div>
 
-                    {/* Logout Group */}
+                    {/* Logout Button */}
                     <div>
                         <button
                             onClick={() => router.post('/logout')}
@@ -136,12 +128,6 @@ export default function ProfileDropdown() {
                     </div>
                 </div>
             )}
-
-            {/* MODAL UNTUK CRUD DATA PROFIL */}
-            <EditProfileModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-            />
         </div>
     );
 }
