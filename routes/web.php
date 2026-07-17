@@ -10,6 +10,7 @@ use App\Http\Controllers\Company\DashboardController as CompanyDashboardControll
 use App\Http\Controllers\Profile\ProfileController;
 // Student
 use App\Http\Controllers\Student\CommunityController;
+use App\Http\Controllers\Student\CommunityPostController;
 use App\Http\Controllers\Student\CourseController;
 use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
 use App\Http\Controllers\Student\DownloadCertificateController;
@@ -51,7 +52,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // STUDENT ROLE
     Route::middleware('role:student')->group(function () {
         Route::get('/student/dashboard', [StudentDashboardController::class, 'index'])->name('student.dashboard');
-        Route::get('/student/community', [CommunityController::class, 'index'])->name('student.community');
 
         // 1. Rute POST
         Route::post('/student/courses/{course}/enroll', [EnrollmentController::class, 'enroll'])->name('student.courses.enroll');
@@ -69,6 +69,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // 3. RUTE WILDCARD SLUG DI PALING BAWAH
         Route::get('/student/courses/{categorySlug}', [CourseController::class, 'index'])->name('student.courses.index');
         Route::get('/student/courses/{categorySlug}/{course}', [CourseController::class, 'show'])->name('student.courses.show');
+
+        // 4. Community
+        Route::get('student/community', [CommunityPostController::class, 'index'])->name('community.index');
+
+        // Kirim Postingan Baru
+        Route::post('student/community/posts', [CommunityPostController::class, 'store'])->name('community.posts.store');
+
+        // Toggle Like Postingan
+        Route::post('student/community/posts/{id}/like', [CommunityPostController::class, 'toggleLike'])->name('community.posts.like');
+        Route::post('/community/posts/{postId}/comments', [CommunityPostController::class, 'storeComment'])->name('community.comments.store');
     });
 
     // TEACHER ROLE
