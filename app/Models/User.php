@@ -71,6 +71,20 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasOne(AdminProfile::class);
     }
 
+    // Helper untuk mendapatkan profil sesuai role tanpa N+1
+    public function getProfile()
+    {
+        $roleSlug = $this->roles->first()?->name ?? 'student';
+
+        return match ($roleSlug) {
+            'teacher' => $this->teacherProfile,
+            'student' => $this->studentProfile,
+            'company' => $this->companyProfile,
+            'admin' => $this->adminProfile,
+            default => null,
+        };
+    }
+
     public function enrollments(): HasMany
     {
         return $this->hasMany(Enrollment::class);
