@@ -27,15 +27,14 @@ export default function Index({
     console.log(stats)
 
     const handleEnroll = (courseId: number) => {
-        if (confirm('Apakah Anda yakin ingin mendaftar ke kursus ini?')) {
+        if (confirm('Confirm to enroll in this course?')) {
             router.post(`/student/courses/${courseId}/enroll`, {}, {
                 onSuccess: () => {
-                    alert('Pendaftaran berhasil! Kelas sekarang terbuka.');
+                    alert('Enrollment successful! The course is now open.');
                 },
                 onError: (errors: any) => {
-                    // Tampilkan pesan error spesifik jika ada dari Laravel
                     const errorMessages = Object.values(errors).join('\n');
-                    alert(`Gagal mendaftar kelas.\n${errorMessages}`);
+                    alert(`Failed to enroll in the course.\n${errorMessages}`);
                 }
             });
         }
