@@ -14,16 +14,34 @@ class CourseController extends Controller
     // Akses: /student/courses
     public function index()
     {
+        $categories = CourseCategory::orderBy('order')->get()->map(function ($category) {
+            return [
+                'id' => $category->id,
+                'name' => $category->name,
+                'slug' => $category->slug,
+                'description' => $category->description,
+                'icon' => $category->icon,
+                'instructor' => $category->instructor,
+                'duration' => $category->duration,
+                'price' => $category->price,
+                // Ini kuncinya: ubah path menjadi URL lengkap
+                'thumbnail_url' => $category->thumbnail_path
+                    ? Storage::disk('s3')->url($category->thumbnail_path)
+                    : null,
+            ];
+        });
+
         return Inertia::render('Student/Course/Index', [
-            'categories' => CourseCategory::orderBy('order')->get()
+            'categories' => $categories,
         ]);
     }
 
     // Akses: /student/courses/{categorySlug}
     public function showByCategory($categorySlug)
     {
-        $category = CourseCategory::where('slug', $categorySlug)->firstOrFail();
         $userId = Auth::id();
+
+        $category = CourseCategory::where('slug', $categorySlug)->firstOrFail();
 
         $courses = Course::where('category_id', $category->id)
             ->withCount('lessons')
@@ -33,24 +51,28 @@ class CourseController extends Controller
                 $enrollment = $course->users->first()?->pivot;
                 $total = $course->lessons_count;
                 $completed = $enrollment?->completed_lessons_count ?? 0;
-                
+
                 return [
                     'id' => $course->id,
                     'title' => $course->title,
                     'level' => $course->level ?? 'General',
-                    'progress' => $total > 0 ? (int)(($completed / $total) * 100) : 0,
+                    'progress' => $total > 0 ? (int) (($completed / $total) * 100) : 0,
                     'status' => $enrollment ? ($enrollment->is_completed ? 'Completed' : 'In Progress') : 'Locked',
                 ];
             });
 
         return Inertia::render('Student/Course/CourseDetail/Index', [
-            'category' => $category,
-            'courses' => $courses,
-            'stats' => [
-                'proficiency' => $category->id === 1 ? 'TOCFL A2' : 'N/A',
-                'learning_hours' => 48,
-                'vocab_count' => $category->id === 1 ? 450 : 0,
+            'category' => [
+                'id' => $category->id,
+                'name' => $category->name,
+                'description' => $category->description,
+                'instructor' => $category->instructor,
+                'duration' => $category->duration,
+                'price' => $category->price,
+                'updated_at' => $category->updated_at->format('d M Y'),
+                'thumbnail_url' => $category->thumbnail_path ? Storage::disk('s3')->url($category->thumbnail_path) : null,
             ],
+            'courses' => $courses,
         ]);
     }
 
@@ -65,7 +87,7 @@ class CourseController extends Controller
                 ->with('error', 'You must register for this course first.');
         }
 
-       $course->load([
+        $course->load([
             'lessons' => function ($query) {
                 $query->reorder()
                     ->orderBy('order', 'asc');

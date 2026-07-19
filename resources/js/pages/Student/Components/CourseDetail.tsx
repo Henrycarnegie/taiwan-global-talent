@@ -43,7 +43,7 @@ export default function CourseDetail({ category, courses }: Props) {
 
             {/* COURSE LIST SECTION */}
             <div className="max-w-5xl">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">Kursus dalam kategori ini</h2>
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">Course in this Category</h2>
                 
                 <div className="space-y-4">
                     {courses.map((course) => (

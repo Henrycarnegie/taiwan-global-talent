@@ -15,7 +15,7 @@ export default function HeaderLogo({ userName }: HeaderLogoProps) {
                     {userName ?? 'User'}
                 </h1>
                 <p className="text-[10px] tracking-widest text-gray-400 uppercase">
-                    Talent Net Platform
+                    Taiwan Global Talent
                 </p>
             </div>
         </div>

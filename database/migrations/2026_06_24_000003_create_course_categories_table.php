@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('icon')->nullable();
             $table->string('instructor')->nullable();
             $table->string('duration')->nullable();
+            $table->string('thumbnail_path')->nullable();
             $table->decimal('price', 10, 2)->default(0);
             $table->integer('order')->default(0);
             $table->timestamps();
