@@ -2,50 +2,40 @@ name: linter
 
 on:
   push:
-    branches:
-      - develop
-      - main
-      - master
-      - workos
+    branches: [develop, main, master, workos]
   pull_request:
-    branches:
-      - develop
-      - main
-      - master
-      - workos
+    branches: [develop, main, master, workos]
 
 permissions:
-  contents: write
+  contents: write # Diwajibkan 'write' agar bot bisa push kode yang sudah rapi
 
 jobs:
   quality:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
-        with:
-          persist-credentials: false
+      - uses: actions/checkout@v4 # Diubah ke v4 yang lebih stabil dan resmi
 
       - name: Setup PHP
-        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+        uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.4'
+          php-version: '8.3' # Kita samakan dengan PHP server live kamu dulu
 
       - name: Install Dependencies
         run: |
           composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
           npm install
 
-      - name: Run Pint
+      - name: Run Pint (Fix Code Style PHP)
         run: composer lint
 
-      - name: Format Frontend
+      - name: Format Frontend (Fix JS/TSX)
         run: npm run format
 
       - name: Lint Frontend
         run: npm run lint
 
-      # - name: Commit Changes
-      #   uses: stefanzweifel/git-auto-commit-action@v7
-      #   with:
-      #     commit_message: fix code style
-      #     commit_options: '--no-verify'
+      - name: Commit Changes Otomatis (Jika ada yang berantakan)
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: auto fix code style & linting"
+          commit_options: '--no-verify'
