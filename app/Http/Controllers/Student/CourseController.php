@@ -11,59 +11,50 @@ use Inertia\Inertia;
 
 class CourseController extends Controller
 {
-    public function index($categorySlug)
+    // Akses: /student/courses
+    public function index()
+    {
+        return Inertia::render('Student/Course/Index', [
+            'categories' => CourseCategory::orderBy('order')->get()
+        ]);
+    }
+
+    // Akses: /student/courses/{categorySlug}
+    public function showByCategory($categorySlug)
     {
         $category = CourseCategory::where('slug', $categorySlug)->firstOrFail();
-
-        $allCategories = CourseCategory::orderBy('order')->get(['id', 'name', 'slug']);
-
         $userId = Auth::id();
 
         $courses = Course::where('category_id', $category->id)
             ->withCount('lessons')
-            ->with(['users' => function ($query) use ($userId) {
-                $query->where('user_id', $userId);
-            }])
+            ->with(['users' => fn ($query) => $query->where('user_id', $userId)])
             ->get()
             ->map(function ($course) {
                 $enrollment = $course->users->first()?->pivot;
-
-                $totalLessons = $course->lessons_count;
-                $completedCount = $enrollment?->completed_lessons_count ?? 0;
-
-                $progress = $totalLessons > 0 ? (int) (($completedCount / $totalLessons) * 100) : 0;
-
-                if ($enrollment) {
-                    $status = $enrollment->is_completed ? 'Completed' : 'In Progress';
-                } else {
-                    $status = 'Locked';
-                }
-
+                $total = $course->lessons_count;
+                $completed = $enrollment?->completed_lessons_count ?? 0;
+                
                 return [
                     'id' => $course->id,
                     'title' => $course->title,
                     'level' => $course->level ?? 'General',
-                    'modules_count' => $totalLessons,
-                    'progress' => $progress,
-                    'status' => $status,
+                    'progress' => $total > 0 ? (int)(($completed / $total) * 100) : 0,
+                    'status' => $enrollment ? ($enrollment->is_completed ? 'Completed' : 'In Progress') : 'Locked',
                 ];
             });
 
-        // Statistik Cerdas
-        $stats = [
-            'proficiency' => $category->id === 1 ? 'TOCFL A2' : 'N/A',
-            'learning_hours' => 48,
-            'vocab_count' => $category->id === 1 ? 450 : 0,
-        ];
-
-        return Inertia::render('Student/Course/Index', [
-            'currentCategory' => $category,
-            'allCategories' => $allCategories,
+        return Inertia::render('Student/Course/CourseDetail/Index', [
+            'category' => $category,
             'courses' => $courses,
-            'stats' => $stats,
+            'stats' => [
+                'proficiency' => $category->id === 1 ? 'TOCFL A2' : 'N/A',
+                'learning_hours' => 48,
+                'vocab_count' => $category->id === 1 ? 450 : 0,
+            ],
         ]);
     }
 
+    // Akses: /student/courses/{categorySlug}/{course}
     public function show($categorySlug, Course $course)
     {
         $category = CourseCategory::where('slug', $categorySlug)->firstOrFail();

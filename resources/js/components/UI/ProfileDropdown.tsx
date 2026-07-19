@@ -1,6 +1,7 @@
 import { Link, router } from '@inertiajs/react';
 import { LogOut, User as UserIcon, Award } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
+import { route } from 'ziggy-js';
 import { useAuth } from '@/hooks/useAuth';
 
 export default function ProfileDropdown() {
@@ -105,7 +106,8 @@ export default function ProfileDropdown() {
 
                         {/* LINK KE CERTIFICATE */}
                         <Link
-                            href="/student/courses/certificate"
+                            // Gunakan route helper agar aman dari perubahan prefix
+                            href={route('student.courses.certificate.index')}
                             onClick={() => setIsOpen(false)}
                             className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-sm text-gray-600 transition duration-150 hover:bg-slate-50 hover:text-gray-900"
                         >
