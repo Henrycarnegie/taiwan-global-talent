@@ -8,7 +8,7 @@ export default function StudentDashboard() {
             <div className="space-y-6">
                 <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-xs">
                     <h2 className="text-xl font-bold text-gray-900">
-                        Welcome to Your Dashboard Overview
+                        Welcome to Your Dashboard Overview!
                     </h2>
                     <p className="mt-1 text-sm text-gray-500">
                         Track your learning progress, industry profile, and
