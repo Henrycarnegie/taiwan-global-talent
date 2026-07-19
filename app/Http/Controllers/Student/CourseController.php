@@ -11,59 +11,72 @@ use Inertia\Inertia;
 
 class CourseController extends Controller
 {
-    public function index($categorySlug)
+    // Akses: /student/courses
+    public function index()
     {
-        $category = CourseCategory::where('slug', $categorySlug)->firstOrFail();
+        $categories = CourseCategory::orderBy('order')->get()->map(function ($category) {
+            return [
+                'id' => $category->id,
+                'name' => $category->name,
+                'slug' => $category->slug,
+                'description' => $category->description,
+                'icon' => $category->icon,
+                'instructor' => $category->instructor,
+                'duration' => $category->duration,
+                'price' => $category->price,
+                // Ini kuncinya: ubah path menjadi URL lengkap
+                'thumbnail_url' => $category->thumbnail_path
+                    ? Storage::disk('s3')->url($category->thumbnail_path)
+                    : null,
+            ];
+        });
 
-        $allCategories = CourseCategory::orderBy('order')->get(['id', 'name', 'slug']);
+        return Inertia::render('Student/Course/Index', [
+            'categories' => $categories,
+        ]);
+    }
 
+    // Akses: /student/courses/{categorySlug}
+    public function showByCategory($categorySlug)
+    {
         $userId = Auth::id();
+
+        $category = CourseCategory::where('slug', $categorySlug)->firstOrFail();
 
         $courses = Course::where('category_id', $category->id)
             ->withCount('lessons')
-            ->with(['users' => function ($query) use ($userId) {
-                $query->where('user_id', $userId);
-            }])
+            ->with(['users' => fn ($query) => $query->where('user_id', $userId)])
             ->get()
             ->map(function ($course) {
                 $enrollment = $course->users->first()?->pivot;
-
-                $totalLessons = $course->lessons_count;
-                $completedCount = $enrollment?->completed_lessons_count ?? 0;
-
-                $progress = $totalLessons > 0 ? (int) (($completedCount / $totalLessons) * 100) : 0;
-
-                if ($enrollment) {
-                    $status = $enrollment->is_completed ? 'Completed' : 'In Progress';
-                } else {
-                    $status = 'Locked';
-                }
+                $total = $course->lessons_count;
+                $completed = $enrollment?->completed_lessons_count ?? 0;
 
                 return [
                     'id' => $course->id,
                     'title' => $course->title,
                     'level' => $course->level ?? 'General',
-                    'modules_count' => $totalLessons,
-                    'progress' => $progress,
-                    'status' => $status,
+                    'progress' => $total > 0 ? (int) (($completed / $total) * 100) : 0,
+                    'status' => $enrollment ? ($enrollment->is_completed ? 'Completed' : 'In Progress') : 'Locked',
                 ];
             });
 
-        // Statistik Cerdas
-        $stats = [
-            'proficiency' => $category->id === 1 ? 'TOCFL A2' : 'N/A',
-            'learning_hours' => 48,
-            'vocab_count' => $category->id === 1 ? 450 : 0,
-        ];
-
-        return Inertia::render('Student/Course/Index', [
-            'currentCategory' => $category,
-            'allCategories' => $allCategories,
+        return Inertia::render('Student/Course/CourseDetail/Index', [
+            'category' => [
+                'id' => $category->id,
+                'name' => $category->name,
+                'description' => $category->description,
+                'instructor' => $category->instructor,
+                'duration' => $category->duration,
+                'price' => $category->price,
+                'updated_at' => $category->updated_at->format('d M Y'),
+                'thumbnail_url' => $category->thumbnail_path ? Storage::disk('s3')->url($category->thumbnail_path) : null,
+            ],
             'courses' => $courses,
-            'stats' => $stats,
         ]);
     }
 
+    // Akses: /student/courses/{categorySlug}/{course}
     public function show($categorySlug, Course $course)
     {
         $category = CourseCategory::where('slug', $categorySlug)->firstOrFail();
@@ -74,7 +87,7 @@ class CourseController extends Controller
                 ->with('error', 'You must register for this course first.');
         }
 
-       $course->load([
+        $course->load([
             'lessons' => function ($query) {
                 $query->reorder()
                     ->orderBy('order', 'asc');

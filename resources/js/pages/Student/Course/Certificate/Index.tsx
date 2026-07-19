@@ -1,5 +1,4 @@
-import { Link } from '@inertiajs/react';
-import { PlayIcon, FileDownIcon } from 'lucide-react';
+import { FileDownIcon, LockKeyhole } from 'lucide-react';
 import { useState } from 'react';
 import DownloadProgressBar from '@/components/UI/DownloadProgressBar';
 import Layout from '../../Layout';
@@ -19,17 +18,18 @@ interface Props {
 
 export default function Index({
     courses = [],
-    stats,
-    currentCategory,
-    allCategories,
+    // stats,
+    // currentCategory,
+    // allCategories,
 }: Props) {
-    console.log(stats);
-    console.log(allCategories);
 
     const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
     const [activeCourseTitle, setActiveCourseTitle] = useState<string>('');
 
-    const handleDownloadCertificate = async (courseId: number, courseTitle: string) => {
+    const handleDownloadCertificate = async (
+        courseId: number,
+        courseTitle: string,
+    ) => {
         if (isPopupOpen) {
             return;
         }
@@ -38,7 +38,9 @@ export default function Index({
         setIsPopupOpen(true);
 
         try {
-            const response = await fetch(`/student/courses/${courseId}/certificate`);
+            const response = await fetch(
+                `/student/courses/${courseId}/certificate`,
+            );
 
             if (!response.ok) {
                 const errorData = await response.json();
@@ -50,19 +52,20 @@ export default function Index({
 
             const blob = await response.blob();
             const downloadUrl = window.URL.createObjectURL(blob);
-            
+
             const downloadLink = document.createElement('a');
             downloadLink.href = downloadUrl;
             downloadLink.download = `Sertifikat-${courseTitle}.pdf`;
             document.body.appendChild(downloadLink);
             downloadLink.click();
-            
+
             downloadLink.remove();
             window.URL.revokeObjectURL(downloadUrl);
-
         } catch (error) {
             console.log(error);
-            alert('Failed to download certificate. There was a network connection error while downloading the certificate.');
+            alert(
+                'Failed to download certificate. There was a network connection error while downloading the certificate.',
+            );
         } finally {
             setIsPopupOpen(false);
         }
@@ -70,8 +73,11 @@ export default function Index({
 
     return (
         <Layout>
-            <div className="space-y-8 relative">
-                <DownloadProgressBar isOpen={isPopupOpen} courseTitle={activeCourseTitle} />
+            <div className="relative space-y-8">
+                <DownloadProgressBar
+                    isOpen={isPopupOpen}
+                    courseTitle={activeCourseTitle}
+                />
 
                 {/* Daftar Kursus */}
                 <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-xs">
@@ -116,11 +122,16 @@ export default function Index({
                                     <div className="flex items-center gap-2">
                                         {course.status === 'Completed' ? (
                                             <button
-                                                onClick={() => handleDownloadCertificate(course.id, course.title)}
+                                                onClick={() =>
+                                                    handleDownloadCertificate(
+                                                        course.id,
+                                                        course.title,
+                                                    )
+                                                }
                                                 disabled={isPopupOpen}
-                                                className={`flex w-full items-center justify-center gap-2 rounded-xl border border-transparent px-5 py-2.5 text-xs font-bold text-white transition-all md:w-auto cursor-pointer ${
-                                                    isPopupOpen 
-                                                        ? 'bg-emerald-400 cursor-not-allowed opacity-70' 
+                                                className={`flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-transparent px-5 py-2.5 text-xs font-bold text-white transition-all md:w-auto ${
+                                                    isPopupOpen
+                                                        ? 'cursor-not-allowed bg-emerald-400 opacity-70'
                                                         : 'bg-emerald-600 hover:bg-emerald-700 active:scale-95'
                                                 }`}
                                             >
@@ -128,13 +139,13 @@ export default function Index({
                                                 Download Certificate
                                             </button>
                                         ) : (
-                                            <Link
-                                                href={`/student/courses/${currentCategory?.slug || 'all'}/${course.id}`}
-                                                className="flex w-full items-center justify-center gap-2 rounded-xl border border-transparent bg-blue-600 px-5 py-2.5 text-xs font-bold text-white transition-all hover:bg-blue-700 active:scale-95 md:w-auto"
+                                            <button
+                                                disabled
+                                                className="flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-xl border border-transparent bg-gray-200 px-5 py-2.5 text-xs font-bold text-white transition-all md:w-auto"
                                             >
-                                                <PlayIcon size={14} /> Resume
-                                                Learning
-                                            </Link>
+                                                <LockKeyhole size={14} />
+                                                Locked
+                                            </button>
                                         )}
                                     </div>
                                 </div>
