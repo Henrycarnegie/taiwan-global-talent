@@ -12,15 +12,17 @@ return new class extends Migration
             $table->id();
             $table->foreignId('company_job_id')->constrained('company_jobs')->onDelete('cascade');
             $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
-            
-            // Candidate Metadata
+
             $table->string('candidate_name');
             $table->string('candidate_email');
             $table->string('candidate_phone')->nullable();
-            $table->string('resume_path'); // Path berkas CV di Cloudflare R2
-            
+            $table->string('resume_path');
+            $table->text('cover_letter')->nullable();
+
             $table->enum('status', ['pending', 'reviewed', 'interviewed', 'hired', 'rejected'])->default('pending');
             $table->timestamps();
+
+            $table->unique(['company_job_id', 'user_id']);
         });
     }
 

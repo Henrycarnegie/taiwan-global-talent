@@ -9,25 +9,15 @@ class CompanyJob extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'company_profile_id',
-        'title',
-        'type',
-        'location_type',
-        'city',
-        'salary_range',
-        'description',
-        'status',
-        'views_count',
-    ];
+    protected $guarded = ['id'];
 
     public function companyProfile()
     {
-        return $this->belongsTo(CompanyProfile::class);
+        return $this->belongsTo(CompanyProfile::class, 'company_profile_id');
     }
 
     public function applications()
     {
-        return $this->hasMany(JobApplication::class);
+        return $this->hasMany(JobApplication::class, 'company_job_id');
     }
 }

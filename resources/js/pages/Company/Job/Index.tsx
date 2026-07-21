@@ -7,7 +7,6 @@ import {
     Clock,
     Users,
     Eye,
-    // MoreVertical,
     CheckCircle2,
     XCircle,
     FileEdit,
@@ -16,9 +15,10 @@ import {
 import { useState } from 'react';
 import CompanyNavbar from '../Components/CompanyNavbar';
 
-interface Job {
+interface CompanyJob {
     id: number;
     title: string;
+    slug: string;
     type: 'Full-time' | 'Part-time' | 'Contract' | 'Internship';
     location_type: 'On-site' | 'Remote' | 'Hybrid';
     city?: string;
@@ -31,7 +31,7 @@ interface Job {
 
 interface JobIndexProps {
     company: any;
-    jobs?: Job[];
+    jobs?: CompanyJob[];
 }
 
 export default function JobIndex({ company, jobs = [] }: JobIndexProps) {
@@ -40,7 +40,7 @@ export default function JobIndex({ company, jobs = [] }: JobIndexProps) {
         'all' | 'published' | 'draft' | 'closed'
     >('all');
 
-    // Filter Logic
+    // Filter Logic yang sudah diperbaiki
     const filteredJobs = jobs.filter((job) => {
         const matchesSearch = job.title
             .toLowerCase()
@@ -48,13 +48,10 @@ export default function JobIndex({ company, jobs = [] }: JobIndexProps) {
         const matchesStatus =
             statusFilter === 'all' || job.status === statusFilter;
 
-        return {
-            matchesSearch,
-            matchesStatus,
-        };
+        return matchesSearch && matchesStatus;
     });
 
-    const getStatusBadge = (status: Job['status']) => {
+    const getStatusBadge = (status: CompanyJob['status']) => {
         switch (status) {
             case 'published':
                 return (
@@ -83,15 +80,15 @@ export default function JobIndex({ company, jobs = [] }: JobIndexProps) {
             <CompanyNavbar company={company} />
 
             <main className="mx-auto max-w-7xl space-y-6 px-4 py-8 sm:px-6 lg:px-8">
-                {/* Top Header */}
+                {/* Header Section */}
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
                             Job Postings
                         </h1>
                         <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-                            Manage and publish career opportunities to attract
-                            top talent.
+                            Kelola lowongan pekerjaan dan publikasikan ke
+                            talenta terbaik.
                         </p>
                     </div>
 
@@ -103,7 +100,7 @@ export default function JobIndex({ company, jobs = [] }: JobIndexProps) {
                     </Link>
                 </div>
 
-                {/* Filters & Search Toolbar */}
+                {/* Toolbar Search & Filter */}
                 <div className="flex flex-col items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:flex-row dark:border-slate-800 dark:bg-slate-900">
                     <div className="relative w-full sm:w-80">
                         <Search className="absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-slate-400" />
@@ -111,7 +108,7 @@ export default function JobIndex({ company, jobs = [] }: JobIndexProps) {
                             type="text"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            placeholder="Search job title..."
+                            placeholder="Cari posisi pekerjaan..."
                             className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2 pr-4 pl-10 text-xs text-slate-900 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none dark:border-slate-800 dark:bg-slate-950 dark:text-white"
                         />
                     </div>
@@ -136,18 +133,18 @@ export default function JobIndex({ company, jobs = [] }: JobIndexProps) {
                     </div>
                 </div>
 
-                {/* Job List Container */}
+                {/* Container List Job */}
                 {filteredJobs.length === 0 ? (
                     <div className="rounded-2xl border border-slate-200 bg-white p-12 text-center shadow-sm dark:border-slate-800 dark:bg-slate-900">
                         <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 dark:bg-indigo-950/50">
                             <Briefcase className="h-7 w-7" />
                         </div>
                         <h3 className="mt-4 text-base font-bold text-slate-900 dark:text-white">
-                            No job postings found
+                            Tidak ada lowongan ditemukan
                         </h3>
                         <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-                            Get started by creating a new job opening for
-                            applicants.
+                            Mulai buat lowongan pekerjaan baru untuk menerima
+                            lamaran kandidat.
                         </p>
                     </div>
                 ) : (
@@ -178,7 +175,9 @@ export default function JobIndex({ company, jobs = [] }: JobIndexProps) {
                                         {job.salary_range && (
                                             <>
                                                 <span>•</span>
-                                                <span>{job.salary_range}</span>
+                                                <span className="font-medium text-emerald-600 dark:text-emerald-400">
+                                                    {job.salary_range}
+                                                </span>
                                             </>
                                         )}
                                     </div>
@@ -188,7 +187,7 @@ export default function JobIndex({ company, jobs = [] }: JobIndexProps) {
                                     <div className="flex items-center gap-4 text-xs text-slate-600 dark:text-slate-400">
                                         <div
                                             className="flex items-center gap-1.5"
-                                            title="Total Applicants"
+                                            title="Total Pelamar"
                                         >
                                             <Users className="h-4 w-4 text-indigo-500" />
                                             <span className="font-bold text-slate-900 dark:text-white">
@@ -197,7 +196,7 @@ export default function JobIndex({ company, jobs = [] }: JobIndexProps) {
                                         </div>
                                         <div
                                             className="flex items-center gap-1.5"
-                                            title="Views"
+                                            title="Total Dilihat"
                                         >
                                             <Eye className="h-4 w-4 text-slate-400" />
                                             <span>{job.views_count}</span>
@@ -208,15 +207,9 @@ export default function JobIndex({ company, jobs = [] }: JobIndexProps) {
                                         <Link
                                             href={`/company/jobs/${job.id}/edit`}
                                             className="rounded-lg border border-slate-200 p-2 text-slate-600 hover:bg-slate-50 hover:text-indigo-600 dark:border-slate-800 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-indigo-400"
-                                            title="Edit Job"
+                                            title="Edit Lowongan"
                                         >
                                             <FileEdit className="h-4 w-4" />
-                                        </Link>
-                                        <Link
-                                            href={`/company/applicants?job_id=${job.id}`}
-                                            className="rounded-xl bg-slate-100 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
-                                        >
-                                            View Applicants
                                         </Link>
                                     </div>
                                 </div>

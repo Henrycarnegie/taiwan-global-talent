@@ -10,15 +10,17 @@ class JobApplication extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'company_job_id',
-        'user_id',
-        'candidate_name',
-        'candidate_email',
-        'candidate_phone',
-        'resume_path',
-        'status',
-    ];
+    protected $guarded = ['id'];
+
+    protected $appends = ['resume_url'];
+
+    public function getResumeUrlAttribute()
+    {
+        if ($this->resume_path) {
+            return Storage::disk('s3')->url($this->resume_path);
+        }
+        return null;
+    }
 
     public function job()
     {
@@ -28,11 +30,5 @@ class JobApplication extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
-    }
-
-    // Accessor URL R2 Langsung
-    public function getResumeUrlAttribute(): ?string
-    {
-        return $this->resume_path ? Storage::disk('s3')->url($this->resume_path) : null;
     }
 }
