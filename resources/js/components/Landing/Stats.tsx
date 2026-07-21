@@ -1,4 +1,4 @@
-import { motion, useInView, useReducedMotion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import {
     Building2,
     BriefcaseBusiness,
@@ -38,12 +38,14 @@ type AnimatedNumberProps = {
     value: number;
     suffix: string;
     shouldAnimate: boolean;
+    animationRun: number;
 };
 
 const AnimatedNumber = ({
     value,
     suffix,
     shouldAnimate,
+    animationRun,
 }: AnimatedNumberProps) => {
     const [currentValue, setCurrentValue] = useState(0);
     const prefersReducedMotion = useReducedMotion();
@@ -75,7 +77,7 @@ const AnimatedNumber = ({
         animationFrame = requestAnimationFrame(updateValue);
 
         return () => cancelAnimationFrame(animationFrame);
-    }, [prefersReducedMotion, shouldAnimate, value]);
+    }, [animationRun, prefersReducedMotion, shouldAnimate, value]);
 
     const displayedValue =
         prefersReducedMotion && shouldAnimate ? value : currentValue;
@@ -90,42 +92,82 @@ const AnimatedNumber = ({
 
 const Stats = () => {
     const sectionRef = useRef<HTMLElement | null>(null);
-    const isInView = useInView(sectionRef, {
-        once: true,
-        margin: '0px 0px 160px 0px',
-    });
+    const secondRunTimeoutRef = useRef<number | null>(null);
+    const [animationRun, setAnimationRun] = useState(0);
+
+    useEffect(() => {
+        const section = sectionRef.current;
+
+        if (!section) {
+            return;
+        }
+
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setAnimationRun(1);
+
+                    secondRunTimeoutRef.current = window.setTimeout(() => {
+                        setAnimationRun(2);
+                    }, 30000);
+
+                    observer.disconnect();
+                }
+            },
+            {
+                root: null,
+                rootMargin: '0px 0px 180px 0px',
+                threshold: 0.12,
+            },
+        );
+
+        observer.observe(section);
+
+        return () => {
+            observer.disconnect();
+
+            if (secondRunTimeoutRef.current) {
+                window.clearTimeout(secondRunTimeoutRef.current);
+            }
+        };
+    }, []);
 
     return (
         <section
             ref={sectionRef}
-            className="border-y-4 border-[#173b8f] bg-[#173b8f] py-10"
+            className="border-y border-[#173b8f]/10 bg-[#fbfaf7] py-10"
         >
             <div className="mx-auto grid max-w-7xl grid-cols-2 gap-4 px-5 md:grid-cols-4">
                 {stats.map((stat, i) => (
                     <motion.div
-                        key={stat.label}
-                        initial={{ opacity: 0, y: 28 }}
-                        animate={isInView ? { opacity: 1, y: 0 } : undefined}
+                        key={`${stat.label}-${animationRun}`}
+                        initial={{ opacity: 0, y: 30, scale: 0.96 }}
+                        animate={
+                            animationRun > 0
+                                ? { opacity: 1, y: 0, scale: 1 }
+                                : undefined
+                        }
                         transition={{
                             delay: i * 0.08,
-                            duration: 0.55,
+                            duration: 0.65,
                             ease: 'easeOut',
                         }}
-                        className="rounded-lg border-2 border-white/20 bg-white p-6 text-center shadow-[5px_5px_0_#ffcb05] transition-all hover:-translate-y-1"
+                        className="rounded-md border border-[#173b8f]/12 bg-white p-6 text-center text-[#173b8f] shadow-sm transition-colors hover:border-[#f47b20]/40"
                     >
-                        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-[#fff7d7]">
-                            <stat.icon className="h-6 w-6 text-[#f47b20]" />
+                        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-md bg-[#173b8f]/8">
+                            <stat.icon className="h-6 w-6 text-[#173b8f]" />
                         </div>
 
-                        <h3 className="text-3xl font-black text-[#173b8f]">
+                        <h3 className="text-3xl font-extrabold text-[#173b8f]">
                             <AnimatedNumber
                                 value={stat.value}
                                 suffix={stat.suffix}
-                                shouldAnimate={isInView}
+                                shouldAnimate={animationRun > 0}
+                                animationRun={animationRun}
                             />
                         </h3>
 
-                        <p className="mt-1 text-sm font-black text-[#173b8f]/65">
+                        <p className="mt-1 text-sm font-semibold text-[#173b8f]/62">
                             {stat.label}
                         </p>
                     </motion.div>
