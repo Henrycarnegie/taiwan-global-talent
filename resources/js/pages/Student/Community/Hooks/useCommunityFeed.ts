@@ -58,7 +58,7 @@ export function useCommunityFeed({
         media: File | null,
     ) => {
         router.post(
-            route('community.posts.store'),
+            route('student.community.posts.store'),
             {
                 content,
                 tag,
@@ -91,7 +91,7 @@ export function useCommunityFeed({
         );
 
         router.post(
-            route('community.posts.like', postId),
+            route('student.community.posts.like', postId),
             {},
             { preserveScroll: true },
         );
@@ -123,7 +123,7 @@ export function useCommunityFeed({
         );
 
         router.post(
-            `/community/posts/${postId}/comments`,
+            `/student/community/posts/${postId}/comments`,
             { content },
             { preserveScroll: true },
         );

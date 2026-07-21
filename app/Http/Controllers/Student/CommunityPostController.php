@@ -21,53 +21,51 @@ class CommunityPostController extends Controller
      */
     public function index()
     {
-        // Ambil data posts seperti biasa
-        $postsQuery = CommunityPost::with(['user', 'likes', 'comments.user'])
+        // Cukup eager load relasi companyProfile tanpa pusing logic di controller
+        $postsQuery = CommunityPost::with(['user.companyProfile', 'likes', 'comments.user.companyProfile'])
             ->orderBy('is_pinned', 'desc')
             ->latest()
             ->paginate(10);
 
-        // Transformasi data posts (logika data array mapping yang sudah kamu buat sebelumnya)
         $formattedPosts = $postsQuery->through(function ($post) {
             return [
-                'id' => $post->id,
+            'id' => $post->id,
+            'user' => [
+                'id' => $post->user->id,
+                'name' => $post->user->display_name,         
+                'avatar_url' => $post->user->display_avatar, 
+                'university' => $post->user->display_subtitle,
+                'role' => $post->user->companyProfile ? 'company' : 'student',
+            ],
+            'tag' => $post->tag ?? 'General',
+            'content' => $post->content,
+            'media_url' => $post->media_url,
+            'media_type' => $post->media_type,
+            'is_pinned' => (bool) $post->is_pinned,
+            'likes_count' => $post->likes_count,
+            'comments_count' => $post->comments()->count(),
+            'is_liked_by_me' => auth()->check() ? $post->likes->contains('user_id', auth()->id()) : false,
+            'comments' => $post->comments->map(fn ($comment) => [
+                'id' => $comment->id,
+                'content' => $comment->content,
+                'created_at' => $comment->created_at->toIso8601String(),
                 'user' => [
-                    'id' => $post->user->id,
-                    'name' => $post->user->name,
-                    'avatar_url' => $post->user->avatar_url,
-                    'university' => $post->user->university ?? 'Taiwan Alumni',
-                    'role' => $post->user->role,
+                    'name' => $comment->user->display_name,     
+                    'avatar_url' => $comment->user->display_avatar,
                 ],
-                'tag' => $post->tag ?? 'General',
-                'content' => $post->content,
-                'media_url' => $post->media_url,
-                'media_type' => $post->media_type,
-                'is_pinned' => (bool) $post->is_pinned,
-                'likes_count' => $post->likes_count,
-                'comments_count' => $post->comments()->count(),
-                'is_liked_by_me' => auth()->check() ? $post->likes->contains('user_id', auth()->id()) : false,
-                'comments' => $post->comments->map(fn ($comment) => [
-                    'id' => $comment->id,
-                    'content' => $comment->content,
-                    'created_at' => $comment->created_at->toIso8601String(),
-                    'user' => [
-                        'name' => $comment->user->name,
-                        'avatar_url' => $comment->user->avatar_url,
-                    ],
-                ]),
-                'created_at' => $post->created_at->toIso8601String(),
-            ];
-        });
+            ]),
+            'created_at' => $post->created_at->toIso8601String(),
+        ];
+    });
 
-        if ((request()->wantsJson() || request()->ajax()) && ! request()->hasHeader('X-Inertia')) {
-            return response()->json($formattedPosts);
-        }
-
-        // Jika load pertama kali atau redirect setelah posting dari Inertia, render halaman seperti biasa
-        return Inertia::render('Student/Community/Index', [
-            'initialPosts' => $formattedPosts,
-        ]);
+    if ((request()->wantsJson() || request()->ajax()) && ! request()->hasHeader('X-Inertia')) {
+        return response()->json($formattedPosts);
     }
+
+    return Inertia::render('Student/Community/Index', [
+        'initialPosts' => $formattedPosts,
+    ]);
+}
 
     /**
      * Show the form for creating a new resource.
