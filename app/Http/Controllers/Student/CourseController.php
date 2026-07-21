@@ -65,6 +65,7 @@ class CourseController extends Controller
             'category' => [
                 'id' => $category->id,
                 'name' => $category->name,
+                'slug' => $category->slug,
                 'description' => $category->description,
                 'instructor' => $category->instructor,
                 'duration' => $category->duration,
