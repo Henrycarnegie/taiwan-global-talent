@@ -1,10 +1,4 @@
-import {
-    ArrowRight,
-    BadgeCheck,
-    BookOpenText,
-    Clock3,
-    Sparkles,
-} from 'lucide-react';
+import { ArrowRight, BadgeCheck, BookOpenText, Clock3 } from 'lucide-react';
 
 const courseGroups = [
     {
@@ -58,7 +52,7 @@ const courseGroups = [
         eyebrow: 'Opportunity track',
         fit: 'Best for funded study and employer visibility',
         accent: '#6f5bd9',
-        image: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=900&q=82',
+        image: '/images/landing/opportunity-track.png',
         description:
             'Map scholarship options, prepare documents, and activate the employer matching tools that help companies discover you.',
         courses: [
@@ -222,30 +216,6 @@ export default function Membership() {
                             </div>
                         </article>
                     ))}
-                </div>
-
-                <div className="mt-12 grid gap-5 rounded-md bg-[#173b8f] p-7 text-white shadow-[0_24px_70px_rgba(23,59,143,0.18)] md:grid-cols-[1fr_auto] md:items-center">
-                    <div className="flex gap-4">
-                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-[#ffcb05] text-[#173b8f]">
-                            <Sparkles className="h-6 w-6" />
-                        </div>
-                        <div>
-                            <h3 className="text-xl font-black">
-                                Free access is available for every age group.
-                            </h3>
-                            <p className="mt-2 max-w-3xl text-sm leading-7 font-semibold text-white/72">
-                                Start with profile visibility, community
-                                discussions, webinar access, and scholarship
-                                discovery without a subscription.
-                            </p>
-                        </div>
-                    </div>
-                    <a
-                        href="/login"
-                        className="inline-flex items-center justify-center rounded-md bg-white px-6 py-4 text-sm font-black text-[#173b8f] transition hover:bg-[#ffcb05]"
-                    >
-                        Create Free Account
-                    </a>
                 </div>
             </div>
         </section>

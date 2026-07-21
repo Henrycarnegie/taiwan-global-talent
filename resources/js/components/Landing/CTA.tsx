@@ -1,9 +1,24 @@
-import { ArrowRight, CheckCircle2, ShieldCheck } from 'lucide-react';
+import {
+    ArrowRight,
+    BriefcaseBusiness,
+    GraduationCap,
+    ShieldCheck,
+    Users,
+} from 'lucide-react';
 
-const trustItems = [
-    'Free starter membership',
-    'Secure protected data',
-    'Integrated campus and employer ecosystem',
+const ecosystemItems = [
+    {
+        label: 'Free starter membership',
+        icon: GraduationCap,
+    },
+    {
+        label: 'Secure protected data',
+        icon: ShieldCheck,
+    },
+    {
+        label: 'Campus and employer ecosystem',
+        icon: BriefcaseBusiness,
+    },
 ];
 
 const CTA = () => {
@@ -11,20 +26,16 @@ const CTA = () => {
         <section className="relative overflow-hidden bg-[#f7f3ea] px-5 py-24">
             <div className="mx-auto grid max-w-7xl overflow-hidden rounded-md bg-[#102a43] shadow-sm lg:grid-cols-[1fr_0.82fr]">
                 <div className="p-8 text-white md:p-14">
-                    <div className="inline-flex items-center gap-2 rounded border border-white/14 bg-white/10 px-4 py-2 text-xs font-extrabold tracking-widest text-white uppercase">
-                        <span className="flex h-2 w-2 rounded-full bg-[#f47b20]" />
-                        120+ members joined this week
-                    </div>
-
-                    <h2 className="mt-7 max-w-3xl text-4xl leading-tight font-extrabold tracking-tight md:text-6xl">
+                    <h2 className="max-w-3xl text-4xl leading-tight font-extrabold tracking-tight md:text-6xl">
                         Start with one pathway. Build toward a bigger Taiwan
                         plan.
                     </h2>
 
                     <p className="mt-6 max-w-2xl text-base leading-8 font-medium text-white/70">
-                        Create a free account, choose the pathway that fits your
-                        stage, and keep scholarship, Mandarin, and career
-                        preparation moving in one focused workspace.
+                        Create your free account to access Mandarin courses,
+                        earn certificates, connect with a global learning
+                        community, and discover scholarships, internships, and
+                        career opportunities—all in one place.
                     </p>
 
                     <div className="mt-9 flex flex-col gap-4 sm:flex-row">
@@ -44,16 +55,32 @@ const CTA = () => {
                         </a>
                     </div>
 
-                    <div className="mt-10 grid gap-3 border-t border-white/10 pt-8 md:grid-cols-3">
-                        {trustItems.map((item) => (
-                            <div
-                                key={item}
-                                className="flex items-start gap-3 text-sm font-bold text-white/72"
-                            >
-                                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#28a6a1]" />
-                                {item}
-                            </div>
-                        ))}
+                    <div className="mt-10 border-t border-white/10 pt-8">
+                        <div className="mb-5 flex items-center gap-3 text-xs font-extrabold tracking-widest text-white/55 uppercase">
+                            <Users className="h-4 w-4 text-[#ffcb05]" />
+                            Connected ecosystem
+                        </div>
+
+                        <div className="grid gap-4 md:grid-cols-3">
+                            {ecosystemItems.map((item, index) => (
+                                <div
+                                    key={item.label}
+                                    className="group relative flex min-h-28 items-center gap-4 rounded-md border border-white/12 bg-white/8 p-4 transition duration-300 hover:-translate-y-1 hover:border-[#ffcb05]/55 hover:bg-white/14"
+                                >
+                                    {index < ecosystemItems.length - 1 && (
+                                        <span className="absolute top-1/2 left-[calc(100%+0.25rem)] hidden h-px w-3 bg-[#ffcb05]/45 md:block" />
+                                    )}
+
+                                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-[#ffcb05] text-[#173b8f] transition duration-300 group-hover:bg-white">
+                                        <item.icon className="h-5 w-5" />
+                                    </div>
+
+                                    <p className="text-sm leading-6 font-extrabold text-white/82 transition group-hover:text-white">
+                                        {item.label}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
 

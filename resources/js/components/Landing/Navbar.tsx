@@ -9,15 +9,17 @@ const Navbar = () => {
         <nav className="fixed top-0 z-50 w-full border-b border-[#173b8f]/10 bg-white/96">
             <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4">
                 <a href="/" className="flex items-center gap-3">
-                    <span className="flex h-12 w-12 items-center justify-center rounded-md bg-[#173b8f] text-lg font-extrabold text-white">
-                        TGT
-                    </span>
-                    <div className="leading-tight">
+                    <img
+                        src="/images/logo.png"
+                        alt="Taiwan Global Talent Hub"
+                        className="h-16 w-16 shrink-0 object-contain"
+                    />
+                    <div className="text-center leading-tight">
                         <div className="text-lg font-extrabold tracking-tight text-[#173b8f]">
-                            Taiwan Global Talent
+                            Taiwan Global Talent hub
                         </div>
                         <div className="text-[11px] font-semibold tracking-wide text-[#173b8f]/58 uppercase">
-                            Learning • Careers • Mobility
+                            Learn. Connect. Grow.
                         </div>
                     </div>
                 </a>

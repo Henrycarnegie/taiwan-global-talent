@@ -4,7 +4,6 @@ import {
     CheckCircle2,
     GraduationCap,
     ShieldCheck,
-    Sparkles,
     UserCog,
 } from 'lucide-react';
 import { useState } from 'react';
@@ -118,13 +117,17 @@ const LoginPage = () => {
                     <img
                         src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=82"
                         alt="People planning career and learning goals"
-                        className="absolute inset-0 h-full w-full object-cover opacity-42"
+                        className="absolute inset-0 h-full w-full object-cover opacity-[0.72] saturate-110"
                     />
-                    <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(16,42,67,0.94)_0%,rgba(16,42,67,0.56)_100%)]" />
+                    <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(16,42,67,0.76)_0%,rgba(16,42,67,0.28)_100%)]" />
                     <div className="relative flex h-full flex-col justify-between">
                         <div>
-                            <div className="flex h-12 w-12 items-center justify-center rounded-md bg-white text-[#173b8f]">
-                                <Sparkles className="h-6 w-6" />
+                            <div className="flex h-16 w-16 items-center justify-center rounded-md bg-white p-1.5 shadow-sm">
+                                <img
+                                    src="/images/logo.png"
+                                    alt="Taiwan Global Talent hub"
+                                    className="h-full w-full object-contain"
+                                />
                             </div>
                             <h1 className="mt-8 max-w-lg text-5xl leading-tight font-black tracking-tight">
                                 One platform for learning, opportunity, and
@@ -141,9 +144,9 @@ const LoginPage = () => {
                             {trustItems.map((item) => (
                                 <div
                                     key={item}
-                                    className="flex items-center gap-3 rounded-md border border-white/12 bg-white/10 px-4 py-3 text-sm font-bold text-white/82 backdrop-blur"
+                                    className="group flex items-center gap-3 rounded-md border border-white/16 bg-white/14 px-4 py-3 text-sm font-bold text-white/88 shadow-[0_10px_28px_rgba(15,23,42,0.16)] backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:border-[#28a6a1]/70 hover:bg-white/22 hover:text-white hover:shadow-[0_18px_42px_rgba(40,166,161,0.24)]"
                                 >
-                                    <CheckCircle2 className="h-5 w-5 text-[#28a6a1]" />
+                                    <CheckCircle2 className="h-5 w-5 text-[#28a6a1] transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6" />
                                     {item}
                                 </div>
                             ))}
@@ -154,8 +157,12 @@ const LoginPage = () => {
                 <section className="flex items-center p-6 sm:p-10">
                     <div className="mx-auto w-full max-w-xl">
                         <div className="mb-8">
-                            <div className="flex h-12 w-12 items-center justify-center rounded-md bg-[#173b8f] text-sm font-black text-white">
-                                TGT
+                            <div className="flex h-16 w-16 items-center justify-center rounded-md bg-white p-1.5 shadow-sm ring-1 ring-[#173b8f]/10">
+                                <img
+                                    src="/images/logo.png"
+                                    alt="Taiwan Global Talent hub"
+                                    className="h-full w-full object-contain"
+                                />
                             </div>
                             <h2 className="mt-5 text-3xl font-black tracking-tight text-[#173b8f] sm:text-4xl">
                                 Continue with the role that fits your goal.

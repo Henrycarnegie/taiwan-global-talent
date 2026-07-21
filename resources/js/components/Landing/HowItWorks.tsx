@@ -46,11 +46,6 @@ const HowItWorks = () => {
                     <h2 className="mt-5 text-4xl font-black tracking-tight text-white md:text-5xl">
                         How This Platform Helps You
                     </h2>
-                    <p className="mt-4 text-base leading-relaxed font-semibold text-white/75">
-                        A structured digital process that prepares your career
-                        and education journey in Taiwan without complicated
-                        bureaucracy.
-                    </p>
                 </div>
 
                 {/* Steps Timeline Grid */}
