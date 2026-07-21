@@ -3,26 +3,26 @@
 namespace App\Http\Controllers\Company;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $user = Auth::user();
+        $user = auth()->user()->load('companyProfile');
+        $company = $user->companyProfile;
 
-        // Cek apakah user punya role company
-        if (! $user->hasRole('company')) {
-            // Jika tidak punya, redirect atau return error sesuai keinginan
-            abort(403, 'You are not a company user.');
+        if ($company) {
+            $disk = Storage::disk('s3');
+
+            $company->logo_url = $company->logo_path ? $disk->url($company->logo_path) : null;
+            $company->banner_url = $company->banner_path ? $disk->url($company->banner_path) : null;
+            $company->business_registration_url = $company->business_registration_path ? $disk->url($company->business_registration_path) : null;
         }
 
-        // Ambil company yang terkait dengan user
-        // Kita asumsikan ada relasi hasOne dari User ke Company
-        return Inertia::render('Company/Dashboard', [
-            'company' => $user,
+        return Inertia::render('Company/Index', [
+            'company' => $company,
         ]);
     }
 }

@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable implements FilamentUser
 {
@@ -83,6 +84,35 @@ class User extends Authenticatable implements FilamentUser
             'admin' => $this->adminProfile,
             default => null,
         };
+    }
+
+    public function getDisplayNameAttribute(): string
+    {
+        if ($this->relationLoaded('companyProfile') && $this->companyProfile) {
+            return $this->companyProfile->company_display_name;
+        }
+
+        return $this->name;
+    }
+
+    // 2. Subtitle Otomatis (Industri Perusahaan / Universitas)
+    public function getDisplaySubtitleAttribute(): string
+    {
+        if ($this->relationLoaded('companyProfile') && $this->companyProfile) {
+            return $this->companyProfile->industry ?? 'Official Company Account';
+        }
+
+        return $this->university ?? 'Taiwan Alumni';
+    }
+
+    // 3. Avatar URL Otomatis (Logo Cloudflare R2 / Avatar User)
+    public function getDisplayAvatarAttribute(): ?string
+    {
+        if ($this->relationLoaded('companyProfile') && $this->companyProfile?->logo_path) {
+            return Storage::disk('s3')->url($this->companyProfile->logo_path);
+        }
+
+        return $this->avatar_url;
     }
 
     public function enrollments(): HasMany

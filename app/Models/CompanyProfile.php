@@ -10,7 +10,7 @@ class CompanyProfile extends Model
         'user_id',
         'company_legal_name',
         'company_display_name',
-        
+
         'tax_id',
         'business_registration_path',
         'slug',
@@ -28,17 +28,22 @@ class CompanyProfile extends Model
         'country',
         'official_email',
 
-        'pic_name', 
+        'pic_name',
         'pic_phone',
-        'pic_position', 
+        'pic_position',
 
-        'status', 
-        'rejection_reason', 
-        'verified_at', 
+        'status',
+        'rejection_reason',
+        'verified_at',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function jobs()
+    {
+        return $this->hasMany(CompanyJob::class);
     }
 }

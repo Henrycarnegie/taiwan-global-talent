@@ -4,7 +4,10 @@
 use App\Http\Controllers\Auth\AdminAuthController;
 use App\Http\Controllers\Auth\GoogleAuthController;
 // Company
+use App\Http\Controllers\Company\CompanyApplicantController;
 use App\Http\Controllers\Company\CompanyApplyController;
+use App\Http\Controllers\Company\CompanyCommunityController;
+use App\Http\Controllers\Company\CompanyJobController;
 use App\Http\Controllers\Company\DashboardController as CompanyDashboardController;
 // Profile
 use App\Http\Controllers\Profile\ProfilePageController;
@@ -46,6 +49,28 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [TeacherApplyController::class, 'create'])->name('apply');
         Route::post('/store', [TeacherApplyController::class, 'store'])->name('store');
         Route::get('/waiting-approval', [TeacherApplyController::class, 'waiting'])->name('waiting');
+    });
+
+    Route::middleware(['role:company', 'check.company.status'])->group(function () {
+        Route::prefix('company')->name('company.')->group(function () {
+            Route::get('/dashboard', [CompanyDashboardController::class, 'index'])->name('dashboard');
+
+            // Job Postings Routes
+            Route::get('/jobs', [CompanyJobController::class, 'index'])->name('jobs.index');
+
+            // Applicants Routes
+            Route::get('/applicants', [CompanyApplicantController::class, 'index'])->name('applicants.index');
+
+            // Community Routes
+            Route::get('/community', [CompanyCommunityController::class, 'index'])->name('community.index');
+
+            Route::post('/community', [CompanyCommunityController::class, 'store'])->name('community.store');
+
+            Route::post('/community/{id}/like', [CompanyCommunityController::class, 'toggleLike'])->name('community.like');
+
+            Route::post('/community/{id}/comment', [CompanyCommunityController::class, 'storeComment'])->name('community.comment');
+        });
+
     });
 
     // STUDENT ROLE
@@ -105,11 +130,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // TEACHER ROLE
     Route::middleware('role:teacher')->group(function () {
         Route::get('/teacher/dashboard', [TeacherDashboardController::class, 'index'])->name('teacher.dashboard');
-    });
-
-    // COMPANY ROLE
-    Route::middleware(['role:company', 'check.company.status'])->prefix('company')->name('company.')->group(function () {
-        Route::get('/dashboard', [CompanyDashboardController::class, 'index'])->name('dashboard');
     });
 
     // ADMIN ROLE
