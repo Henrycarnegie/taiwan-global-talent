@@ -1,36 +1,25 @@
 import { Eye, MessageCircle, Plus, ShieldCheck } from 'lucide-react';
 import Layout from '../Layout';
+import { useCommunityFeed } from './Hooks/useCommunityFeed';
 
-export default function Community() {
-    const threads = [
-        {
-            id: 1,
-            tag: 'Scholarships & Paperwork',
-            title: 'Tips for renewing an ARC (Alien Resident Certificate) in Taipei in 2026',
-            author: 'Budi Santoso (NTUST)',
-            replies: 14,
-            views: 124,
-            time: '2 hours ago',
-        },
-        {
-            id: 2,
-            tag: 'Internship Info',
-            title: 'Looking for two teammates for an ASUS Taiwan digital innovation competition',
-            author: 'Siti Rahma (NTU)',
-            replies: 8,
-            views: 95,
-            time: '5 hours ago',
-        },
-        {
-            id: 3,
-            tag: 'Life in Taiwan',
-            title: 'Any Indonesian grocery stores or Muslim-friendly restaurants near Hsinchu?',
-            author: 'Kevin Kevin (NTHU)',
-            replies: 32,
-            views: 310,
-            time: '1 day ago',
-        },
-    ];
+interface Props {
+    initialPosts?: {
+        data: CommunityPost[];
+        next_page_url: string | null;
+    };
+}
+
+export default function Community({ initialPosts }: Props) {
+    const { auth } = usePage().props as any;
+    const currentUser: CommunityUser = auth.user;
+
+    const { 
+        posts, 
+        loadingMore, 
+        handleCreatePost, 
+        handleLike, 
+        handleCommentSubmit 
+    } = useCommunityFeed({ initialPosts, currentUser });
 
     return (
         <Layout>
@@ -146,7 +135,12 @@ export default function Community() {
                                 </span>
                             ))}
                         </div>
-                    </div>
+                    )}
+                </div>
+
+                {/* Bagian Widgets Samping */}
+                <div className="lg:col-span-1">
+                    <SideWidgets />
                 </div>
             </div>
         </Layout>

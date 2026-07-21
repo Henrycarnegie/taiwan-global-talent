@@ -19,6 +19,8 @@ return new class extends Migration
             // Status apakah kursus sudah diselesaikan 100%
             $table->boolean('is_completed')->default(false);
             $table->timestamp('completed_at')->nullable();
+
+            $table->string('certificate_path')->nullable();
             
             $table->timestamps();
 

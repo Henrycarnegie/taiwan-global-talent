@@ -6,6 +6,7 @@ use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -68,6 +69,25 @@ class User extends Authenticatable implements FilamentUser
     public function adminProfile(): HasOne
     {
         return $this->hasOne(AdminProfile::class);
+    }
+
+    // Helper untuk mendapatkan profil sesuai role tanpa N+1
+    public function getProfile()
+    {
+        $roleSlug = $this->roles->first()?->name ?? 'student';
+
+        return match ($roleSlug) {
+            'teacher' => $this->teacherProfile,
+            'student' => $this->studentProfile,
+            'company' => $this->companyProfile,
+            'admin' => $this->adminProfile,
+            default => null,
+        };
+    }
+
+    public function enrollments(): HasMany
+    {
+        return $this->hasMany(Enrollment::class);
     }
 
     // Helpers untuk role checking

@@ -13,8 +13,6 @@ export default function Show({ course, currentCategory }: any) {
     const [loading, setLoading] = useState(false);
     const isMandarin = currentCategory.id === 1;
 
-    console.log(activeLesson)
-
     const handleCompleteLesson = () => {
         if (!activeLesson || loading) {
             return;

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Certificate;
 use App\Models\Course;
 use App\Models\CourseCategory;
+use App\Models\Enrollment;
 use App\Services\PDFGeneratorService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,65 +20,57 @@ class DownloadCertificateController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $categorySlug = request('category', 'all');
 
+        $categorySlug = request('category', 'all');
         $allCategories = CourseCategory::all();
 
-        // 1. Ambil semua data pendaftaran (enrollments) milik user ini, baik yang selesai maupun belum
-        // Kita jadikan 'course_id' sebagai KEY array agar pencarian di dalam loop (.map) sangat instan
-        $userEnrollments = DB::table('enrollments')
-            ->where('user_id', $user->id)
-            ->get()
-            ->keyBy('course_id');
+        $currentCategory = null;
+        if ($categorySlug !== 'all') {
+            $currentCategory = CourseCategory::where('slug', $categorySlug)->first();
+        }
 
-        $currentCategory = CourseCategory::find($categorySlug);
+        $enrollmentsQuery = Enrollment::where('user_id', $user->id)
+            ->with([
+                'course' => function ($query) {
+                    $query->with('category')->withCount([
+                        'lessons' => function ($lessonQuery) {
+                            $lessonQuery->where('is_published', true);
+                        },
+                    ]);
+                },
+            ]);
 
-        // 2. Query mengambil kelas-kelas yang aktif beserta jumlah total lesson yang diterbitkan
-        $courses = Course::withCount([
-            'lessons' => function ($query) use ($currentCategory) {
-                $query->where('is_published', true);
-                if ($currentCategory && $currentCategory->id === 1) {
-                    $query->where('category_id', 1); // Mempertahankan logika filter kamu
-                }
-            },
-        ])
-            ->when($currentCategory, function ($query) use ($currentCategory) {
-                if ($currentCategory->id === 1) {
-                    $query->where('category_id', 1);
-                }
-            })
-            ->with(['category'])
-            ->get();
+        if ($currentCategory) {
+            $enrollmentsQuery->whereHas('course', function ($query) use ($currentCategory) {
+                $query->where('category_id', $currentCategory->id);
+            });
+        }
 
-        // 3. Petakan status dan hitung progres belajar yang SEBENARNYA (sinkron dengan LessonProgressController)
-        $coursesWithStatus = $courses->map(function ($course) use ($userEnrollments) {
-            // Ambil data pendaftaran user untuk kelas spesifik ini
-            $enrollment = $userEnrollments->get($course->id);
+        $enrollments = $enrollmentsQuery->get();
 
-            if ($enrollment) {
-                // Status kelulusan dibaca langsung dari flag database
+        $coursesWithStatus = $enrollments->map(function ($enrollment) {
+            $course = $enrollment->course;
+
+            if ($course) {
+
                 $course->status = $enrollment->is_completed ? 'Completed' : 'Incomplete';
 
-                // RUMUS PROGRES BARU: (lessons yang selesai / total lessons di kelas) * 100
                 $course->progress = $course->lessons_count > 0
                     ? round(($enrollment->completed_lessons_count / $course->lessons_count) * 100, 0)
                     : 0;
 
-                // Pengaman tambahan: pastikan tidak ada persentase melebihi 100%
                 if ($course->progress > 100) {
                     $course->progress = 100;
                 }
-            } else {
-                // Jika user ternyata belum mendaftar/enroll di kelas ini
-                $course->status = 'Incomplete';
-                $course->progress = 0;
+
+                $course->certificate_path = $enrollment->certificate_path;
             }
 
             return $course;
-        });
+        })->filter();
 
         return Inertia::render('Student/Course/Certificate/Index', [
-            'courses' => $coursesWithStatus,
+            'courses' => $coursesWithStatus->values(),
             'stats' => $user->studentProfile,
             'currentCategory' => $currentCategory,
             'allCategories' => $allCategories,

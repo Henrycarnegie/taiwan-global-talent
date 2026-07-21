@@ -13,6 +13,8 @@ import {
 import { useEffect, useRef, useState } from 'react';
 import ProfileDropdown from '@/components/UI/ProfileDropdown';
 import { useAuth } from '@/hooks/useAuth';
+import HeaderLogo from './Components/HeaderLogo';
+import Navbar from './Components/Navbar';
 
 interface Props {
     children: React.ReactNode;
@@ -218,6 +220,7 @@ export default function Layout({ children }: Props) {
                                 )}
                             </button>
                         </div>
+
                     </div>
 
                     {isMobileMenuOpen && (

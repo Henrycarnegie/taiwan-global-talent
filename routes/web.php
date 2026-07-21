@@ -7,9 +7,9 @@ use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Company\CompanyApplyController;
 use App\Http\Controllers\Company\DashboardController as CompanyDashboardController;
 // Profile
-use App\Http\Controllers\Profile\ProfileController;
+use App\Http\Controllers\Profile\ProfilePageController;
 // Student
-use App\Http\Controllers\Student\CommunityController;
+use App\Http\Controllers\Student\CommunityPostController;
 use App\Http\Controllers\Student\CourseController;
 use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
 use App\Http\Controllers\Student\DownloadCertificateController;
@@ -50,25 +50,56 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // STUDENT ROLE
     Route::middleware('role:student')->group(function () {
-        Route::get('/student/dashboard', [StudentDashboardController::class, 'index'])->name('student.dashboard');
-        Route::get('/student/community', [CommunityController::class, 'index'])->name('student.community');
 
-        // 1. Rute POST
-        Route::post('/student/courses/{course}/enroll', [EnrollmentController::class, 'enroll'])->name('student.courses.enroll');
-        Route::post('/student/courses/{course}/lessons/{lesson}/complete', [LessonProgressController::class, 'completeLesson'])->name('student.lessons.complete');
+        Route::prefix('student')->name('student.')->group(function () {
+            Route::get('/dashboard', [StudentDashboardController::class, 'index'])
+                ->name('dashboard');
 
-        // 2. RUTE SPESIFIK (DOWNLOAD) HARUS DI ATAS WILDCARD
-        Route::get('/student/courses/certificate', [DownloadCertificateController::class, 'index'])
-            ->name('student.courses.certificate.index');
+            Route::prefix('courses')->name('courses.')->group(function () {
 
-        // Endpoint khusus untuk memicu download file fisik PDF dari S3/R2
-        Route::get('/student/courses/{course}/certificate', [DownloadCertificateController::class, 'downloadCertificate'])
-            ->middleware('throttle:certificate-download')
-            ->name('student.courses.certificate.download');
+                // 1. Index & Enroll (Paling atas)
+                Route::get('/', [CourseController::class, 'index'])
+                    ->name('index');
 
-        // 3. RUTE WILDCARD SLUG DI PALING BAWAH
-        Route::get('/student/courses/{categorySlug}', [CourseController::class, 'index'])->name('student.courses.index');
-        Route::get('/student/courses/{categorySlug}/{course}', [CourseController::class, 'show'])->name('student.courses.show');
+                Route::post('/{course}/enroll', [EnrollmentController::class, 'enroll'])
+                    ->name('enroll');
+
+                Route::post('/{course}/lessons/{lesson}/complete', [LessonProgressController::class, 'completeLesson'])
+                    ->name('lessons.complete');
+
+                // 2. Sertifikat (Dipindah ke atas wildcard agar tidak tertangkap oleh {categorySlug})
+                Route::get('/certificate', [DownloadCertificateController::class, 'index'])
+                    ->name('certificate.index');
+
+                Route::get('/{course}/certificate', [DownloadCertificateController::class, 'downloadCertificate'])
+                    ->middleware('throttle:certificate-download')
+                    ->name('certificate.download');
+
+                // 3. Detail Kategori & Detail Kursus (Paling bawah)
+                Route::get('/{categorySlug}', [CourseController::class, 'showByCategory'])
+                    ->name('showCategory');
+
+                Route::get('/{categorySlug}/{course}', [CourseController::class, 'show'])
+                    ->name('show');
+            });
+
+            Route::get('/profile', [ProfilePageController::class, 'show'])
+                ->name('profile.show');
+
+            Route::prefix('community')->name('community.')->group(function () {
+                Route::get('/', [CommunityPostController::class, 'index'])->name('index');
+
+                Route::post('/posts', [CommunityPostController::class, 'store'])->name('posts.store');
+
+                Route::post('/posts/{id}/like', [CommunityPostController::class, 'toggleLike'])->name('posts.like');
+
+                Route::post('/posts/{postId}/comments', [CommunityPostController::class, 'storeComment'])
+                    ->name('comments.store');
+            });
+        });
+
+        Route::patch('/profile/update', [ProfilePageController::class, 'update'])
+            ->name('profile.update');
     });
 
     // TEACHER ROLE
@@ -87,9 +118,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // ---------------------------------------------------------
     // Global Authenticated Routes (Profile & Logout)
     // ---------------------------------------------------------
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
-
     Route::post('/logout', function () {
         auth()->logout();
         request()->session()->invalidate();
