@@ -42,7 +42,7 @@ export default function Hero() {
                     >
                         <a
                             href="#courses"
-                            className="group inline-flex items-center rounded-md bg-[#f47b20] px-7 py-4 text-sm font-extrabold text-white shadow-sm transition hover:bg-white hover:text-[#173b8f]"
+                            className="group inline-flex items-center rounded-md border border-white/30 bg-white/8 px-7 py-4 text-sm font-extrabold text-white shadow-sm transition hover:bg-white hover:text-[#173b8f]"
                         >
                             Explore pathways
                             <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />

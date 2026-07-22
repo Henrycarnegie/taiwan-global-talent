@@ -49,7 +49,7 @@ export default function Navbar({ currentUrl }: NavbarProps) {
                     href="/student/community"
                     className={getNavClass('/student/community')}
                 >
-                    Community{' '}
+                                        Community{' '}
                     <span className="ml-1 text-[10px] font-normal opacity-80">
                         社群
                     </span>

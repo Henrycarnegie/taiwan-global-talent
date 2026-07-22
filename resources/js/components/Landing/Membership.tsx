@@ -4,7 +4,6 @@ const courseGroups = [
     {
         title: 'Mandarin Career Courses',
         eyebrow: 'Language track',
-        fit: 'Best for study, work, and relocation prep',
         accent: '#f47b20',
         image: '/images/landing/diverse-collaboration.png',
         description:
@@ -12,13 +11,11 @@ const courseGroups = [
         courses: [
             {
                 title: 'Mandarin Foundations for Taiwan',
-                price: 'NT$ 0',
                 duration: 'Flexible starter',
                 action: 'View pathway',
             },
             {
                 title: 'TOCFL and Workplace Mandarin',
-                price: 'NT$ 1,990',
                 duration: '6-week guided plan',
                 action: 'See details',
             },
@@ -27,7 +24,6 @@ const courseGroups = [
     {
         title: 'Career Readiness Courses',
         eyebrow: 'Portfolio track',
-        fit: 'Best for internships, jobs, and career pivots',
         accent: '#28a6a1',
         image: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=900&q=82',
         description:
@@ -35,13 +31,11 @@ const courseGroups = [
         courses: [
             {
                 title: 'Professional Profile Studio',
-                price: 'NT$ 1,490',
                 duration: '4 live sessions',
                 action: 'View pathway',
             },
             {
                 title: 'Taiwan Interview Readiness',
-                price: 'NT$ 1,200',
                 duration: 'Mock interview lab',
                 action: 'See details',
             },
@@ -50,7 +44,6 @@ const courseGroups = [
     {
         title: 'Scholarship & Company Programs',
         eyebrow: 'Opportunity track',
-        fit: 'Best for funded study and employer visibility',
         accent: '#6f5bd9',
         image: '/images/landing/opportunity-track.png',
         description:
@@ -58,13 +51,11 @@ const courseGroups = [
         courses: [
             {
                 title: 'Scholarship Planning Sprint',
-                price: 'NT$ 990',
                 duration: 'Document roadmap',
                 action: 'View pathway',
             },
             {
                 title: 'Employer Visibility Profile',
-                price: 'NT$ 0',
                 duration: 'Free profile access',
                 action: 'Create account',
             },
@@ -125,14 +116,6 @@ export default function Membership() {
                                         className="absolute inset-0 h-full w-full object-cover"
                                     />
                                     <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(9,23,47,0.72)_0%,rgba(9,23,47,0.18)_100%)]" />
-                                    <div className="absolute top-6 left-6 rounded-md bg-white/92 px-4 py-3 text-[#173b8f] shadow-sm">
-                                        <p className="text-[10px] font-extrabold tracking-widest text-[#173b8f]/48 uppercase">
-                                            Recommended fit
-                                        </p>
-                                        <p className="mt-1 max-w-56 text-xs leading-5 font-extrabold">
-                                            {group.fit}
-                                        </p>
-                                    </div>
                                     <div className="absolute inset-x-0 bottom-0 p-7 text-white">
                                         <span
                                             className="inline-flex rounded px-3 py-1 text-xs font-extrabold tracking-widest text-white uppercase"
@@ -184,17 +167,9 @@ export default function Membership() {
 
                                             <div className="mt-10">
                                                 <div className="flex items-end justify-between gap-4">
-                                                    <div>
-                                                        <p className="text-xs font-extrabold tracking-widest text-[#173b8f]/42 uppercase">
-                                                            Starts at
-                                                        </p>
-                                                        <div className="mt-1 text-3xl font-extrabold text-[#173b8f]">
-                                                            {course.price}
-                                                        </div>
-                                                    </div>
                                                     <a
                                                         href="/login"
-                                                        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#173b8f] text-white transition group-hover:bg-[#f47b20]"
+                                                        className="ml-auto flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#173b8f] text-white transition group-hover:bg-[#f47b20]"
                                                         aria-label={
                                                             course.action
                                                         }
