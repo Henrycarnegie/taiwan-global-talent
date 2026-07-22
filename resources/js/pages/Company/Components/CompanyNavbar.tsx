@@ -10,24 +10,27 @@ import {
     ExternalLink,
 } from 'lucide-react';
 import { useState } from 'react';
+import { useAuth } from '@/hooks/useAuth';
 
 interface CompanyNavbarProps {
     company: any;
 }
 
 export default function CompanyNavbar({ company }: CompanyNavbarProps) {
-    const { auth, url } = usePage() as any;
+    const { url } = usePage() as any;
+    const { user } = useAuth();
     const [dropdownOpen, setDropdownOpen] = useState(false);
-    
+
     const getNavClass = (path: string) => {
         const active = url.startsWith(path);
 
         return `rounded-lg px-3 py-2 text-xs font-medium text-slate-600 transition-colors dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white ${
-            active ? 'bg-blue-600 hover:bg-blue-600/80 text-white shadow-xs' : 'hover:bg-slate-100 hover:text-slate-900'
+            active
+                ? 'bg-blue-600 hover:bg-blue-600/80 text-white shadow-xs'
+                : 'hover:bg-slate-100 hover:text-slate-900'
         }`;
     };
 
-    console.log(auth);
     const getStatusBadge = (status: string) => {
         switch (status) {
             case 'approved':
@@ -125,12 +128,11 @@ export default function CompanyNavbar({ company }: CompanyNavbarProps) {
                                         className="h-full w-full object-cover"
                                     />
                                 ) : (
-                                    auth?.user?.name?.charAt(0) || 'C'
+                                    user?.name?.charAt(0) || 'C'
                                 )}
                             </div>
                             <span className="hidden text-xs font-semibold text-slate-700 sm:inline-block dark:text-slate-200">
-                                {company?.company_display_name ||
-                                    auth?.user?.name}
+                                {company?.company_display_name || user?.name}
                             </span>
                             <ChevronDown className="h-3.5 w-3.5 text-slate-400" />
                         </button>
@@ -139,10 +141,10 @@ export default function CompanyNavbar({ company }: CompanyNavbarProps) {
                             <div className="absolute right-0 mt-2 w-52 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl dark:border-slate-800 dark:bg-slate-900">
                                 <div className="border-b border-slate-100 px-4 py-3 dark:border-slate-800">
                                     <p className="text-xs font-semibold text-slate-900 dark:text-white">
-                                        {auth?.user?.name}
+                                        {user?.name}
                                     </p>
                                     <p className="truncate text-[11px] text-slate-500 dark:text-slate-400">
-                                        {auth?.user?.email}
+                                        {user?.email}
                                     </p>
                                 </div>
                                 <div className="p-1">

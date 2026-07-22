@@ -44,7 +44,6 @@ export default function Navbar({ currentUrl }: NavbarProps) {
                         證書
                     </span>
                 </Link>
-                {/* Link Halaman Komunitas (LinkedIn Feed) */}
                 <Link
                     href="/student/community"
                     className={getNavClass('/student/community')}
@@ -52,6 +51,15 @@ export default function Navbar({ currentUrl }: NavbarProps) {
                     Community{' '}
                     <span className="ml-1 text-[10px] font-normal opacity-80">
                         社群
+                    </span>
+                </Link>
+                <Link
+                    href="/student/jobs"
+                    className={getNavClass('/student/jobs')}
+                >
+                    Job Portal{' '}
+                    <span className="ml-1 text-[10px] font-normal opacity-80">
+                        職缺
                     </span>
                 </Link>
             </nav>

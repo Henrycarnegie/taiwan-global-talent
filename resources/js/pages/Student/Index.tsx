@@ -37,7 +37,7 @@ export default function StudentDashboard() {
                                 employer matching.
                             </p>
                         </div>
-                        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.12)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.09)_1px,transparent_1px)] [background-size:28px_28px] opacity-20" />
+                        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.12)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.09)_1px,transparent_1px)] bg-size-[28px_28px] opacity-20" />
                     </div>
 
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-4">

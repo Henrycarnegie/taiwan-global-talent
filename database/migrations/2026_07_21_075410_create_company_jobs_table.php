@@ -12,10 +12,12 @@ return new class extends Migration
             $table->id();
             $table->foreignId('company_profile_id')->constrained('company_profiles')->onDelete('cascade');
             $table->string('title');
+            $table->string('slug')->unique();
             $table->enum('type', ['Full-time', 'Part-time', 'Contract', 'Internship'])->default('Full-time');
             $table->enum('location_type', ['On-site', 'Remote', 'Hybrid'])->default('On-site');
             $table->string('city')->nullable();
             $table->string('salary_range')->nullable();
+            $table->text('requirements')->nullable();
             $table->text('description')->nullable();
             $table->enum('status', ['published', 'draft', 'closed'])->default('published');
             $table->unsignedBigInteger('views_count')->default(0);

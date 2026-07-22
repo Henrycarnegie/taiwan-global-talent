@@ -18,6 +18,7 @@ use App\Http\Controllers\Student\DashboardController as StudentDashboardControll
 use App\Http\Controllers\Student\DownloadCertificateController;
 use App\Http\Controllers\Student\EnrollmentController;
 use App\Http\Controllers\Student\LessonProgressController;
+use App\Http\Controllers\Student\StudentJobController;
 // Teacher
 use App\Http\Controllers\Teacher\DashboardController as TeacherDashboardController;
 use App\Http\Controllers\Teacher\TeacherApplyController;
@@ -51,26 +52,23 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/waiting-approval', [TeacherApplyController::class, 'waiting'])->name('waiting');
     });
 
+    // COMPANY ROLE
     Route::middleware(['role:company', 'check.company.status'])->group(function () {
         Route::prefix('company')->name('company.')->group(function () {
             Route::get('/dashboard', [CompanyDashboardController::class, 'index'])->name('dashboard');
 
             // Job Postings Routes
-            Route::get('/jobs', [CompanyJobController::class, 'index'])->name('jobs.index');
+            Route::resource('jobs', CompanyJobController::class);
 
             // Applicants Routes
             Route::get('/applicants', [CompanyApplicantController::class, 'index'])->name('applicants.index');
 
             // Community Routes
             Route::get('/community', [CompanyCommunityController::class, 'index'])->name('community.index');
-
             Route::post('/community', [CompanyCommunityController::class, 'store'])->name('community.store');
-
             Route::post('/community/{id}/like', [CompanyCommunityController::class, 'toggleLike'])->name('community.like');
-
             Route::post('/community/{id}/comment', [CompanyCommunityController::class, 'storeComment'])->name('community.comment');
         });
-
     });
 
     // STUDENT ROLE
@@ -113,13 +111,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
             Route::prefix('community')->name('community.')->group(function () {
                 Route::get('/', [CommunityPostController::class, 'index'])->name('index');
-
                 Route::post('/posts', [CommunityPostController::class, 'store'])->name('posts.store');
-
                 Route::post('/posts/{id}/like', [CommunityPostController::class, 'toggleLike'])->name('posts.like');
+                Route::post('/posts/{postId}/comments', [CommunityPostController::class, 'storeComment'])->name('comments.store');
+            });
 
-                Route::post('/posts/{postId}/comments', [CommunityPostController::class, 'storeComment'])
-                    ->name('comments.store');
+            // Student Jobs Routes
+            Route::prefix('jobs')->name('jobs.')->group(function () {
+                Route::get('/', [StudentJobController::class, 'index'])->name('index');
+                Route::get('/{job:slug}', [StudentJobController::class, 'show'])->name('show');
+                Route::post('/{job}/apply', [StudentJobController::class, 'apply'])->name('apply');
             });
         });
 

@@ -9,6 +9,8 @@ import CompanyVerificationAlert from './Components/CompanyVerificationAlert';
 
 export default function Index({company}: {company: CompanyProfile}) {
 
+    console.log(company)
+
     return (
         <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
             <Head title="Company Dashboard" />

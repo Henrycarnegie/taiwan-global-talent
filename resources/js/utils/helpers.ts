@@ -5,11 +5,9 @@ export function playAudio(path: string | null): void {
         return;
     }
 
-    new Audio(`/storage/${path}`)
-        .play()
-        .catch((err) => {
-            console.error('Audio error:', err);
-        });
+    new Audio(`/storage/${path}`).play().catch((err) => {
+        console.error('Audio error:', err);
+    });
 }
 
 export function getYouTubeEmbedUrl(url: string): string | null {
@@ -17,7 +15,8 @@ export function getYouTubeEmbedUrl(url: string): string | null {
         return null;
     }
 
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const regExp =
+        /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
     const match = url.match(regExp);
 
     if (match && match[2].length === 11) {
@@ -26,3 +25,17 @@ export function getYouTubeEmbedUrl(url: string): string | null {
 
     return null;
 }
+
+export const getS3Url = (path: string | null): string | null => {
+    if (!path) {
+        return null;
+    }
+
+    if (path.startsWith('http')) {
+        return path; // Jika sudah full URL
+    }
+
+    const baseUrl = import.meta.env.VITE_AWS_URL || '';
+    
+    return `${baseUrl.replace(/\/$/, '')}/${path.replace(/^\//, '')}`;
+};
