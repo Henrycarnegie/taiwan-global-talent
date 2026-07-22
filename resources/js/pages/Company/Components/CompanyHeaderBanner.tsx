@@ -1,5 +1,4 @@
 import { Building2, Globe, MapPin, Plus, Sparkles } from 'lucide-react';
-import { getS3Url } from '@/utils/helpers';
 
 interface CompanyHeaderBannerProps {
     company: any;
@@ -8,17 +7,13 @@ interface CompanyHeaderBannerProps {
 export default function CompanyHeaderBanner({
     company,
 }: CompanyHeaderBannerProps) {
-
-    const bannerUrl = getS3Url(company.banner_path);
-    const logoUrl = getS3Url(company.logo_path);
-
     return (
         <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
             {/* Banner Background */}
             <div className="relative h-44 w-full bg-linear-to-r from-slate-900 via-indigo-950 to-slate-900">
-                {bannerUrl ? (
+                {company.banner_url ? (
                     <img
-                        src={bannerUrl}
+                        src={company.banner_url}
                         alt="Banner"
                         className="h-full w-full object-cover opacity-80"
                     />
@@ -32,9 +27,9 @@ export default function CompanyHeaderBanner({
                 <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between sm:space-x-5">
                     <div className="-mt-14 flex items-end space-x-4">
                         <div className="relative flex h-24 w-24 items-center justify-center overflow-hidden rounded-2xl border-4 border-white bg-slate-100 shadow-md dark:border-slate-900 dark:bg-slate-800">
-                            {logoUrl ? (
+                            {company.logo_url ? (
                                 <img
-                                    src={logoUrl}
+                                    src={company.logo_url}
                                     alt={company.name}
                                     className="h-full w-full object-cover"
                                 />
