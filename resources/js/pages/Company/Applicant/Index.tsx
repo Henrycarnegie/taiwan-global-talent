@@ -15,8 +15,7 @@ import {
     Calendar,
 } from 'lucide-react';
 import { useState } from 'react';
-import ProfileDropdown from '@/components/UI/ProfileDropdown';
-import { useAuth } from '@/hooks/useAuth';
+import CompanyNavbar from '@/components/Company/CompanyNavbar';
 
 interface Applicant {
     id: number;
@@ -26,7 +25,7 @@ interface Applicant {
     candidate_email: string;
     candidate_phone?: string;
     candidate_avatar?: string;
-    resume_url: string;
+    resume_url: string; // Directly Cloudflare R2 Full URL
     applied_at: string;
     status: 'pending' | 'reviewed' | 'interviewed' | 'hired' | 'rejected';
 }
@@ -37,10 +36,9 @@ interface ApplicantIndexProps {
 }
 
 export default function ApplicantIndex({
+    company,
     applicants = [],
 }: ApplicantIndexProps) {
-    
-    const { user } = useAuth();
     const [search, setSearch] = useState('');
     const [statusFilter, setStatusFilter] = useState<string>('all');
 
@@ -95,8 +93,8 @@ export default function ApplicantIndex({
     return (
         <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
             <Head title="Applicants - Company Portal" />
-
-            <ProfileDropdown user={user} />
+            
+            <CompanyNavbar company={company} />
 
             <main className="mx-auto max-w-7xl space-y-6 px-4 py-8 sm:px-6 lg:px-8">
                 {/* Header */}

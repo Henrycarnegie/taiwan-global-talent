@@ -2,10 +2,10 @@ import { Link, usePage } from '@inertiajs/react';
 import { Building2 } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
+import ProfileDropdown from '../UI/ProfileDropdown';
 import CompanyStatusBadge from './CompanyStatusBadge';
 import type { NotificationItem } from './NotificationDropdown';
 import NotificationDropdown from './NotificationDropdown';
-import UserMenuDropdown from './UserMenuDropdown';
 
 interface CompanyNavbarProps {
     company: any;
@@ -19,7 +19,6 @@ export default function CompanyNavbar({
     const { url } = usePage() as any;
     const { user } = useAuth();
 
-    const [dropdownOpen, setDropdownOpen] = useState(false);
     const [notifOpen, setNotifOpen] = useState(false);
 
     const getNavClass = (path: string) => {
@@ -88,19 +87,10 @@ export default function CompanyNavbar({
                         initialNotifications={notifications}
                         onToggle={() => {
                             setNotifOpen(!notifOpen);
-                            setDropdownOpen(false);
                         }}
                     />
 
-                    <UserMenuDropdown
-                        user={user}
-                        company={company}
-                        isOpen={dropdownOpen}
-                        onToggle={() => {
-                            setDropdownOpen(!dropdownOpen);
-                            setNotifOpen(false);
-                        }}
-                    />
+                    <ProfileDropdown user={user} />
                 </div>
             </div>
         </header>
