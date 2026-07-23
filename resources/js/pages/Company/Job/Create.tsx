@@ -1,8 +1,12 @@
 import { Head, useForm, Link } from '@inertiajs/react';
 import { ArrowLeft } from 'lucide-react';
-import CompanyNavbar from '../../../components/Company/CompanyNavbar';
+import ProfileDropdown from '@/components/UI/ProfileDropdown';
+import { useAuth } from '@/hooks/useAuth';
 
-export default function CreateJob({ company }: { company: any }) {
+export default function CreateJob() {
+
+    const { user } = useAuth();
+
     const { data, setData, post, processing, errors } = useForm({
         title: '',
         type: 'Full-time',
@@ -18,11 +22,12 @@ export default function CreateJob({ company }: { company: any }) {
         e.preventDefault();
         post('/company/jobs');
     };
-
+    
     return (
         <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
             <Head title="Buat Lowongan Baru - Company Portal" />
-            <CompanyNavbar company={company} />
+
+            <ProfileDropdown user={user} />
 
             <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
                 <Link

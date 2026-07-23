@@ -10,7 +10,8 @@ import {
     Sparkles,
 } from 'lucide-react';
 import { useState } from 'react';
-import CompanyNavbar from '../../../components/Company/CompanyNavbar';
+import ProfileDropdown from '@/components/UI/ProfileDropdown';
+import { useAuth } from '@/hooks/useAuth';
 
 interface User {
     id: number;
@@ -56,6 +57,7 @@ export default function CompanyCommunityIndex({
     company,
     initialPosts,
 }: Props) {
+    const { user } = useAuth();
     const posts = initialPosts?.data || [];
     const [openCommentId, setOpenCommentId] = useState<number | null>(null);
     const [commentText, setCommentText] = useState('');
@@ -108,7 +110,8 @@ export default function CompanyCommunityIndex({
     return (
         <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
             <Head title="Company Community Feed" />
-            <CompanyNavbar company={company} />
+
+            <ProfileDropdown user={user} />
 
             <main className="mx-auto max-w-4xl space-y-6 px-4 py-8 sm:px-6">
                 {/* Header Section */}
