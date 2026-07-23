@@ -1,5 +1,5 @@
 import { Building2, Globe, MapPin, Plus, Sparkles } from 'lucide-react';
-import { getS3Url } from '@/utils/helpers';
+import { getS3Url } from '@/utils/media.helper';
 
 interface CompanyHeaderBannerProps {
     company: any;
@@ -8,7 +8,6 @@ interface CompanyHeaderBannerProps {
 export default function CompanyHeaderBanner({
     company,
 }: CompanyHeaderBannerProps) {
-
     const bannerUrl = getS3Url(company.banner_path);
     const logoUrl = getS3Url(company.logo_path);
 

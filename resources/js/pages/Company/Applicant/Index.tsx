@@ -15,7 +15,7 @@ import {
     Calendar,
 } from 'lucide-react';
 import { useState } from 'react';
-import CompanyNavbar from '../Components/CompanyNavbar';
+import CompanyNavbar from '../../../components/Company/CompanyNavbar';
 
 interface Applicant {
     id: number;

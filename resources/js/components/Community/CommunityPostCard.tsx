@@ -1,7 +1,7 @@
 import { Pin, ThumbsUp, MessageSquare, Send, Clock, Tag } from 'lucide-react';
 import React, { useState } from 'react';
 import type { CommunityPost } from '@/types/community';
-import { formatRelativeTime } from '@/utils/date';
+import { formatRelativeTime } from '@/utils/date.helper';
 
 interface CommunityPostCardProps {
     post: CommunityPost;

@@ -1,6 +1,6 @@
 import { Head, useForm, Link } from '@inertiajs/react';
 import { ArrowLeft } from 'lucide-react';
-import CompanyNavbar from '../Components/CompanyNavbar';
+import CompanyNavbar from '../../../components/Company/CompanyNavbar';
 
 export default function CreateJob({ company }: { company: any }) {
     const { data, setData, post, processing, errors } = useForm({
@@ -27,12 +27,12 @@ export default function CreateJob({ company }: { company: any }) {
             <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
                 <Link
                     href="/company/jobs"
-                    className="inline-flex items-center gap-2 text-xs font-semibold text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 mb-6"
+                    className="mb-6 inline-flex items-center gap-2 text-xs font-semibold text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400"
                 >
                     <ArrowLeft className="h-4 w-4" /> Kembali ke Daftar Lowongan
                 </Link>
 
-                <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-8">
+                <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8 dark:border-slate-800 dark:bg-slate-900">
                     <div className="mb-6 border-b border-slate-100 pb-4 dark:border-slate-800">
                         <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
                             Buat Lowongan Pekerjaan
@@ -51,11 +51,17 @@ export default function CreateJob({ company }: { company: any }) {
                             <input
                                 type="text"
                                 value={data.title}
-                                onChange={(e) => setData('title', e.target.value)}
+                                onChange={(e) =>
+                                    setData('title', e.target.value)
+                                }
                                 placeholder="Contoh: Senior Full Stack Developer"
-                                className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs text-slate-900 focus:border-indigo-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-slate-800 dark:bg-slate-950 dark:text-white"
+                                className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs text-slate-900 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none dark:border-slate-800 dark:bg-slate-950 dark:text-white"
                             />
-                            {errors.title && <span className="mt-1 text-xs text-rose-500">{errors.title}</span>}
+                            {errors.title && (
+                                <span className="mt-1 text-xs text-rose-500">
+                                    {errors.title}
+                                </span>
+                            )}
                         </div>
 
                         {/* Tipe Pekerjaan & Sistem Kerja */}
@@ -66,13 +72,17 @@ export default function CreateJob({ company }: { company: any }) {
                                 </label>
                                 <select
                                     value={data.type}
-                                    onChange={(e) => setData('type', e.target.value as any)}
+                                    onChange={(e) =>
+                                        setData('type', e.target.value as any)
+                                    }
                                     className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs focus:border-indigo-500 focus:bg-white focus:outline-none dark:border-slate-800 dark:bg-slate-950 dark:text-white"
                                 >
                                     <option value="Full-time">Full-time</option>
                                     <option value="Part-time">Part-time</option>
                                     <option value="Contract">Contract</option>
-                                    <option value="Internship">Internship</option>
+                                    <option value="Internship">
+                                        Internship
+                                    </option>
                                 </select>
                             </div>
 
@@ -82,7 +92,12 @@ export default function CreateJob({ company }: { company: any }) {
                                 </label>
                                 <select
                                     value={data.location_type}
-                                    onChange={(e) => setData('location_type', e.target.value as any)}
+                                    onChange={(e) =>
+                                        setData(
+                                            'location_type',
+                                            e.target.value as any,
+                                        )
+                                    }
                                     className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs focus:border-indigo-500 focus:bg-white focus:outline-none dark:border-slate-800 dark:bg-slate-950 dark:text-white"
                                 >
                                     <option value="On-site">On-site</option>
@@ -102,11 +117,17 @@ export default function CreateJob({ company }: { company: any }) {
                                     <input
                                         type="text"
                                         value={data.city}
-                                        onChange={(e) => setData('city', e.target.value)}
+                                        onChange={(e) =>
+                                            setData('city', e.target.value)
+                                        }
                                         placeholder="Contoh: Jakarta Selatan"
                                         className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs text-slate-900 focus:border-indigo-500 focus:bg-white focus:outline-none dark:border-slate-800 dark:bg-slate-950 dark:text-white"
                                     />
-                                    {errors.city && <span className="mt-1 text-xs text-rose-500">{errors.city}</span>}
+                                    {errors.city && (
+                                        <span className="mt-1 text-xs text-rose-500">
+                                            {errors.city}
+                                        </span>
+                                    )}
                                 </div>
                             )}
 
@@ -117,7 +138,9 @@ export default function CreateJob({ company }: { company: any }) {
                                 <input
                                     type="text"
                                     value={data.salary_range}
-                                    onChange={(e) => setData('salary_range', e.target.value)}
+                                    onChange={(e) =>
+                                        setData('salary_range', e.target.value)
+                                    }
                                     placeholder="Contoh: Rp 8.000.000 - Rp 12.000.000"
                                     className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs text-slate-900 focus:border-indigo-500 focus:bg-white focus:outline-none dark:border-slate-800 dark:bg-slate-950 dark:text-white"
                                 />
@@ -132,7 +155,9 @@ export default function CreateJob({ company }: { company: any }) {
                             <textarea
                                 rows={5}
                                 value={data.description}
-                                onChange={(e) => setData('description', e.target.value)}
+                                onChange={(e) =>
+                                    setData('description', e.target.value)
+                                }
                                 placeholder="Jelaskan tanggung jawab utama dan gambaran umum tentang peran ini..."
                                 className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs text-slate-900 focus:border-indigo-500 focus:bg-white focus:outline-none dark:border-slate-800 dark:bg-slate-950 dark:text-white"
                             ></textarea>
@@ -146,7 +171,9 @@ export default function CreateJob({ company }: { company: any }) {
                             <textarea
                                 rows={4}
                                 value={data.requirements}
-                                onChange={(e) => setData('requirements', e.target.value)}
+                                onChange={(e) =>
+                                    setData('requirements', e.target.value)
+                                }
                                 placeholder="Tuliskan kualifikasi, keahlian, atau pengalaman yang dibutuhkan kandidat..."
                                 className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs text-slate-900 focus:border-indigo-500 focus:bg-white focus:outline-none dark:border-slate-800 dark:bg-slate-950 dark:text-white"
                             ></textarea>
@@ -164,7 +191,9 @@ export default function CreateJob({ company }: { company: any }) {
                                         name="status"
                                         value="published"
                                         checked={data.status === 'published'}
-                                        onChange={() => setData('status', 'published')}
+                                        onChange={() =>
+                                            setData('status', 'published')
+                                        }
                                         className="text-indigo-600 focus:ring-indigo-500"
                                     />
                                     Publikasikan Langsung
@@ -175,7 +204,9 @@ export default function CreateJob({ company }: { company: any }) {
                                         name="status"
                                         value="draft"
                                         checked={data.status === 'draft'}
-                                        onChange={() => setData('status', 'draft')}
+                                        onChange={() =>
+                                            setData('status', 'draft')
+                                        }
                                         className="text-indigo-600 focus:ring-indigo-500"
                                     />
                                     Simpan Draft

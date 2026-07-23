@@ -1,4 +1,4 @@
-import CourseCategoryCard from '../Components/CourseCategoryCard';
+import CourseCategoryCard from '../../../components/Student/CourseCategoryCard';
 import Layout from '../Layout';
 
 interface Category {

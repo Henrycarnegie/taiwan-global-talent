@@ -11,10 +11,10 @@ import React, { useState } from 'react';
 import InputText from '@/components/UI/InputText';
 import Layout from '../Student/Layout';
 
-import CompanyFields from './Components/CompanyFields';
-import ProfileHeroCard from './Components/ProfileHeroCard';
-import StudentFields from './Components/StudentFields';
-import TeacherFields from './Components/TeacherFields';
+import CompanyFields from '../../components/Profile/CompanyFields';
+import ProfileHeroCard from '../../components/Profile/ProfileHeroCard';
+import StudentFields from '../../components/Profile/StudentFields';
+import TeacherFields from '../../components/Profile/TeacherFields';
 
 export default function ProfilePage() {
     const { auth } = usePage().props as any;
