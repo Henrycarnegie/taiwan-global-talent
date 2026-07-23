@@ -1,12 +1,8 @@
 import { Head, useForm, Link } from '@inertiajs/react';
 import { ArrowLeft } from 'lucide-react';
-import ProfileDropdown from '@/components/UI/ProfileDropdown';
-import { useAuth } from '@/hooks/useAuth';
+import CompanyNavbar from '@/components/Company/CompanyNavbar';
 
-export default function EditJob({ job }: { job: any }) {
-
-    const { user } = useAuth();
-
+export default function EditJob({ company, job }: { company: any; job: any }) {
     const { data, setData, put, processing, errors } = useForm({
         title: job.title || '',
         type: job.type || 'Full-time',
@@ -26,8 +22,7 @@ export default function EditJob({ job }: { job: any }) {
     return (
         <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
             <Head title={`Edit - ${job.title}`} />
-
-            <ProfileDropdown user={user} />
+            <CompanyNavbar company={company} />
 
             <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
                 <Link
