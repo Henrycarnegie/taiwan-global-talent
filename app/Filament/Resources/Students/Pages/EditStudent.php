@@ -16,4 +16,9 @@ class EditStudent extends EditRecord
             DeleteAction::make(),
         ];
     }
+
+    protected function getSavedNotificationTitle(): ?string
+    {
+        return 'Student updated';
+    }
 }

@@ -8,4 +8,9 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateCourseCategory extends CreateRecord
 {
     protected static string $resource = CourseCategoryResource::class;
+
+    protected function getCreatedNotificationTitle(): ?string
+    {
+        return 'New Course created';
+    }
 }

@@ -8,4 +8,9 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateLessons extends CreateRecord
 {
     protected static string $resource = LessonsResource::class;
+
+    protected function getCreatedNotificationTitle(): ?string
+    {
+        return 'Lesson registered';
+    }
 }

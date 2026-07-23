@@ -1,30 +1,25 @@
 import { Building2, Globe, MapPin, Plus, Sparkles } from 'lucide-react';
-import { getS3Url } from '@/utils/helpers';
+import type { CompanyProfile } from '@/types/company/type';
 
-interface CompanyHeaderBannerProps {
-    company: any;
-}
-
-export default function CompanyHeaderBanner({
-    company,
-}: CompanyHeaderBannerProps) {
-
-    const bannerUrl = getS3Url(company.banner_path);
-    const logoUrl = getS3Url(company.logo_path);
+export default function CompanyHeaderBanner({ company }: { company: CompanyProfile }) {
+    const bannerUrl = company.banner_url;
+    const logoUrl = company.logo_url;
 
     return (
         <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
             {/* Banner Background */}
             <div className="relative h-44 w-full bg-linear-to-r from-slate-900 via-indigo-950 to-slate-900">
+                <div className="relative h-44 w-full bg-slate-900">
                 {bannerUrl ? (
                     <img
                         src={bannerUrl}
-                        alt="Banner"
+                        alt="Company Banner"
                         className="h-full w-full object-cover opacity-80"
                     />
                 ) : (
                     <div className="absolute inset-0 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] bg-size-[16px_16px] opacity-20" />
                 )}
+            </div>
             </div>
 
             {/* Profile Info Overlay */}
@@ -35,7 +30,7 @@ export default function CompanyHeaderBanner({
                             {logoUrl ? (
                                 <img
                                     src={logoUrl}
-                                    alt={company.name}
+                                    alt={company.company_display_name}
                                     className="h-full w-full object-cover"
                                 />
                             ) : (

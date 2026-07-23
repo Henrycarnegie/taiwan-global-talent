@@ -10,6 +10,11 @@ class EditVocabulary extends EditRecord
 {
     protected static string $resource = VocabularyResource::class;
 
+    protected function getSavedNotificationTitle(): ?string
+    {
+        return 'Vocabulary updated';
+    }
+
     protected function getHeaderActions(): array
     {
         return [

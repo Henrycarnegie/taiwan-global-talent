@@ -13,7 +13,7 @@ import {
     Filter,
 } from 'lucide-react';
 import { useState } from 'react';
-import CompanyNavbar from '../Components/CompanyNavbar';
+import CompanyNavbar from '../../../components/Company/CompanyNavbar';
 
 interface CompanyJob {
     id: number;

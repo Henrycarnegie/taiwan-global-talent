@@ -21,7 +21,7 @@ class VocabularyResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
     
-    protected static UnitEnum|string|null $navigationGroup = "Course";
+    protected static UnitEnum|string|null $navigationGroup = "Mandarin-Course";
 
     protected static ?string $recordTitleAttribute = 'title';
 

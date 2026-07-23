@@ -17,4 +17,9 @@ class CreateCourse extends CreateRecord
             'category' => $this->record->category_id,
         ]);
     }
+
+    protected function getCreatedNotificationTitle(): ?string
+    {
+        return 'Course created';
+    }
 }

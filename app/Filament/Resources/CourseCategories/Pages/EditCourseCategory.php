@@ -16,4 +16,9 @@ class EditCourseCategory extends EditRecord
             DeleteAction::make(),
         ];
     }
+    
+    protected function getSavedNotificationTitle(): ?string
+    {
+        return 'Course updated';
+    }
 }

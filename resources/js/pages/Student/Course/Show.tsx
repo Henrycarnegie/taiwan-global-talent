@@ -5,11 +5,13 @@ import LessonContentBlock from '@/components/Course/LessonContentBlock';
 import LessonSyllabus from '@/components/Course/LessonSyllabus';
 import MandarinAddonPanel from '@/components/Course/MandarinAddOnPanel';
 import MediaContentManager from '@/components/Course/MediaContentManager';
-import { getYouTubeEmbedUrl, playAudio } from '@/utils/helpers';
+import { getYouTubeEmbedUrl, playAudio } from '@/utils/media.helper';
 import Layout from '../Layout';
 
 export default function Show({ course, currentCategory }: any) {
-    const [activeLesson, setActiveLesson] = useState<any>(course.lessons?.[0] || null);
+    const [activeLesson, setActiveLesson] = useState<any>(
+        course.lessons?.[0] || null,
+    );
     const [loading, setLoading] = useState(false);
     const isMandarin = currentCategory.id === 1;
 
@@ -26,14 +28,24 @@ export default function Show({ course, currentCategory }: any) {
             {
                 onSuccess: (page: any) => {
                     const flashData = page.props.flash || {};
-                    alert(flashData.success || 'Progres materi Anda berhasil disimpan.');
+                    alert(
+                        flashData.success ||
+                            'Progres materi Anda berhasil disimpan.',
+                    );
 
-                    const currentIdx = course.lessons.findIndex((l: any) => l.id === activeLesson.id);
+                    const currentIdx = course.lessons.findIndex(
+                        (l: any) => l.id === activeLesson.id,
+                    );
 
-                    if (currentIdx !== -1 && currentIdx + 1 < course.lessons.length) {
+                    if (
+                        currentIdx !== -1 &&
+                        currentIdx + 1 < course.lessons.length
+                    ) {
                         setActiveLesson(course.lessons[currentIdx + 1]);
                     } else {
-                        alert('Selamat! Anda telah menyelesaikan kelas ini. Silakan unduh sertifikat Anda di halaman Sertifikat.');
+                        alert(
+                            'Selamat! Anda telah menyelesaikan kelas ini. Silakan unduh sertifikat Anda di halaman Sertifikat.',
+                        );
                         router.get('/student/courses/certificate');
                     }
                 },
@@ -43,7 +55,7 @@ export default function Show({ course, currentCategory }: any) {
                 },
                 onFinish: () => setLoading(false),
                 preserveScroll: true,
-            }
+            },
         );
     };
 
@@ -59,8 +71,12 @@ export default function Show({ course, currentCategory }: any) {
                         <ArrowLeft size={16} />
                     </Link>
                     <div>
-                        <h2 className="text-base font-bold tracking-tight text-gray-900">{course.title}</h2>
-                        <p className="text-xs text-gray-400">{currentCategory.name} Program</p>
+                        <h2 className="text-base font-bold tracking-tight text-gray-900">
+                            {course.title}
+                        </h2>
+                        <p className="text-xs text-gray-400">
+                            {currentCategory.name} Program
+                        </p>
                     </div>
                 </div>
 
@@ -102,10 +118,12 @@ export default function Show({ course, currentCategory }: any) {
                                     <button
                                         onClick={handleCompleteLesson}
                                         disabled={loading}
-                                        className="flex items-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-xs font-bold text-white transition-all hover:bg-blue-700 active:scale-95 disabled:bg-gray-400 cursor-pointer"
+                                        className="flex cursor-pointer items-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-xs font-bold text-white transition-all hover:bg-blue-700 active:scale-95 disabled:bg-gray-400"
                                     >
                                         <CheckCircle2 size={16} />
-                                        {loading ? 'Saving Progress...' : 'Mark as Completed & Next'}
+                                        {loading
+                                            ? 'Saving Progress...'
+                                            : 'Mark as Completed & Next'}
                                     </button>
                                 </div>
                             </>

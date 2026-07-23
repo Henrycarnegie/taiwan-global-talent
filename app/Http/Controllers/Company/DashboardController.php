@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Company;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Resources\CompanyProfileResource;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
@@ -22,7 +23,7 @@ class DashboardController extends Controller
         }
 
         return Inertia::render('Company/Index', [
-            'company' => $company,
+            'company' => $company ? new CompanyProfileResource($company)->resolve() : null,
         ]);
     }
 }

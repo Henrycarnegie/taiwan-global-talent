@@ -10,6 +10,11 @@ class EditTeacher extends EditRecord
 {
     protected static string $resource = TeacherResource::class;
 
+    protected function getSavedNotificationTitle(): ?string
+    {
+        return 'Teacher updated';
+    }
+
     protected function getHeaderActions(): array
     {
         return [
