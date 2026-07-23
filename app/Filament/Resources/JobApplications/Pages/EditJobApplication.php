@@ -16,4 +16,9 @@ class EditJobApplication extends EditRecord
             DeleteAction::make(),
         ];
     }
+
+    protected function getSavedNotificationTitle(): ?string
+    {
+        return 'Job application updated';
+    }
 }

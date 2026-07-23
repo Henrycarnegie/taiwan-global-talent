@@ -16,4 +16,9 @@ class EditCommunityPost extends EditRecord
             DeleteAction::make(),
         ];
     }
+
+    protected function getSavedNotificationTitle(): ?string
+    {
+        return 'Community Post updated';
+    }
 }

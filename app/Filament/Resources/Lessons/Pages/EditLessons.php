@@ -16,4 +16,9 @@ class EditLessons extends EditRecord
             DeleteAction::make(),
         ];
     }
+
+    protected function getSavedNotificationTitle(): ?string
+    {
+        return 'Lesson updated';
+    }
 }

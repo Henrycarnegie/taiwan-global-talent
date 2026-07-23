@@ -8,4 +8,9 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateCompanyJob extends CreateRecord
 {
     protected static string $resource = CompanyJobResource::class;
+
+    protected function getCreatedNotificationTitle(): ?string
+    {
+        return 'Job created';
+    }
 }

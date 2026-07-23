@@ -16,4 +16,9 @@ class EditCompanyJob extends EditRecord
             DeleteAction::make(),
         ];
     }
+
+    protected function getSavedNotificationTitle(): ?string
+    {
+        return 'Job updated';
+    }
 }

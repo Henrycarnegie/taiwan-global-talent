@@ -16,4 +16,9 @@ class EditCompany extends EditRecord
             DeleteAction::make(),
         ];
     }
+    
+    protected function getSavedNotificationTitle(): ?string
+    {
+        return 'Company updated';
+    }
 }
