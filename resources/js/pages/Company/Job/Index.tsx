@@ -13,7 +13,8 @@ import {
     Filter,
 } from 'lucide-react';
 import { useState } from 'react';
-import CompanyNavbar from '../../../components/Company/CompanyNavbar';
+import ProfileDropdown from '@/components/UI/ProfileDropdown';
+import { useAuth } from '@/hooks/useAuth';
 
 interface CompanyJob {
     id: number;
@@ -30,11 +31,11 @@ interface CompanyJob {
 }
 
 interface JobIndexProps {
-    company: any;
     jobs?: CompanyJob[];
 }
 
-export default function JobIndex({ company, jobs = [] }: JobIndexProps) {
+export default function JobIndex({ jobs = [] }: JobIndexProps) {
+    const { user } = useAuth();
     const [search, setSearch] = useState('');
     const [statusFilter, setStatusFilter] = useState<
         'all' | 'published' | 'draft' | 'closed'
@@ -77,7 +78,8 @@ export default function JobIndex({ company, jobs = [] }: JobIndexProps) {
     return (
         <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
             <Head title="Job Postings - Company Portal" />
-            <CompanyNavbar company={company} />
+
+            <ProfileDropdown user={user} />
 
             <main className="mx-auto max-w-7xl space-y-6 px-4 py-8 sm:px-6 lg:px-8">
                 {/* Header Section */}
