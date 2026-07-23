@@ -30,7 +30,7 @@ export default function Layout({ children }: Props) {
 
                         {/* 3. Dropdown Edit Profil & Log Out */}
                         <div className="absolute top-4 right-4 md:static">
-                            <ProfileDropdown />
+                            <ProfileDropdown user={user} />
                         </div>
                     </div>
                 </div>
