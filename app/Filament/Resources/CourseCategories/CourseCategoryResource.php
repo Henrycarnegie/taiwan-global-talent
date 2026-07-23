@@ -19,9 +19,11 @@ class CourseCategoryResource extends Resource
 {
     protected static ?string $model = CourseCategory::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-plus-circle';
 
-    protected static UnitEnum|string|null $navigationGroup = 'Course';
+    protected static UnitEnum|string|null $navigationGroup = 'Courses Management';
+
+    protected static ?string $navigationLabel = 'Add New Course';
 
     public static function form(Schema $schema): Schema
     {
