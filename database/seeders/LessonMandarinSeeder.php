@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Course;
+use App\Models\Module;
 use App\Models\Lesson;
 use App\Models\Sentence;
 use App\Models\Vocabulary;
@@ -12,7 +12,7 @@ class LessonMandarinSeeder extends Seeder
 {
     public function run(): void
     {
-        $course = Course::updateOrCreate(
+        $module = Module::updateOrCreate(
             ['id' => 1],
             [
                 'title' => 'Basic Mandarin for Beginners',
@@ -25,7 +25,7 @@ class LessonMandarinSeeder extends Seeder
         $lesson1 = Lesson::updateOrCreate(
             ['id' => 1],
             [
-                'course_id' => $course->id,
+                'module_id' => $module->id,
                 'title' => 'Lesson 1: Greetings and Hello',
                 'content' => 'In this first lesson, we will learn how to greet other people.',
                 'sentence_hanzi' => '你好！',
@@ -54,7 +54,7 @@ class LessonMandarinSeeder extends Seeder
         $lesson2 = Lesson::updateOrCreate(
             ['id' => 2],
             [
-                'course_id' => $course->id,
+                'module_id' => $module->id,
                 'title' => 'Lesson 2: Saying Thank You',
                 'content' => 'This second lesson covers polite ways to say thank you.',
                 'sentence_hanzi' => '谢谢！',

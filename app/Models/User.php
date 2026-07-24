@@ -39,9 +39,9 @@ class User extends Authenticatable implements FilamentUser
     }
 
     // Relasi Utama
-    public function courses()
+    public function module()
     {
-        return $this->belongsToMany(Course::class, 'enrollments')
+        return $this->belongsToMany(Module::class, 'enrollments')
             ->withPivot('completed_lessons_count', 'is_completed', 'completed_at')
             ->withTimestamps();
     }

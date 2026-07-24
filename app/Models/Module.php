@@ -5,11 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Course extends Model
+class Module extends Model
 {
     use HasFactory;
 
-    // protected $fillable = ['title', 'description', 'mandarin_level', 'is_published'];
     protected $fillable = [
         'title',
         'description',
@@ -49,6 +48,6 @@ class Course extends Model
 
     public function enrollments(): HasMany
     {
-        return $this->hasMany(Enrollment::class, 'course_id');
+        return $this->hasMany(Enrollment::class, 'module_id');
     }
 }

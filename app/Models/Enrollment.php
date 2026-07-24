@@ -15,7 +15,7 @@ class Enrollment extends Model
      */
     protected $fillable = [
         'user_id',
-        'course_id',
+        'module_id',
         'completed_lessons_count',
         'is_completed',
         'completed_at',
@@ -42,8 +42,8 @@ class Enrollment extends Model
     /**
      * Relasi ke Course (Kelas yang diikuti).
      */
-    public function course(): BelongsTo
+    public function module(): BelongsTo
     {
-        return $this->belongsTo(Course::class);
+        return $this->belongsTo(Module::class, 'module_id');
     }
 }

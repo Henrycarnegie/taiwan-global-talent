@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Teacher;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CourseResource;
-use App\Models\Course;
+use App\Models\Module;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -16,19 +16,19 @@ class TeacherCourseController extends Controller
     {
         $user = $request->user();
 
-        $query = Course::withCount('lessons')->where('teacher_id', $user->id);
+        $query = Module::withCount('lessons')->where('teacher_id', $user->id);
 
         if ($request->has('category') && in_array($request->category, ['mandarin', 'others'])) {
             $query->where('category', $request->category);
         }
 
-        $courses = $query->latest()->get();
+        $modules = $query->latest()->get();
 
         $stats = [
-            'total_courses' => Course::where('teacher_id', $user->id)->count(),
-            'published_courses' => Course::where('teacher_id', $user->id)->where('status', 'published')->count(),
-            'mandarin_courses' => Course::where('teacher_id', $user->id)->where('category', 'mandarin')->count(),
-            'total_lessons' => Course::where('teacher_id', $user->id)->withCount('lessons')->get()->sum('lessons_count'),
+            'total_courses' => Module::where('teacher_id', $user->id)->count(),
+            'published_courses' => Module::where('teacher_id', $user->id)->where('status', 'published')->count(),
+            'mandarin_courses' => Module::where('teacher_id', $user->id)->where('category', 'mandarin')->count(),
+            'total_lessons' => Module::where('teacher_id', $user->id)->withCount('lessons')->get()->sum('lessons_count'),
         ];
 
         return Inertia::render('Teacher/Index', [
@@ -38,7 +38,7 @@ class TeacherCourseController extends Controller
                 'email' => $user->email,
             ],
             'stats' => $stats,
-            'courses' => CourseResource::collection($courses)->resolve(),
+            'modules' => CourseResource::collection($modules)->resolve(),
             'filters' => $request->only(['category']),
         ]);
     }
@@ -63,7 +63,7 @@ class TeacherCourseController extends Controller
             $thumbnailPath = $request->file('thumbnail')->store('courses/thumbnails', 'r2');
         }
 
-        Course::create([
+        Module::create([
             'teacher_id' => $request->user()->id,
             'title' => $validated['title'],
             'slug' => Str::slug($validated['title']) . '-' . time(),
@@ -77,20 +77,20 @@ class TeacherCourseController extends Controller
         return redirect()->route('teacher.dashboard')->with('success', 'Course created successfully!');
     }
 
-    public function edit(Course $course): Response
+    public function edit(Module $module): Response
     {
-        $this->authorizeTeacher($course);
+        $this->authorizeTeacher($module);
 
-        $course->load('lessons');
+        $module->load('lessons');
 
         return Inertia::render('Teacher/Course/Edit', [
-            'course' => (new CourseResource($course))->resolve(),
+            'module' => (new CourseResource($module))->resolve(),
         ]);
     }
 
-    private function authorizeTeacher(Course $course)
+    private function authorizeTeacher(Module $module)
     {
-        if ($course->teacher_id !== auth()->id()) {
+        if ($module->teacher_id !== auth()->id()) {
             abort(403, 'Unauthorized access to this course.');
         }
     }

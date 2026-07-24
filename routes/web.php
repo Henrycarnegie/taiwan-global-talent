@@ -85,17 +85,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 Route::get('/', [CourseController::class, 'index'])
                     ->name('index');
 
-                Route::post('/{course}/enroll', [EnrollmentController::class, 'enroll'])
+                Route::post('/{module}/enroll', [EnrollmentController::class, 'enroll'])
                     ->name('enroll');
 
-                Route::post('/{course}/lessons/{lesson}/complete', [LessonProgressController::class, 'completeLesson'])
+                Route::post('/{module}/lessons/{lesson}/complete', [LessonProgressController::class, 'completeLesson'])
                     ->name('lessons.complete');
 
                 // 2. Sertifikat (Dipindah ke atas wildcard agar tidak tertangkap oleh {categorySlug})
                 Route::get('/certificate', [DownloadCertificateController::class, 'index'])
                     ->name('certificate.index');
 
-                Route::get('/{course}/certificate', [DownloadCertificateController::class, 'downloadCertificate'])
+                Route::get('/{module}/certificate', [DownloadCertificateController::class, 'downloadCertificate'])
                     ->middleware('throttle:certificate-download')
                     ->name('certificate.download');
 
@@ -103,7 +103,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 Route::get('/{categorySlug}', [CourseController::class, 'showByCategory'])
                     ->name('showCategory');
 
-                Route::get('/{categorySlug}/{course}', [CourseController::class, 'show'])
+                Route::get('/{categorySlug}/{module}', [CourseController::class, 'show'])
                     ->name('show');
             });
 

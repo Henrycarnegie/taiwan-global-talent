@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
 use App\Models\Certificate;
-use App\Models\Course;
+use App\Models\Module;
 use App\Models\CourseCategory;
 use App\Models\Enrollment;
 use App\Services\PDFGeneratorService;
@@ -31,7 +31,7 @@ class DownloadCertificateController extends Controller
 
         $enrollmentsQuery = Enrollment::where('user_id', $user->id)
             ->with([
-                'course' => function ($query) {
+                'module' => function ($query) {
                     $query->with('category')->withCount([
                         'lessons' => function ($lessonQuery) {
                             $lessonQuery->where('is_published', true);
@@ -41,50 +41,50 @@ class DownloadCertificateController extends Controller
             ]);
 
         if ($currentCategory) {
-            $enrollmentsQuery->whereHas('course', function ($query) use ($currentCategory) {
+            $enrollmentsQuery->whereHas('module', function ($query) use ($currentCategory) {
                 $query->where('category_id', $currentCategory->id);
             });
         }
 
         $enrollments = $enrollmentsQuery->get();
 
-        $coursesWithStatus = $enrollments->map(function ($enrollment) {
-            $course = $enrollment->course;
+        $modulesWithStatus = $enrollments->map(function ($enrollment) {
+            $module = $enrollment->module;
 
-            if ($course) {
+            if ($module) {
 
-                $course->status = $enrollment->is_completed ? 'Completed' : 'Incomplete';
+                $module->status = $enrollment->is_completed ? 'Completed' : 'Incomplete';
 
-                $course->progress = $course->lessons_count > 0
-                    ? round(($enrollment->completed_lessons_count / $course->lessons_count) * 100, 0)
+                $module->progress = $module->lessons_count > 0
+                    ? round(($enrollment->completed_lessons_count / $module->lessons_count) * 100, 0)
                     : 0;
 
-                if ($course->progress > 100) {
-                    $course->progress = 100;
+                if ($module->progress > 100) {
+                    $module->progress = 100;
                 }
 
-                $course->certificate_path = $enrollment->certificate_path;
+                $module->certificate_path = $enrollment->certificate_path;
             }
 
-            return $course;
+            return $module;
         })->filter();
 
         return Inertia::render('Student/Course/Certificate/Index', [
-            'courses' => $coursesWithStatus->values(),
+            'modules' => $modulesWithStatus->values(),
             'stats' => $user->studentProfile,
             'currentCategory' => $currentCategory,
             'allCategories' => $allCategories,
         ]);
     }
 
-    public function downloadCertificate(Request $request, Course $course)
+    public function downloadCertificate(Request $request, Module $module)
     {
         $user = Auth::user();
 
         // 1. Pastikan user memang sudah menyelesaikan kelas ini (cek tabel enrollments)
         $enrollment = DB::table('enrollments')
             ->where('user_id', $user->id)
-            ->where('course_id', $course->id)
+            ->where('module_id', $module->id)
             ->first();
 
         if (! $enrollment || ! $enrollment->is_completed) {
@@ -93,7 +93,7 @@ class DownloadCertificateController extends Controller
 
         // 2. Cek apakah record sertifikat sudah ada di database (Model Certificate)
         $certificate = Certificate::where('user_id', $user->id)
-            ->where('course_id', $course->id)
+            ->where('module_id', $module->id)
             ->first();
 
         // 3. JIKA BELUM ADA, GENERATE LANGSUNG SAAT INI JUGA (SINKRON)
@@ -103,11 +103,11 @@ class DownloadCertificateController extends Controller
 
             try {
                 $pdfService = new PDFGeneratorService;
-                $uploadedPath = $pdfService->generate($user, $course, $temporaryCode);
+                $uploadedPath = $pdfService->generate($user, $module, $temporaryCode);
 
                 $certificate = Certificate::create([
                     'user_id' => $user->id,
-                    'course_id' => $course->id,
+                    'module_id' => $module->id,
                     'certificate_code' => $temporaryCode,
                     'pdf_path' => $uploadedPath,
                     'issued_at' => now(),
@@ -128,7 +128,7 @@ class DownloadCertificateController extends Controller
             }
 
             // Return download langsung ke device browser user
-            return Storage::disk('s3')->download($certificate->pdf_path, "Sertifikat-{$course->title}.pdf");
+            return Storage::disk('s3')->download($certificate->pdf_path, "Sertifikat-{$module->title}.pdf");
 
         } catch (\Exception $e) {
             return response()->json([

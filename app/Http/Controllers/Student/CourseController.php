@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
-use App\Models\Course;
+use App\Models\Module;
 use App\Models\CourseCategory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -43,19 +43,19 @@ class CourseController extends Controller
 
         $category = CourseCategory::where('slug', $categorySlug)->firstOrFail();
 
-        $courses = Course::where('category_id', $category->id)
+        $modules = Module::where('category_id', $category->id)
             ->withCount('lessons')
             ->with(['users' => fn ($query) => $query->where('user_id', $userId)])
             ->get()
-            ->map(function ($course) {
-                $enrollment = $course->users->first()?->pivot;
-                $total = $course->lessons_count;
+            ->map(function ($module) {
+                $enrollment = $module->users->first()?->pivot;
+                $total = $module->lessons_count;
                 $completed = $enrollment?->completed_lessons_count ?? 0;
 
                 return [
-                    'id' => $course->id,
-                    'title' => $course->title,
-                    'level' => $course->level ?? 'General',
+                    'id' => $module->id,
+                    'title' => $module->title,
+                    'level' => $module->level ?? 'General',
                     'progress' => $total > 0 ? (int) (($completed / $total) * 100) : 0,
                     'status' => $enrollment ? ($enrollment->is_completed ? 'Completed' : 'In Progress') : 'Locked',
                 ];
@@ -73,22 +73,22 @@ class CourseController extends Controller
                 'updated_at' => $category->updated_at->format('d M Y'),
                 'thumbnail_url' => $category->thumbnail_path ? Storage::disk('s3')->url($category->thumbnail_path) : null,
             ],
-            'courses' => $courses,
+            'modules' => $modules,
         ]);
     }
 
-    // Akses: /student/courses/{categorySlug}/{course}
-    public function show($categorySlug, Course $course)
+    // Akses: /student/courses/{categorySlug}/{module}
+    public function show($categorySlug, Module $module)
     {
         $category = CourseCategory::where('slug', $categorySlug)->firstOrFail();
 
-        $enrollment = $course->users()->where('user_id', Auth::id())->first();
+        $enrollment = $module->users()->where('user_id', Auth::id())->first();
         if (! $enrollment) {
             return redirect()->route('student.courses.index', $categorySlug)
                 ->with('error', 'You must register for this course first.');
         }
 
-        $course->load([
+        $module->load([
             'lessons' => function ($query) {
                 $query->reorder()
                     ->orderBy('order', 'asc');
@@ -98,7 +98,7 @@ class CourseController extends Controller
             'lessons.vocabularies',
         ]);
 
-        $course->lessons->each(function ($lesson) {
+        $module->lessons->each(function ($lesson) {
             if ($lesson->content_type === 'audio' && $lesson->audios) {
                 $lesson->audios->each(function ($audio) {
                     if ($audio->lesson_audio_path) {
@@ -108,10 +108,10 @@ class CourseController extends Controller
             }
         });
 
-        $courseData = [
-            'id' => $course->id,
-            'title' => $course->title,
-            'lessons' => $course->lessons->map(function ($lesson) {
+        $moduleData = [
+            'id' => $module->id,
+            'title' => $module->title,
+            'lessons' => $module->lessons->map(function ($lesson) {
                 return [
                     'id' => $lesson->id,
                     'title' => $lesson->title,
@@ -149,7 +149,7 @@ class CourseController extends Controller
 
         return Inertia::render('Student/Course/Show', [
             'currentCategory' => $category,
-            'course' => $courseData,
+            'module' => $moduleData,
             'enrollment' => [
                 'completed_lessons_count' => $enrollment->pivot->completed_lessons_count,
                 'is_completed' => $enrollment->pivot->is_completed,

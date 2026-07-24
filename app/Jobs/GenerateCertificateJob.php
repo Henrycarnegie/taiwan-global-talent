@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Models\Course;
+use App\Models\Module;
 use App\Models\User;
 use App\Services\PDFGeneratorService;
 use Illuminate\Bus\Queueable;
@@ -18,15 +18,15 @@ class GenerateCertificateJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $user;
-    public $course;
+    public $module;
 
     // Timeout job agak diperlama karena proses Google API bisa butuh waktu
     public $timeout = 120; 
 
-    public function __construct(User $user, Course $course)
+    public function __construct(User $user, Module $module)
     {
         $this->user = $user;
-        $this->course = $course;
+        $this->module = $module;
     }
 
     public function handle(PDFGeneratorService $pdfService): void
@@ -35,12 +35,12 @@ class GenerateCertificateJob implements ShouldQueue
             $certCode = 'CERT-' . strtoupper(uniqid()); 
             
             // Generate PDF via Service
-            $filePath = $pdfService->generate($this->user, $this->course, $certCode);
+            $filePath = $pdfService->generate($this->user, $this->module, $certCode);
 
             // Simpan path file tersebut ke tabel enrollments
             DB::table('enrollments')
                 ->where('user_id', $this->user->id)
-                ->where('course_id', $this->course->id)
+                ->where('module_id', $this->module->id)
                 ->update(['certificate_path' => $filePath]);
 
         } catch (\Exception $e) {
