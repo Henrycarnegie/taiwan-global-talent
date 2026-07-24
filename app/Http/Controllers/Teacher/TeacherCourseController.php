@@ -16,10 +16,14 @@ class TeacherCourseController extends Controller
     {
         $user = $request->user();
 
-        $query = Module::withCount('lessons')->where('teacher_id', $user->id);
+        $query = Module::with(['category', 'lessons'])
+            ->withCount('lessons')
+            ->where('teacher_id', $user->id);
 
         if ($request->has('category') && in_array($request->category, ['mandarin', 'others'])) {
-            $query->where('category', $request->category);
+            $query->whereHas('category', function ($q) use ($request) {
+                $q->where('slug', $request->category);
+            });
         }
 
         $modules = $query->latest()->get();
@@ -27,8 +31,13 @@ class TeacherCourseController extends Controller
         $stats = [
             'total_courses' => Module::where('teacher_id', $user->id)->count(),
             'published_courses' => Module::where('teacher_id', $user->id)->where('status', 'published')->count(),
-            'mandarin_courses' => Module::where('teacher_id', $user->id)->where('category', 'mandarin')->count(),
-            'total_lessons' => Module::where('teacher_id', $user->id)->withCount('lessons')->get()->sum('lessons_count'),
+            'mandarin_courses' => Module::where('teacher_id', $user->id)
+                ->whereHas('category', fn ($q) => $q->where('slug', 'mandarin'))
+                ->count(),
+            'total_lessons' => Module::where('teacher_id', $user->id)
+                ->withCount('lessons')
+                ->get()
+                ->sum('lessons_count'),
         ];
 
         return Inertia::render('Teacher/Index', [
@@ -66,7 +75,7 @@ class TeacherCourseController extends Controller
         Module::create([
             'teacher_id' => $request->user()->id,
             'title' => $validated['title'],
-            'slug' => Str::slug($validated['title']) . '-' . time(),
+            'slug' => Str::slug($validated['title']).'-'.time(),
             'category' => $validated['category'],
             'description' => $validated['description'] ?? null,
             'price' => $validated['price'],

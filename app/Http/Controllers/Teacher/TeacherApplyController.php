@@ -72,7 +72,7 @@ class TeacherApplyController extends Controller
         }
 
         return Inertia::render('Teacher/Waiting/Index', [
-            'profile' => $profileData,
+            'profile' => $profile,
         ]);
     }
 }

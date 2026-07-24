@@ -13,14 +13,25 @@ return new class extends Migration
     {
         Schema::create('modules', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->text('description');
-            $table->string('level')->nullable();
+            
+            // Relasi ke Teacher (User)
+            $table->foreignId('teacher_id')
+                ->constrained('users')
+                ->onDelete('cascade');
+
+            // Relasi ke Parent Course (CourseCategory)
             $table->foreignId('category_id')
-                ->nullable()
                 ->constrained('course_categories')
-                ->onDelete('set null');
-    
+                ->onDelete('cascade');
+
+            $table->string('title');
+            $table->string('slug')->nullable();
+            $table->text('description')->nullable();
+            $table->string('level')->nullable();
+            $table->integer('order')->default(0);
+
+            // Status publikasi modul (draft / published)
+            $table->string('status')->default('draft');
             $table->boolean('is_published')->default(false);
 
             $table->string('google_slides_template_id')->nullable();

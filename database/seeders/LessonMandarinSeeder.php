@@ -2,9 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\Module;
 use App\Models\Lesson;
+use App\Models\Module;
 use App\Models\Sentence;
+use App\Models\User;
 use App\Models\Vocabulary;
 use Illuminate\Database\Seeder;
 
@@ -12,16 +13,32 @@ class LessonMandarinSeeder extends Seeder
 {
     public function run(): void
     {
+        // Cari user dengan role teacher, atau ambil user pertama sebagai fallback
+        $teacher = User::whereHas('roles', function ($q) {
+            $q->where('name', 'teacher');
+        })->first() ?? User::first();
+
+        // Jika belum ada user sama sekali, buat 1 user teacher dummy
+        if (!$teacher) {
+            $teacher = User::factory()->create([
+                'name' => 'Wang Laoshi',
+                'email' => 'teacher@example.com',
+            ]);
+        }
+
         $module = Module::updateOrCreate(
             ['id' => 1],
             [
+                'teacher_id' => $teacher->id, // <--- TAMBAHKAN TEACHER_ID DI SINI
                 'title' => 'Basic Mandarin for Beginners',
                 'description' => 'This course introduces the fundamentals of Mandarin Chinese.',
                 'level' => 'HSK 1',
                 'category_id' => 1,
                 'is_published' => true,
+                'status' => 'published',
             ]
         );
+
         $lesson1 = Lesson::updateOrCreate(
             ['id' => 1],
             [
