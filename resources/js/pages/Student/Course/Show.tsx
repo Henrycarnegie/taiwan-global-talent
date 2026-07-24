@@ -8,9 +8,9 @@ import MediaContentManager from '@/components/Course/MediaContentManager';
 import { getYouTubeEmbedUrl, playAudio } from '@/utils/media.helper';
 import Layout from '../Layout';
 
-export default function Show({ course, currentCategory }: any) {
+export default function Show({ module, currentCategory }: any) {
     const [activeLesson, setActiveLesson] = useState<any>(
-        course.lessons?.[0] || null,
+        module.lessons?.[0] || null,
     );
     const [loading, setLoading] = useState(false);
     const isMandarin = currentCategory.id === 1;
@@ -23,7 +23,7 @@ export default function Show({ course, currentCategory }: any) {
         setLoading(true);
 
         router.post(
-            `/student/courses/${course.id}/lessons/${activeLesson.id}/complete`,
+            `/student/courses/${module.id}/lessons/${activeLesson.id}/complete`,
             {},
             {
                 onSuccess: (page: any) => {
@@ -33,15 +33,15 @@ export default function Show({ course, currentCategory }: any) {
                             'Progres materi Anda berhasil disimpan.',
                     );
 
-                    const currentIdx = course.lessons.findIndex(
+                    const currentIdx = module.lessons.findIndex(
                         (l: any) => l.id === activeLesson.id,
                     );
 
                     if (
                         currentIdx !== -1 &&
-                        currentIdx + 1 < course.lessons.length
+                        currentIdx + 1 < module.lessons.length
                     ) {
-                        setActiveLesson(course.lessons[currentIdx + 1]);
+                        setActiveLesson(module.lessons[currentIdx + 1]);
                     } else {
                         alert(
                             'Selamat! Anda telah menyelesaikan kelas ini. Silakan unduh sertifikat Anda di halaman Sertifikat.',
@@ -72,7 +72,7 @@ export default function Show({ course, currentCategory }: any) {
                     </Link>
                     <div>
                         <h2 className="text-base font-bold tracking-tight text-gray-900">
-                            {course.title}
+                            {module.title}
                         </h2>
                         <p className="text-xs text-gray-400">
                             {currentCategory.name} Program
@@ -85,7 +85,7 @@ export default function Show({ course, currentCategory }: any) {
                     {/* Left Panel (Syllabus) */}
                     <div className="relative lg:col-span-4">
                         <LessonSyllabus
-                            lessons={course.lessons}
+                            lessons={module.lessons}
                             activeLessonId={activeLesson?.id || null}
                             onSelectLesson={(lesson) => setActiveLesson(lesson)}
                         />

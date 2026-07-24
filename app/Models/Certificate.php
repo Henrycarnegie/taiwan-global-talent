@@ -11,7 +11,7 @@ class Certificate extends Model
         'uuid',
         'certificate_code',
         'user_id',
-        'course_id',
+        'module_id',
         'pdf_path',
         'issued_at',
         
@@ -22,9 +22,9 @@ class Certificate extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function course()
+    public function module()
     {
-        return $this->belongsTo(Course::class);
+        return $this->belongsTo(Module::class, 'module_id');
     }
 
     protected static function boot()

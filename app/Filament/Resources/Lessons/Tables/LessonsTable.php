@@ -16,8 +16,8 @@ class LessonsTable
     {
         return $table
             ->columns([
-                TextColumn::make('course.title')
-                    ->label('Course Name')
+                TextColumn::make('module.title')
+                    ->label('Module Name')
                     ->sortable()
                     ->searchable(),
 
@@ -38,9 +38,9 @@ class LessonsTable
                     ->sortable(),
             ])
             ->filters([
-                SelectFilter::make('course_id')
-                    ->relationship('course', 'title')
-                    ->label('Filter by Course')
+                SelectFilter::make('module_id')
+                    ->relationship('module', 'title')
+                    ->label('Filter by Module')
                     ->multiple()
                     ->preload(),
             ])

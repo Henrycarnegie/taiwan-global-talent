@@ -22,6 +22,7 @@ use App\Http\Controllers\Student\StudentJobController;
 // Teacher
 use App\Http\Controllers\Teacher\DashboardController as TeacherDashboardController;
 use App\Http\Controllers\Teacher\TeacherApplyController;
+use App\Http\Controllers\Teacher\TeacherCourseController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -84,17 +85,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 Route::get('/', [CourseController::class, 'index'])
                     ->name('index');
 
-                Route::post('/{course}/enroll', [EnrollmentController::class, 'enroll'])
+                Route::post('/{module}/enroll', [EnrollmentController::class, 'enroll'])
                     ->name('enroll');
 
-                Route::post('/{course}/lessons/{lesson}/complete', [LessonProgressController::class, 'completeLesson'])
+                Route::post('/{module}/lessons/{lesson}/complete', [LessonProgressController::class, 'completeLesson'])
                     ->name('lessons.complete');
 
                 // 2. Sertifikat (Dipindah ke atas wildcard agar tidak tertangkap oleh {categorySlug})
                 Route::get('/certificate', [DownloadCertificateController::class, 'index'])
                     ->name('certificate.index');
 
-                Route::get('/{course}/certificate', [DownloadCertificateController::class, 'downloadCertificate'])
+                Route::get('/{module}/certificate', [DownloadCertificateController::class, 'downloadCertificate'])
                     ->middleware('throttle:certificate-download')
                     ->name('certificate.download');
 
@@ -102,7 +103,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 Route::get('/{categorySlug}', [CourseController::class, 'showByCategory'])
                     ->name('showCategory');
 
-                Route::get('/{categorySlug}/{course}', [CourseController::class, 'show'])
+                Route::get('/{categorySlug}/{module}', [CourseController::class, 'show'])
                     ->name('show');
             });
 
@@ -130,7 +131,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // TEACHER ROLE
     Route::middleware('role:teacher')->group(function () {
-        Route::get('/teacher/dashboard', [TeacherDashboardController::class, 'index'])->name('teacher.dashboard');
+        Route::prefix('teacher')->name('teacher.')->group(function () {
+        Route::get('/dashboard', [TeacherCourseController::class, 'index'])->name('dashboard');
+        Route::get('/courses/create', [TeacherCourseController::class, 'create'])->name('courses.create');
+        Route::post('/courses', [TeacherCourseController::class, 'store'])->name('courses.store');
+        Route::get('/courses/{course}/edit', [TeacherCourseController::class, 'edit'])->name('courses.edit');  });
     });
 
     // ADMIN ROLE

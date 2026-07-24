@@ -8,7 +8,7 @@ use App\Filament\Resources\Courses\Pages\ListCourses;
 use App\Filament\Resources\Courses\RelationManagers\LessonsRelationManager;
 use App\Filament\Resources\Courses\Schemas\CourseForm;
 use App\Filament\Resources\Courses\Tables\CoursesTable;
-use App\Models\Course;
+use App\Models\Module;
 use App\Models\CourseCategory;
 use BackedEnum;
 use Filament\Navigation\NavigationItem;
@@ -20,7 +20,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class CourseResource extends Resource
 {
-    protected static ?string $model = Course::class;
+    protected static ?string $model = Module::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 

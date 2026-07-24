@@ -11,7 +11,7 @@ import {
 import { route } from 'ziggy-js';
 import Layout from '../../Layout';
 
-interface Course {
+interface Module {
     id: number;
     title: string;
     level: string;
@@ -31,11 +31,11 @@ interface Props {
         thumbnail_url?: string | null;
         updated_at?: string | null;
     };
-    courses: Course[];
+    modules: Module[];
 }
 
-export default function CourseDetail({ category, courses }: Props) {
-    console.log(category);
+export default function CourseDetail({ category, modules }: Props) {
+    console.log(modules);
 
     return (
         <Layout>
@@ -100,19 +100,19 @@ export default function CourseDetail({ category, courses }: Props) {
                             </div>
 
                             <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
-                                {courses.length} Modul
+                                {modules.length} Modul
                             </span>
                         </div>
 
                         <div className="space-y-4">
-                            {courses.map((course, index) => {
+                            {modules.map((module, index) => {
                                 const isCompleted =
-                                    course.status === 'Completed';
-                                const isLocked = course.status === 'Locked';
+                                    module.status === 'Completed';
+                                const isLocked = module.status === 'Locked';
 
                                 return (
                                     <div
-                                        key={course.id}
+                                        key={module.id}
                                         className={`group relative flex flex-col justify-between rounded-2xl border bg-white p-5 transition-all duration-300 md:flex-row md:items-center ${
                                             isLocked
                                                 ? 'border-slate-100 opacity-80'
@@ -124,7 +124,7 @@ export default function CourseDetail({ category, courses }: Props) {
                                                 className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl font-bold ${
                                                     isCompleted
                                                         ? 'bg-emerald-50 text-emerald-600'
-                                                        : course.status ===
+                                                        : module.status ===
                                                             'In Progress'
                                                           ? 'bg-blue-50 text-blue-600'
                                                           : 'bg-slate-100 text-slate-400'
@@ -141,11 +141,11 @@ export default function CourseDetail({ category, courses }: Props) {
 
                                             <div>
                                                 <span className="mb-1 inline-block rounded-full bg-slate-100 px-2 py-1 text-[10px] font-bold tracking-wider text-slate-600 uppercase">
-                                                    {course.level}
+                                                    {module.level}
                                                 </span>
 
                                                 <h3 className="text-base font-bold text-slate-900 transition group-hover:text-blue-600">
-                                                    {course.title}
+                                                    {module.title}
                                                 </h3>
                                             </div>
                                         </div>
@@ -156,7 +156,7 @@ export default function CourseDetail({ category, courses }: Props) {
                                                     <div className="mb-1 flex justify-between text-[10px] font-semibold text-slate-500">
                                                         <span>Progress</span>
                                                         <span>
-                                                            {course.progress}%
+                                                            {module.progress}%
                                                         </span>
                                                     </div>
 
@@ -168,7 +168,7 @@ export default function CourseDetail({ category, courses }: Props) {
                                                                     : 'bg-blue-600'
                                                             }`}
                                                             style={{
-                                                                width: `${course.progress}%`,
+                                                                width: `${module.progress}%`,
                                                             }}
                                                         />
                                                     </div>
@@ -181,7 +181,7 @@ export default function CourseDetail({ category, courses }: Props) {
                                                         router.post(
                                                             route(
                                                                 'student.courses.enroll',
-                                                                course.id,
+                                                                module.id,
                                                             ),
                                                         )
                                                     }
@@ -196,7 +196,7 @@ export default function CourseDetail({ category, courses }: Props) {
                                                         'student.courses.show',
                                                         [
                                                             category.slug,
-                                                            course.id,
+                                                            module.id,
                                                         ],
                                                     )}
                                                     className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-bold transition ${
@@ -276,7 +276,7 @@ export default function CourseDetail({ category, courses }: Props) {
                                         </span>
 
                                         <span className="font-semibold text-slate-900">
-                                            {courses.length}
+                                            {modules.length}
                                         </span>
                                     </div>
 

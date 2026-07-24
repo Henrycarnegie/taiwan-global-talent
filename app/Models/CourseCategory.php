@@ -18,11 +18,11 @@ class CourseCategory extends Model
         'order',
     ];
 
-    public function courses()
+    public function modules(): HasMany
     {
-        return $this->hasMany(Course::class);
+        return $this->hasMany(Module::class, 'category_id')->orderBy('order');
     }
-
+    
     public function enrollments()
     {
         return $this->hasMany(CourseEnrollment::class);

@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('enrollments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('course_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('module_id')->constrained()->cascadeOnDelete();
             
             // Menyimpan total materi yang sudah diselesaikan siswa dalam kursus ini
             $table->integer('completed_lessons_count')->default(0);
@@ -25,7 +25,7 @@ return new class extends Migration
             $table->timestamps();
 
             // Mencegah user mendaftar course yang sama dua kali
-            $table->unique(['user_id', 'course_id']);
+            $table->unique(['user_id', 'module_id']);
         });
     }
 

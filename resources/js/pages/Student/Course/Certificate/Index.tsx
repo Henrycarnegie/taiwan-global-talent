@@ -10,14 +10,14 @@ interface Category {
 }
 
 interface Props {
-    courses: any[];
+    modules: any[];
     stats: any;
     currentCategory: Category | null; // Kita izinkan bernilai null agar aman
     allCategories: Category[];
 }
 
 export default function Index({
-    courses = [],
+    modules = [],
     // stats,
     // currentCategory,
     // allCategories,
@@ -27,19 +27,19 @@ export default function Index({
     const [activeCourseTitle, setActiveCourseTitle] = useState<string>('');
 
     const handleDownloadCertificate = async (
-        courseId: number,
-        courseTitle: string,
+        moduleId: number,
+        moduleTitle: string,
     ) => {
         if (isPopupOpen) {
             return;
         }
 
-        setActiveCourseTitle(courseTitle);
+        setActiveCourseTitle(moduleTitle);
         setIsPopupOpen(true);
 
         try {
             const response = await fetch(
-                `/student/courses/${courseId}/certificate`,
+                `/student/courses/${moduleId}/certificate`,
             );
 
             if (!response.ok) {
@@ -55,7 +55,7 @@ export default function Index({
 
             const downloadLink = document.createElement('a');
             downloadLink.href = downloadUrl;
-            downloadLink.download = `Sertifikat-${courseTitle}.pdf`;
+            downloadLink.download = `Sertifikat-${moduleTitle}.pdf`;
             document.body.appendChild(downloadLink);
             downloadLink.click();
 
@@ -82,50 +82,50 @@ export default function Index({
                 {/* Daftar Kursus */}
                 <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-xs">
                     <div className="divide-y divide-gray-100">
-                        {courses.length === 0 ? (
+                        {modules.length === 0 ? (
                             <div className="p-8 text-center text-sm text-gray-400">
                                 No courses available in this category.
                             </div>
                         ) : (
-                            courses.map((course: any) => (
+                            modules.map((module: any) => (
                                 <div
-                                    key={course.id}
+                                    key={module.id}
                                     className="flex flex-col justify-between gap-6 p-6 transition-colors hover:bg-gray-50/40 md:flex-row md:items-center"
                                 >
                                     <div className="flex-1 space-y-1">
                                         <span className="rounded-md bg-blue-50 px-2 py-0.5 text-xs font-bold text-blue-600 uppercase">
-                                            {course.level}
+                                            {module.level}
                                         </span>
                                         <h4 className="text-base font-bold text-gray-900">
-                                            {course.title}
+                                            {module.title}
                                         </h4>
                                         <div className="text-xs text-gray-500">
-                                            Status: {course.status}
+                                            Status: {module.status}
                                         </div>
                                     </div>
 
                                     <div className="w-full space-y-1 md:w-48">
                                         <div className="mb-1 flex justify-between text-xs font-medium text-gray-500">
                                             <span>Progress</span>
-                                            <span>{course.progress}%</span>
+                                            <span>{module.progress}%</span>
                                         </div>
                                         <div className="h-1.5 w-full overflow-hidden rounded-full bg-gray-100">
                                             <div
                                                 className="h-full rounded-full bg-blue-600 transition-all duration-300"
                                                 style={{
-                                                    width: `${course.progress}%`,
+                                                    width: `${module.progress}%`,
                                                 }}
                                             ></div>
                                         </div>
                                     </div>
 
                                     <div className="flex items-center gap-2">
-                                        {course.status === 'Completed' ? (
+                                        {module.status === 'Completed' ? (
                                             <button
                                                 onClick={() =>
                                                     handleDownloadCertificate(
-                                                        course.id,
-                                                        course.title,
+                                                        module.id,
+                                                        module.title,
                                                     )
                                                 }
                                                 disabled={isPopupOpen}

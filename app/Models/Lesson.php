@@ -13,14 +13,14 @@ class Lesson extends Model
     use HasFactory;
 
     protected $fillable = [
-        'course_id',
+        'module_id',
         'title',
         'content',
         'order',
         'sentence_hanzi',
         'audio_path',
         'audio_hash',
-        
+
         'content_type',
         'video_url',
         'video_path',
@@ -28,9 +28,9 @@ class Lesson extends Model
         'pdf_path',
     ];
 
-    public function course(): BelongsTo
+    public function module(): BelongsTo
     {
-        return $this->belongsTo(Course::class);
+        return $this->belongsTo(Module::class);
     }
 
     public function sentences(): HasMany

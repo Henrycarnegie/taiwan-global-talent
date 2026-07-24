@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Lessons\Schemas;
 
-use App\Models\Course;
+use App\Models\Module;
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
@@ -27,9 +27,9 @@ class LessonsForm
     {
         return $schema
             ->components([
-                Select::make('course_id')
-                    ->relationship('course', 'title')
-                    ->label('Course')
+                Select::make('module_id')
+                    ->relationship('module', 'title')
+                    ->label('Module')
                     ->required()
                     ->preload()
                     ->reactive(),
@@ -41,13 +41,13 @@ class LessonsForm
     public static function getRepeaterComponents(): array
     {
         $isMandarin = function (callable $get) {
-            $courseId = $get('course_id');
-            if (! $courseId) {
+            $moduleId = $get('module_id');
+            if (! $moduleId) {
                 return false;
             }
-            $course = Course::find($courseId);
+            $module = Module::find($moduleId);
 
-            return $course && $course->category_id === 1;
+            return $module && $module->category_id === 1;
         };
 
         return [
@@ -88,7 +88,7 @@ class LessonsForm
             FileUpload::make('video_path')
                 ->label('Atau Upload File Video')
                 ->disk('s3')
-                ->directory('courses/videos')
+                ->directory('modules/videos')
                 ->visible(fn (callable $get) => $get('content_type') === 'video')
                 ->acceptedFileTypes(['video/mp4', 'video/mkv']),
 
@@ -104,7 +104,7 @@ class LessonsForm
                     FileUpload::make('lesson_audio_path')
                         ->label('Upload Learning Audio File')
                         ->disk('s3')
-                        ->directory('courses/audios')
+                        ->directory('modules/audios')
                         ->acceptedFileTypes(['audio/mpeg', 'audio/mp3', 'audio/wav'])
                         ->required(),
                 ])
@@ -115,7 +115,7 @@ class LessonsForm
             FileUpload::make('pdf_path')
                 ->label('Upload Dokumen PDF')
                 ->disk('s3')
-                ->directory('courses/documents')
+                ->directory('modules/documents')
                 ->acceptedFileTypes(['application/pdf'])
                 ->visible(fn (callable $get) => $get('content_type') === 'pdf')
                 ->required(fn (callable $get) => $get('content_type') === 'pdf'),
