@@ -10,7 +10,15 @@ class TeacherApplyController extends Controller
 {
     public function create()
     {
-        return Inertia::render('Teacher/Apply/Index');
+        $existingProfile = auth()->user()->teacherProfile;
+        
+        if ($existingProfile && $existingProfile->status === 'approved') {
+            return redirect()->route('teacher.dashboard');
+        }
+
+        return Inertia::render('Teacher/Apply/Index', [
+            'existingProfile' => $existingProfile,
+        ]);
     }
 
     public function store(Request $request)
@@ -57,6 +65,14 @@ class TeacherApplyController extends Controller
 
     public function waiting()
     {
-        return Inertia::render('Teacher/Waiting/Index');
+        $profile = auth()->user()->teacherProfile;
+
+        if ($profile?->status === 'approved') {
+            return redirect()->route('teacher.dashboard');
+        }
+
+        return Inertia::render('Teacher/Waiting/Index', [
+            'profile' => $profileData,
+        ]);
     }
 }

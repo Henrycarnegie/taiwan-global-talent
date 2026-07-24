@@ -22,6 +22,7 @@ use App\Http\Controllers\Student\StudentJobController;
 // Teacher
 use App\Http\Controllers\Teacher\DashboardController as TeacherDashboardController;
 use App\Http\Controllers\Teacher\TeacherApplyController;
+use App\Http\Controllers\Teacher\TeacherCourseController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -130,7 +131,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // TEACHER ROLE
     Route::middleware('role:teacher')->group(function () {
-        Route::get('/teacher/dashboard', [TeacherDashboardController::class, 'index'])->name('teacher.dashboard');
+        Route::prefix('teacher')->name('teacher.')->group(function () {
+        Route::get('/dashboard', [TeacherCourseController::class, 'index'])->name('dashboard');
+        Route::get('/courses/create', [TeacherCourseController::class, 'create'])->name('courses.create');
+        Route::post('/courses', [TeacherCourseController::class, 'store'])->name('courses.store');
+        Route::get('/courses/{course}/edit', [TeacherCourseController::class, 'edit'])->name('courses.edit');  });
     });
 
     // ADMIN ROLE

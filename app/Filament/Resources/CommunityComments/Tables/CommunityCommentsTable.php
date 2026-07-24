@@ -9,7 +9,6 @@ use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use App\Models\CommunityComment;
 
 class CommunityCommentsTable
 {
@@ -34,7 +33,9 @@ class CommunityCommentsTable
 
                 TextColumn::make('parent_id')
                     ->label('Type')
-                    ->state(fn (CommunityComment $record): string => $record->parent_id ? 'Reply' : 'Main Comment')
+                    ->state(function ($record) {
+                        return $record->parent_id ? 'Reply' : 'Main Comment';
+                    })
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'Reply' => 'info',
